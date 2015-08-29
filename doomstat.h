@@ -257,6 +257,8 @@ extern  int             mouseSensitivity;
 // debug flag to cancel adaptiveness
 extern  boolean         singletics;	
 
+extern  boolean         debugmode; // FS
+
 extern  int             bodyqueslot;
 
 

@@ -23,7 +23,10 @@
 #ifndef __SOUNDS__
 #define __SOUNDS__
 
+#define MAX_SND_DIST 	1600
+#define MAX_CHANNELS	16
 
+#include "p_mobj.h"
 //
 // SoundFX struct.
 //
@@ -59,6 +62,11 @@ struct sfxinfo_struct
 
     // lump number of sfx
     int		lumpnum;		
+
+	void *snd_ptr;
+
+	int numchannels; // total number of channels a sound type may occupy
+
 };
 
 
@@ -91,6 +99,41 @@ extern sfxinfo_t	S_sfx[];
 
 // the complete set of music
 extern musicinfo_t	S_music[];
+
+extern int snd_MaxVolume; // FS
+
+typedef struct
+{
+	mobj_t *mo;
+	long sound_id;
+	long handle;
+	long pitch;
+	int priority;
+    // sound information (if null, channel avail.)
+    sfxinfo_t*	sfxinfo;
+
+    // origin of sound
+    void*	origin;
+
+} channel_t;
+
+typedef struct
+{
+	long id;
+	unsigned short priority;
+	char *name;
+	mobj_t *mo;
+	int distance;
+} ChanInfo_t;
+
+typedef	struct
+{
+	int channelCount;
+	int musicVolume;
+	int soundVolume;
+	ChanInfo_t chan[8];
+} SoundInfo_t;
+
 
 //
 // Identifiers for all music in game.

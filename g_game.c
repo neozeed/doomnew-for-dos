@@ -214,7 +214,7 @@ int		bodyqueslot;
  
 void*		statcopy;				// for statistics driver
  
- 
+
  
 int G_CmdChecksum (ticcmd_t* cmd) 
 { 
@@ -246,7 +246,7 @@ void G_BuildTiccmd (ticcmd_t* cmd)
     
     ticcmd_t*	base;
 
-    base = I_BaseTiccmd ();		// empty, or external driver
+    base = 0;             // empty, or external driver
     memcpy (cmd,base,sizeof(*cmd)); 
 	
     cmd->consistancy = 

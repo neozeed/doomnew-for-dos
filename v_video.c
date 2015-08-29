@@ -41,7 +41,7 @@ rcsid[] = "$Id: v_video.c,v 1.5 1997/02/03 22:45:13 b1 Exp $";
 
 
 // Each screen is [SCREENWIDTH*SCREENHEIGHT]; 
-byte*				screens[5];	
+byte*                           screens[5]; 
  
 int				dirtybox[4]; 
 
@@ -185,7 +185,7 @@ V_CopyRect
     V_MarkRect (destx, desty, width, height); 
 	 
     src = screens[srcscrn]+SCREENWIDTH*srcy+srcx; 
-    dest = screens[destscrn]+SCREENWIDTH*desty+destx; 
+    dest = screens[srcscrn]+SCREENWIDTH*desty+destx; 
 
     for ( ; height>0 ; height--) 
     { 
@@ -481,13 +481,11 @@ V_GetBlock
 // 
 void V_Init (void) 
 { 
-    int		i;
-    byte*	base;
-		
+        int i;
+        byte*   base;
     // stick these in low dos memory on PCs
 
     base = I_AllocLow (SCREENWIDTH*SCREENHEIGHT*4);
-
-    for (i=0 ; i<4 ; i++)
-	screens[i] = base + i*SCREENWIDTH*SCREENHEIGHT;
+    for (i = 0 ; i <4 ; i++)
+        screens[i] = base + i*SCREENWIDTH*SCREENHEIGHT;
 }

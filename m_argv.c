@@ -30,7 +30,7 @@ int		myargc;
 char**		myargv;
 
 
-
+#define strcasecmp strcmpi // FS
 
 //
 // M_CheckParm

@@ -56,6 +56,8 @@ typedef unsigned char byte;
 #endif
 
 
+byte *I_AllocLow (int length); // FS
+extern boolean debugmode; // checkparam of -debug
 
 
 #endif

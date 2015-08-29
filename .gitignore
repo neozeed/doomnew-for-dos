@@ -1,0 +1,13 @@
+# ignore all make dependency files
+*.obj
+*.exe
+*.7z
+*.cfg
+*.err
+*.bat
+*.td
+*.tr
+*.map
+*.bak
+*.lnk
+out.txt

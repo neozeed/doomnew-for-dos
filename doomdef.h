@@ -25,13 +25,22 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <malloc.h> // FS
 
 //
 // Global parameters/defines.
 //
 // DOOM version
-enum { VERSION =  110 };
+enum { VERSION =  109 };
 
+
+#define strcasecmp strcmpi // FS
+#define I_NOUPDATE      0
+#define I_FULLVIEW      1
+#define I_STATBAR       2
+#define I_MESSAGES      4
+#define I_FULLSCRN      8
+#define SBARHEIGHT      32
 
 // Game mode handling - identify IWAD version
 //  to handle IWAD dependend animations etc.
@@ -327,9 +336,8 @@ typedef enum
 // The utility was written by Dave Taylor.
 //#include "sounds.h"
 
-
-
-
+void tprintf (char *string, int initflag); // FS
+extern  int     UpdateState; // FS
 #endif          // __DOOMDEF__
 //-----------------------------------------------------------------------------
 //

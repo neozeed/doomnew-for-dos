@@ -1,95 +1,116 @@
-################################################################
+
+# D.EXE and DOOM.EXE makefile
+
+# --------------------------------------------------------------------------
 #
-# $Id:$
+#      4r  use 80486 timings and register argument passing
+#       c  compile only
+#      d1  include line number debugging information
+#      d2  include full sybolic debugging information
+#      ei  force enums to be of type int
+#       j  change char default from unsigned to signed
+#      oa  relax aliasing checking
+#      od  do not optimize
+#  oe[=#]  expand functions inline, # = quads (default 20)
+#      oi  use the inline library functions
+#      om  generate inline 80x87 code for math functions
+#      ot  optimize for time
+#      ox  maximum optimization
+#       s  remove stack overflow checks
+#     zp1  align structures on bytes
+#      zq  use quiet mode
+#  /i=dir  add include directories
 #
-# $Log:$
-#
-CC=  gcc  # gcc or g++
+# --------------------------------------------------------------------------
 
-CFLAGS=-g -Wall -DNORMALUNIX -DLINUX # -DUSEASM 
-LDFLAGS=-L/usr/X11R6/lib
-LIBS=-lXext -lX11 -lnsl -lm
+CCOPTS = /d2 /omaxet /zp1 /4r /ei /j /zq /i=dmx
 
-# subdirectory for objects
-O=linux
+LOCOBJS = &
+ doomdef.obj &
+ doomstat.obj &
+ dstrings.obj &
+ i_ibm.obj &
+ i_sound.obj &
+ tables.obj &
+ f_finale.obj &
+ f_wipe.obj  &
+ d_main.obj	 &
+ d_net.obj	 &
+ d_items.obj &
+ g_game.obj	 &
+ m_menu.obj	 &
+ m_misc.obj	 &
+ m_argv.obj   &
+ m_bbox.obj	 &
+ m_fixed.obj &
+ m_swap.obj	 &
+ m_cheat.obj &
+ m_random.obj &
+ am_map.obj	 &
+ p_ceilng.obj &
+ p_doors.obj &
+ p_enemy.obj &
+ p_floor.obj &
+ p_inter.obj &
+ p_lights.obj &
+ p_map.obj	 &
+ p_maputl.obj &
+ p_plats.obj &
+ p_pspr.obj	 &
+ p_setup.obj &
+ p_sight.obj &
+ p_spec.obj	 &
+ p_switch.obj &
+ p_mobj.obj	 &
+ p_telept.obj &
+ p_tick.obj	 &
+ p_saveg.obj &
+ p_user.obj	 &
+ r_bsp.obj	 &
+ r_data.obj	 &
+ r_draw.obj	 &
+ r_main.obj	 &
+ r_plane.obj &
+ r_segs.obj	 &
+ r_sky.obj	 &
+ r_things.obj &
+ w_wad.obj	 &
+ wi_stuff.obj &
+ v_video.obj &
+ st_lib.obj	 &
+ st_stuff.obj &
+ hu_stuff.obj &
+ hu_lib.obj	 &
+ s_sound.obj &
+ z_zone.obj	 &
+ info.obj		 &
+ sounds.obj
 
-# not too sophisticated dependency
-OBJS=				\
-		$(O)/doomdef.o		\
-		$(O)/doomstat.o		\
-		$(O)/dstrings.o		\
-		$(O)/i_system.o		\
-		$(O)/i_sound.o		\
-		$(O)/i_video.o		\
-		$(O)/i_net.o			\
-		$(O)/tables.o			\
-		$(O)/f_finale.o		\
-		$(O)/f_wipe.o 		\
-		$(O)/d_main.o			\
-		$(O)/d_net.o			\
-		$(O)/d_items.o		\
-		$(O)/g_game.o			\
-		$(O)/m_menu.o			\
-		$(O)/m_misc.o			\
-		$(O)/m_argv.o  		\
-		$(O)/m_bbox.o			\
-		$(O)/m_fixed.o		\
-		$(O)/m_swap.o			\
-		$(O)/m_cheat.o		\
-		$(O)/m_random.o		\
-		$(O)/am_map.o			\
-		$(O)/p_ceilng.o		\
-		$(O)/p_doors.o		\
-		$(O)/p_enemy.o		\
-		$(O)/p_floor.o		\
-		$(O)/p_inter.o		\
-		$(O)/p_lights.o		\
-		$(O)/p_map.o			\
-		$(O)/p_maputl.o		\
-		$(O)/p_plats.o		\
-		$(O)/p_pspr.o			\
-		$(O)/p_setup.o		\
-		$(O)/p_sight.o		\
-		$(O)/p_spec.o			\
-		$(O)/p_switch.o		\
-		$(O)/p_mobj.o			\
-		$(O)/p_telept.o		\
-		$(O)/p_tick.o			\
-		$(O)/p_saveg.o		\
-		$(O)/p_user.o			\
-		$(O)/r_bsp.o			\
-		$(O)/r_data.o			\
-		$(O)/r_draw.o			\
-		$(O)/r_main.o			\
-		$(O)/r_plane.o		\
-		$(O)/r_segs.o			\
-		$(O)/r_sky.o			\
-		$(O)/r_things.o		\
-		$(O)/w_wad.o			\
-		$(O)/wi_stuff.o		\
-		$(O)/v_video.o		\
-		$(O)/st_lib.o			\
-		$(O)/st_stuff.o		\
-		$(O)/hu_stuff.o		\
-		$(O)/hu_lib.o			\
-		$(O)/s_sound.o		\
-		$(O)/z_zone.o			\
-		$(O)/info.o				\
-		$(O)/sounds.o
+d.exe : $(LOCOBJS) i_ibm.obj
+ wlink @tic.lnk
+ copy d.exe stripd.exe
+ wstrip stripd.exe
+ 4gwbind 4gwpro.exe stripd.exe doom.exe -V 
+# sb /R /O doom.exe #Uncomment this to use DOS32/a
 
-all:	 $(O)/linuxxdoom
+i_ibm.obj:
+ wcc386 /zp1 /4r /zq /ei /j i_ibm.c
 
-clean:
-	rm -f *.o *~ *.flc
-	rm -f linux/*
+.c.obj :
+ wcc386 $(CCOPTS) $[*
 
-$(O)/linuxxdoom:	$(OBJS) $(O)/i_main.o
-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(O)/i_main.o \
-	-o $(O)/linuxxdoom $(LIBS)
+.asm.obj :
+ tasm /mx $[*
 
-$(O)/%.o:	%.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-#############################################################
-#
-#############################################################
+clean : .SYMBOLIC
+ del *.obj
+ del d.exe
+ del stripd.exe
+ del doom.exe
+ 
+final : .SYMBOLIC
+ wlink @tic.lnk
+ copy d.exe stripd.exe
+ wstrip stripd.exe
+ 4gwbind 4gwpro.exe stripd.exe doom.exe -V 
+ sb /R /O doom.exe

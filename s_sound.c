@@ -1,4 +1,7 @@
-// Emacs style mode select   -*- C++ -*- 
+//#define OLDSOUND
+#ifndef OLDSOUND
+
+// Emacs style mode select   -*- C++ -*-
 //-----------------------------------------------------------------------------
 //
 // $Id:$
@@ -44,10 +47,6 @@ rcsid[] = "$Id: s_sound.c,v 1.6 1997/02/03 22:45:12 b1 Exp $";
 #include "doomstat.h"
 
 
-// Purpose?
-const char snd_prefixen[]
-= { 'P', 'P', 'A', 'S', 'S', 'S', 'M', 'M', 'M', 'S', 'S', 'S' };
-
 #define S_MAX_VOLUME		127
 
 // when to clip out sounds
@@ -87,9 +86,10 @@ extern int snd_SfxDevice;
 // Config file? Same disclaimer as above.
 extern int snd_DesiredMusicDevice;
 extern int snd_DesiredSfxDevice;
+extern sfxinfo_t S_sfx[]; // FS
 
 
-
+/*
 typedef struct
 {
     // sound information (if null, channel avail.)
@@ -102,7 +102,7 @@ typedef struct
     int		handle;
     
 } channel_t;
-
+*/
 
 // the set of channels available
 static channel_t*	channels;
@@ -126,7 +126,7 @@ static musicinfo_t*	mus_playing=0;
 // following is set
 //  by the defaults code in M_misc:
 // number of channels available
-int			numChannels;	
+int			numChannels = 8;	
 
 static int		nextcleanup;
 
@@ -150,7 +150,7 @@ S_AdjustSoundParams
   int*		pitch );
 
 void S_StopChannel(int cnum);
-
+void S_StartSong(int mnum); // FS
 
 
 //
@@ -166,12 +166,13 @@ void S_Init
 
   fprintf( stderr, "S_Init: default sfx volume %d\n", sfxVolume);
 
+	I_StartupSound();
   // Whatever these did with DMX, these are rather dummies now.
-  I_SetChannels();
+  I_SetChannels(8);
   
-  S_SetSfxVolume(sfxVolume);
+  S_SetSfxVolume(sfxVolume); // FS: FIXME
   // No music with Linux - another dummy.
-  S_SetMusicVolume(musicVolume);
+  I_SetMusicVolume(musicVolume); // FS: FIXME
 
   // Allocating the internal channels for mixing
   // (the maximum numer of sounds rendered
@@ -241,15 +242,13 @@ void S_Start(void)
   // HACK FOR COMMERCIAL
   //  if (commercial && mnum > mus_e3m9)	
   //      mnum -= mus_e3m9;
-  
+	if (mnum == -9)
+		mnum = mus_intro;
+
   S_ChangeMusic(mnum, true);
   
   nextcleanup = 15;
 }	
-
-
-
-
 
 void
 S_StartSoundAtVolume
@@ -268,10 +267,9 @@ S_StartSoundAtVolume
   mobj_t*	origin = (mobj_t *) origin_p;
   
   
-  // Debug.
-  /*fprintf( stderr,
-  	   "S_StartSoundAtVolume: playing sound %d (%s)\n",
-  	   sfx_id, S_sfx[sfx_id].name );*/
+  // FS: Debug.
+  //printf("S_StartSoundAtVolume: playing sound %d (%s)\n",
+//           sfx_id, S_sfx[sfx_id].name ); // FS
   
   // check for bogus sound #
   if (sfx_id < 1 || sfx_id > NUMSFX)
@@ -353,7 +351,7 @@ S_StartSoundAtVolume
   
   if (cnum<0)
     return;
-
+  //printf("Found a channel: %i\n", cnum); // FS: turn to dprintf
   //
   // This is supposed to handle the loading/caching.
   // For some odd reason, the caching is done nearly
@@ -363,19 +361,20 @@ S_StartSoundAtVolume
   // get lumpnum if necessary
   if (sfx->lumpnum < 0)
     sfx->lumpnum = I_GetSfxLumpNum(sfx);
+        //printf("Got past I_GetSfxLumpNum\n"); // FS: Turn to dprintf
 
 #ifndef SNDSRV
   // cache data if necessary
   if (!sfx->data)
   {
-    fprintf( stderr,
-	     "S_StartSoundAtVolume: 16bit and not pre-cached - wtf?\n");
+//    fprintf( stderr,
+//	     "S_StartSoundAtVolume: 16bit and not pre-cached - wtf?\n");
 
     // DOS remains, 8bit handling
-    //sfx->data = (void *) W_CacheLumpNum(sfx->lumpnum, PU_MUSIC);
-    // fprintf( stderr,
-    //	     "S_StartSoundAtVolume: loading %d (lump %d) : 0x%x\n",
-    //       sfx_id, sfx->lumpnum, (int)sfx->data );
+    sfx->data = (void *) W_CacheLumpNum(sfx->lumpnum, PU_MUSIC);
+//     fprintf( stderr,
+//           "S_StartSoundAtVolume: loading %d (lump %d) : 0x%x\n",
+//           sfx_id, sfx->lumpnum, (int)sfx->data );
     
   }
 #endif
@@ -387,7 +386,7 @@ S_StartSoundAtVolume
   // Assigns the handle to one of the channels in the
   //  mix/output buffer.
   channels[cnum].handle = I_StartSound(sfx_id,
-				       /*sfx->data,*/
+                                       sfx->data,
 				       volume,
 				       sep,
 				       pitch,
@@ -440,7 +439,7 @@ S_StartSound
 		|| channels[i].sfxinfo == &S_sfx[sfx_sawful]
 		|| channels[i].sfxinfo == &S_sfx[sfx_sawhit]) n++;
 	}
-	    
+
 	if (n>1)
 	{
 	    for (i=0; i<numChannels ; i++)
@@ -465,9 +464,6 @@ S_StartSound
  
 }
 
-
-
-
 void S_StopSound(void *origin)
 {
 
@@ -482,13 +478,6 @@ void S_StopSound(void *origin)
 	}
     }
 }
-
-
-
-
-
-
-
 
 
 //
@@ -523,6 +512,7 @@ void S_UpdateSounds(void* listener_p)
     int		volume;
     int		sep;
     int		pitch;
+    int         i; // FS: For DMX
     sfxinfo_t*	sfx;
     channel_t*	c;
     
@@ -533,7 +523,7 @@ void S_UpdateSounds(void* listener_p)
     // Clean up unused data.
     // This is currently not done for 16bit (sounds cached static).
     // DOS 8bit remains. 
-    /*if (gametic > nextcleanup)
+    if (gametic > nextcleanup)
     {
 	for (i=1 ; i<NUMSFX ; i++)
 	{
@@ -548,7 +538,7 @@ void S_UpdateSounds(void* listener_p)
 	    }
 	}
 	nextcleanup = gametic + 15;
-    }*/
+    }
     
     for (cnum=0 ; cnum<numChannels ; cnum++)
     {
@@ -626,14 +616,11 @@ void S_SetMusicVolume(int volume)
     snd_MusicVolume = volume;
 }
 
-
-
 void S_SetSfxVolume(int volume)
 {
 
     if (volume < 0 || volume > 127)
 	I_Error("Attempt to set sfx volume at %d", volume);
-
     snd_SfxVolume = volume;
 
 }
@@ -645,6 +632,11 @@ void S_StartMusic(int m_id)
 {
     S_ChangeMusic(m_id, false);
 }
+void S_StartSong(int m_id)
+{
+    S_ChangeMusic(m_id, false);
+}
+
 
 void
 S_ChangeMusic
@@ -654,13 +646,14 @@ S_ChangeMusic
     musicinfo_t*	music;
     char		namebuf[9];
 
+    
     if ( (musicnum <= mus_None)
-	 || (musicnum >= NUMMUSIC) )
+         || (musicnum >= NUMMUSIC) )
     {
 	I_Error("Bad music number %d", musicnum);
     }
     else
-	music = &S_music[musicnum];
+        music = &S_music[musicnum];
 
     if (mus_playing == music)
 	return;
@@ -701,9 +694,6 @@ void S_StopMusic(void)
 	mus_playing = 0;
     }
 }
-
-
-
 
 void S_StopChannel(int cnum)
 {
@@ -817,9 +807,6 @@ S_AdjustSoundParams
     return (*vol > 0);
 }
 
-
-
-
 //
 // S_getChannel :
 //   If none available, return -1.  Otherwise channel #.
@@ -876,4 +863,6 @@ S_getChannel
 
 
 
+
+#endif
 

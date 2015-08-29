@@ -36,7 +36,16 @@ rcsid[] = "$Id: w_wad.c,v 1.5 1997/02/03 16:47:57 b1 Exp $";
 #include <sys/stat.h>
 #include <alloca.h>
 #define O_BINARY		0
+
+#else
+
+#include <malloc.h>
+#include <io.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
 #endif
+
 
 #include "doomtype.h"
 #include "m_swap.h"
@@ -64,6 +73,7 @@ int			numlumps;
 void**			lumpcache;
 
 
+#ifdef NORMALINUX
 #define strcmpi	strcasecmp
 
 void strupr (char* s)
@@ -81,6 +91,7 @@ int filelength (int handle)
     return fileinfo.st_size;
 }
 
+#endif
 
 void
 ExtractFileBase

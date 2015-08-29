@@ -716,7 +716,7 @@ R_InitBuffer
 
     // Preclaculate all row offsets.
     for (i=0 ; i<height ; i++) 
-	ylookup[i] = screens[0] + (i+viewwindowy)*SCREENWIDTH; 
+        ylookup[i] = screens[0] + (i+viewwindowy)*SCREENWIDTH; 
 } 
  
  

@@ -802,7 +802,7 @@ void M_DrawSound(void)
     V_DrawPatchDirect (60,38,0,W_CacheLumpName("M_SVOL",PU_CACHE));
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),
-		 16,snd_SfxVolume);
+                 16,snd_MaxVolume);
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(music_vol+1),
 		 16,snd_MusicVolume);
@@ -818,16 +818,16 @@ void M_SfxVol(int choice)
     switch(choice)
     {
       case 0:
-	if (snd_SfxVolume)
-	    snd_SfxVolume--;
+        if (snd_MaxVolume)
+            snd_MaxVolume--;
 	break;
       case 1:
-	if (snd_SfxVolume < 15)
-	    snd_SfxVolume++;
+        if (snd_MaxVolume < 15)
+            snd_MaxVolume++;
 	break;
     }
 	
-    S_SetSfxVolume(snd_SfxVolume /* *8 */);
+//    S_SetSfxVolume(snd_MaxVolume /* *8 */);
 }
 
 void M_MusicVol(int choice)
@@ -1774,6 +1774,8 @@ void M_Drawer (void)
 	    x = 160 - M_StringWidth(string)/2;
 	    M_WriteText(x,y,string);
 	    y += SHORT(hu_font[0]->height);
+		UpdateState |= I_FULLSCRN; // FS
+
 	}
 	return;
     }
@@ -1788,6 +1790,7 @@ void M_Drawer (void)
     x = currentMenu->x;
     y = currentMenu->y;
     max = currentMenu->numitems;
+	UpdateState |= I_FULLSCRN; // FS
 
     for (i=0;i<max;i++)
     {
