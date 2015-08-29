@@ -633,7 +633,7 @@ void P_RespawnSpecials (void)
 
     // only respawn items in deathmatch
     if (!netgame) //deathmatch != 2) // FS: Coop respawn too ya know...
-	return;	// 
+		return;	// 
 
     // nothing left to respawn?
     if (iquehead == iquetail)
@@ -731,9 +731,11 @@ void P_SpawnPlayer (mapthing_t* mthing)
     
     // give all cards in death match mode
     if (deathmatch)
-	for (i=0 ; i<NUMCARDS ; i++)
-	    p->cards[i] = true;
-			
+    {
+		for (i=0 ; i<NUMCARDS ; i++)
+		    p->cards[i] = true;
+	}
+	
     if (mthing->type-1 == consoleplayer)
     {
 	// wake up the status bar

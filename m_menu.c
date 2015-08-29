@@ -539,7 +539,7 @@ void M_LoadSelect(int choice)
 //
 void M_LoadGame (int choice)
 {
-    if (netgame)
+    if (netgame && (NetGetPlayerCount() > 1) ) // FS
     {
 		M_StartMessage(DEH_String(LOADNET),NULL,false, false);
 		return;
@@ -686,7 +686,7 @@ void M_QuickLoadResponse(int ch)
 
 void M_QuickLoad(void)
 {
-    if (netgame)
+    if (netgame && (NetGetPlayerCount() > 1))
     {
 		M_StartMessage(DEH_String(QLOADNET),NULL,false, false);
 		return;
@@ -840,7 +840,7 @@ void M_DrawNewGame(void)
 
 void M_NewGame(int choice)
 {
-	if (netgame && !demoplayback)
+	if (netgame && !demoplayback && (NetGetPlayerCount() > 1) )
 	{
 		M_StartMessage(DEH_String(NEWGAME),NULL,false,false);
 		return;
@@ -894,7 +894,6 @@ void M_Episode(int choice)
     {
 		M_StartMessage(DEH_String(SWSTRING),NULL,false,true);
 		M_SetupNextMenu(&ReadDef2);
-//		readthisfullscreenhack = true;
 		return;
     }
 
@@ -984,7 +983,7 @@ void M_EndGame(int choice)
 	return;
     }
 	
-    if (netgame)
+    if (netgame && (NetGetPlayerCount() > 1) )
     {
 		M_StartMessage(DEH_String(NETEND),NULL,false,false);
 		return;
@@ -1065,9 +1064,11 @@ int     quitsounds2[8] =
 
 void M_QuitResponse(int ch)
 {
+	extern int	noquitsound; // FS
+
 	if (ch != 'y')
 		return;
-	if (!netgame)
+	if (!netgame && !noquitsound) // FS: Disable quit sounds
 	{
 		if (gamemode == commercial)
 			S_StartSound(NULL,quitsounds2[(gametic>>2)&7]);
@@ -1821,8 +1822,6 @@ void M_Drawer (void)
 void M_ClearMenus (void)
 {
 	menuactive = 0;
-	// if (!netgame && usergame && paused)
-	//       sendpause = true;
 }
 
 

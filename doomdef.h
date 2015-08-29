@@ -325,6 +325,7 @@ typedef struct
 	unsigned short buttons; // EBT_* flags
 } externdata_t;
 //#endif
+int NetGetPlayerCount(void); // FS
 
 
 #endif          // __DOOMDEF__

@@ -5,6 +5,5 @@
   * Finish up few stray unimportant texts.
 - Fix S_ChangeMusic to pause the music if snd_MusicVolume is 0.
 - DEHACKED:
-  * Parsing with the Banner from Chocolate Doom.
   * Allow Long Strings
   * Allow Long Cheats

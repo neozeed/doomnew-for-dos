@@ -1,3 +1,7 @@
+10-06-13
+ - If you're in a fake netgame (i.e. ipxsetup -nodes 1) you can
+   now load a game or start a new one.
+
 10-05-13
  - noprecache in EXTEND.CFG to disable graphics precaching.
 

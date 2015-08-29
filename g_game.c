@@ -1515,13 +1515,17 @@ void G_DoNewGame (void)
 {
     demoplayback = false; 
     netdemo = false;
-    netgame = false;
-    deathmatch = false;
-    playeringame[1] = playeringame[2] = playeringame[3] = 0;
-    respawnparm = false;
-    fastparm = false;
-    nomonsters = false;
-    consoleplayer = 0;
+
+	if(!netgame) // FS: Needed for fake netgames
+	{
+	    netgame = false;
+	    deathmatch = false;
+	    playeringame[1] = playeringame[2] = playeringame[3] = 0;
+	    respawnparm = false;
+	    fastparm = false;
+	    nomonsters = false;
+	    consoleplayer = 0;
+    }
     G_InitNew (d_skill, d_episode, d_map); 
     gameaction = ga_nothing; 
 } 
@@ -1833,14 +1837,18 @@ boolean G_CheckDemoStatus (void)
 	Z_ChangeTag (demobuffer, PU_CACHE); 
 	demoplayback = false; 
 	netdemo = false;
-	netgame = false;
-	deathmatch = false;
-	playeringame[1] = playeringame[2] = playeringame[3] = 0;
-	respawnparm = false;
-	fastparm = false;
-	nomonsters = false;
-	consoleplayer = 0;
-	D_AdvanceDemo (); 
+	
+	if(!netgame) // FS: Needed for fake netgames
+	{
+		netgame = false;
+		deathmatch = false;
+		playeringame[1] = playeringame[2] = playeringame[3] = 0;
+		respawnparm = false;
+		fastparm = false;
+		nomonsters = false;
+		consoleplayer = 0;
+		D_AdvanceDemo ();
+	}
 	return true; 
     } 
  
