@@ -1,28 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:  none
-//
-//-----------------------------------------------------------------------------
-
-
-static const char
-rcsid[] = "$Id: g_game.c,v 1.8 1997/02/03 22:45:09 b1 Exp $";
+// G_game.c
 
 #include <string.h>
 #include <stdlib.h>
@@ -553,6 +529,8 @@ void G_DoLoadLevel (void)
 // 
 boolean G_Responder (event_t* ev) 
 { 
+	extern int	novert; // FS: No vertical mouse movement
+	
 	// allow spy mode changes even during the demo
 	if (gamestate == GS_LEVEL && ev->type == ev_keydown && ev->data1 == KEY_F12 && (singledemo || !deathmatch) )
 	{
@@ -616,7 +594,7 @@ boolean G_Responder (event_t* ev)
 		mousebuttons[1] = ev->data1 & 2; 
 		mousebuttons[2] = ev->data1 & 4; 
 		mousex = ev->data2*(mouseSensitivity+5)/10; 
-		if (!M_CheckParm("-novert")) // FS: Disable vertical movement
+		if (!novert) // FS: Disable vertical movement
 		{
 			if (mouseSensitivity < 20) // FS: Cap because it gets wonky
 			{

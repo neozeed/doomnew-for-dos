@@ -48,6 +48,8 @@ void M_LoadDefaults (void);
 
 void M_SaveDefaults (void);
 
+void M_LoadExtendedDefaults(void); // FS: For EXTEND.CFG
+void M_SaveExtendedDefaults(void); // FS: For EXTEND.CFG
 
 int
 M_DrawText

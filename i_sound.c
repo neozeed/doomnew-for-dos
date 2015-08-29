@@ -10,6 +10,7 @@
 #include "doomstat.h" // FS: For Doom 2 DMXGUSC
 #include "m_argv.h" // FS: For external GUS ini files
 #include "deh_main.h" // FS: For DEH
+#include "GUS.H" // FS: Internal GUS
 
 /*
 ===============
@@ -272,10 +273,11 @@ void I_sndArbitrateCards(void)
 	//
 	if (gus)
 	{
-		byte *gusbuffer;
-		int	gusfilelength;
-		int	p;
-
+		byte *gusbuffer; // FS: External GUS INI files
+		int	gusfilelength; // FS: External GUS INI files
+		int	p;  // FS: External GUS INI files
+		extern int useIntGus; // FS: Use internal GUS1M WADs
+		
 		if (GF1_Detect())
 			printf("Dude.  The GUS ain't responding.\n",1);
 		else
@@ -299,14 +301,34 @@ void I_sndArbitrateCards(void)
 			}
 			else if(gamemode == commercial) // FS: For Doom 2
 			{
-				dmxlump = W_GetNumForName("dmxgusc");
-				GF1_SetMap(W_CacheLumpNum(dmxlump, PU_CACHE), lumpinfo[dmxlump].size);
+				if (M_CheckParm("-gus") || useIntGus)
+				{
+					extern char *gus2;
+					int length = strlen(gus2);				
+					printf("  using internal GUS1MIID.WAD\n");
+					GF1_SetMap(gus2, length); // FS: Internal GUS
+				}
+				else
+				{
+					dmxlump = W_GetNumForName("dmxgusc");
+					GF1_SetMap(W_CacheLumpNum(dmxlump, PU_CACHE), lumpinfo[dmxlump].size);
+				}
 				// FS: GF1_SetMap (char *entire file, int size of file)
 			}
 			else
 			{
-				dmxlump = W_GetNumForName("dmxgus");
-				GF1_SetMap(W_CacheLumpNum(dmxlump, PU_CACHE), lumpinfo[dmxlump].size);
+				if (M_CheckParm("-gus") || useIntGus)
+				{
+					extern char *gus1;
+					int length = strlen(gus1);				
+					printf("  using internal GUS1M.WAD\n");
+					GF1_SetMap(gus1, length); // FS: Internal GUS
+				}
+				else
+				{
+					dmxlump = W_GetNumForName("dmxgus");
+					GF1_SetMap(W_CacheLumpNum(dmxlump, PU_CACHE), lumpinfo[dmxlump].size);
+				}
 			}
 		}
 

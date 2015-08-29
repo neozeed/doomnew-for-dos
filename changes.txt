@@ -1,3 +1,12 @@
+10-04-13
+ - "-gus" paramater now loads the wads internally from the EXE.
+   You no longer need the GUS1M.WAD or GUS1MIID.WAD present to load it.
+ - useIntGus in EXTEND.CFG to always autoload the updated GUS1M WADs.
+ - Moved all the new config stuff to EXTEND.CFG.  Was starting to get
+   out of hand. :P
+ - novert is now in EXTEND.CFG as well.  Setting "-novert" will also
+   toggle novert in EXTEND.CFG.
+
 10-02-13
  - Draw Time clock on Automap with drawTime in config file.
    * Set to 1 for Military Time.

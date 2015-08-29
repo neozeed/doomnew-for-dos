@@ -175,6 +175,8 @@ extern int	mouseSensitivity;
 extern int	showMessages;
 int headBob; // FS: Head bob toggle
 extern int	drawTime; // FS: Draw Time on Automap
+int	useIntGus; // FS: Use internal GUS1M WADs
+int novert; // FS: No vertical mouse movement
 
 extern int	use_wpnbinds; // FS: Custom weapon keys
 extern int	wpn_shotgun; // FS: Custom weapon keys
@@ -274,17 +276,6 @@ default_t defaults[] =
 	{ "snd_mport", &snd_Mport, -1 },
 
 	{ "usegamma", &usegamma, 0 },
-	{ "usePalFlash", &usePalFlash, 1 }, // FS: Palette Flashing
-	{ "headBob", &headBob, 1 }, // FS: Head bob
-	{ "drawTime", &drawTime, 0}, // FS: Draw time on Automap
-	
-	// FS: Use custom weapon binds
-	{ "use_wpnbinds", &use_wpnbinds, 0},
-	{ "wpn_shotgun", &wpn_shotgun, 44, 1 }, // FS: Z
-	{ "wpn_chaingun", &wpn_chaingun, 45, 1 }, // FS: X
-	{ "wpn_rocket", &wpn_rocket, 16, 1 }, // FS: Q
-	{ "wpn_plasma", &wpn_plasma, 46, 1 }, // FS: C
-	{ "disk_flash_icon", &grmode, 1 }, // FS: Disk Flashing
  
     {"chatmacro0", (int *) &chat_macros[0], (int) HUSTR_CHATMACRO0 },
     {"chatmacro1", (int *) &chat_macros[1], (int) HUSTR_CHATMACRO1 },
@@ -299,6 +290,25 @@ default_t defaults[] =
 
 };
 
+// FS
+default_t	extendeddefaults[] =
+{
+	{ "usePalFlash", &usePalFlash, 1 }, // FS: Palette Flashing
+	{ "headBob", &headBob, 1 }, // FS: Head bob
+	{ "drawTime", &drawTime, 0}, // FS: Draw time on Automap
+	{ "useIntGus", &useIntGus, 0}, // FS: Use internal GUS WADs
+	{ "novert", &novert, 0}, // FS: No vertical mouse movement
+
+	// FS: Use custom weapon binds
+	{ "use_wpnbinds", &use_wpnbinds, 0},
+	{ "wpn_shotgun", &wpn_shotgun, 44, 1 }, // FS: Z
+	{ "wpn_chaingun", &wpn_chaingun, 45, 1 }, // FS: X
+	{ "wpn_rocket", &wpn_rocket, 16, 1 }, // FS: Q
+	{ "wpn_plasma", &wpn_plasma, 46, 1 }, // FS: C
+	{ "disk_flash_icon", &grmode, 1 } // FS: Disk Flashing
+};
+
+int numextendeddefaults; // FS
 int	numdefaults;
 char*	defaultfile;
 
@@ -336,6 +346,39 @@ void M_SaveDefaults (void)
     }
 	
     fclose (f);
+}
+
+void M_SaveExtendedDefaults (void)
+{
+    int		i;
+    int		v;
+    FILE*	f;
+	
+    f = fopen ("extend.cfg", "w");
+    if (!f)
+		return; // can't write the file, but don't complain
+	
+    for (i=0 ; i<numextendeddefaults ; i++)
+    {
+
+#ifdef __WATCOMC__
+		if (extendeddefaults[i].scantranslate)
+			extendeddefaults[i].location = &extendeddefaults[i].untranslated;
+#endif
+
+		if (extendeddefaults[i].defaultvalue > -0xfff && extendeddefaults[i].defaultvalue < 0xfff)
+		{
+		    v = *extendeddefaults[i].location;
+		    fprintf (f,"%s\t\t%i\n",extendeddefaults[i].name,v);
+		}
+		else
+		{
+		    fprintf (f,"%s\t\t\"%s\"\n",extendeddefaults[i].name, * (char **) (extendeddefaults[i].location));
+		}
+    }
+	
+    fclose (f);
+
 }
 
 
@@ -420,6 +463,71 @@ void M_LoadDefaults (void)
 	}
 #endif
 
+}
+
+void M_LoadExtendedDefaults (void)
+{
+    int		i;
+    int		len;
+    FILE*	f;
+    char	def[80];
+    char	strparm[100];
+    char*	newstring;
+    int		parm;
+    boolean	isstring;
+    
+    // set everything to base values
+    numextendeddefaults = sizeof(extendeddefaults)/sizeof(extendeddefaults[0]);
+    for (i=0 ; i<numextendeddefaults ; i++)
+		*extendeddefaults[i].location = extendeddefaults[i].defaultvalue;
+    
+     // read the file in, overriding any set defaults
+    f = fopen ("extend.cfg", "r");
+    if (f)
+    {
+		while (!feof(f))
+		{
+		    isstring = false;
+		    if (fscanf (f, "%79s %[^\n]\n", def, strparm) == 2)
+		    {
+				if (strparm[0] == '"')
+				{
+				    // get a string default
+				    isstring = true;
+				    len = strlen(strparm);
+				    newstring = (char *) malloc(len);
+				    strparm[len-1] = 0;
+				    strcpy(newstring, strparm+1);
+				}
+				else if (strparm[0] == '0' && strparm[1] == 'x')
+				    sscanf(strparm+2, "%x", &parm);
+				else
+				    sscanf(strparm, "%i", &parm);
+				for (i=0 ; i<numdefaults ; i++)
+				    if (!strcmp(def, extendeddefaults[i].name))
+				    {
+						if (!isstring)
+						    *extendeddefaults[i].location = parm;
+						else
+						    *extendeddefaults[i].location = (int) newstring;
+						break;
+				    }
+		    }
+		}
+		fclose (f);
+    }
+
+#ifdef __WATCOMC__
+	for(i = 0; i < numextendeddefaults; i++)
+	{
+		if(extendeddefaults[i].scantranslate)
+		{
+			parm = *extendeddefaults[i].location;
+			extendeddefaults[i].untranslated = parm;
+			*extendeddefaults[i].location = scantokey[parm];
+		}
+	}
+#endif
 }
 
 

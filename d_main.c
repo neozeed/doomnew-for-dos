@@ -97,6 +97,7 @@ char	wadfile[1024];		// primary wad file
 char	mapdir[1024];		   // directory of development maps
 char	basedefault[1024];	  // default file
 extern int headBob; // FS: Head bob toggle
+extern int novert; // FS: No vertical mouse movement
 extern boolean usePalFlash; // FS
 
 // FS: For all the Save, Convert, and Load game stuff
@@ -1156,6 +1157,7 @@ void D_DoomMain (void)
 		}
 	}
 
+/*
 	if (M_CheckParm("-gus")) // FS: GUS1M patches
 	{
 		if(gamemode == commercial)
@@ -1163,6 +1165,7 @@ void D_DoomMain (void)
 		else
 			D_AddFile("GUS1M.WAD");
 	}
+*/
 
 	// turbo option
 	if ( (p=M_CheckParm ("-turbo")) )
@@ -1256,6 +1259,7 @@ void D_DoomMain (void)
 
 	printf ("M_LoadDefaults: Load system defaults.\n");
 	M_LoadDefaults ();			  // load before initing other systems
+	M_LoadExtendedDefaults (); // FS 
 	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
 	printf ("Z_Init: Init zone memory allocation daemon. \n");
@@ -1442,6 +1446,11 @@ void D_DoomMain (void)
 	if (M_CheckParm("-nopalflash")) // FS
 	{
 			usePalFlash = 0;
+	}
+
+	if (M_CheckParm("-novert")) // FS
+	{
+		novert = 1;
 	}
 	
 	if ( gameaction != ga_loadgame )
