@@ -1287,7 +1287,7 @@ void D_DoomMain (void)
 //
 // check which version
 //
-	if (gamemode == registered)
+	if (gamemode == registered || gamemode == retail) // FS
 	{
 		mprintf ("	registered version.\n");
 		mprintf (

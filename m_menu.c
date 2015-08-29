@@ -1753,6 +1753,7 @@ void M_Drawer (void)
 	short			i;
 	short			max;
 	char			string[80]; // FS: Was 40
+	char			*name; // FS: For DEH
 	int			start;
 
 	inhelpscreens = false;
@@ -1800,6 +1801,8 @@ void M_Drawer (void)
 
 	for (i=0;i<max;i++)
 	{
+		name = DEH_String(currentMenu->menuitems[i].name);
+
 		if (currentMenu->menuitems[i].name[0])
 			V_DrawPatchDirect (x,y,0, W_CacheLumpName(DEH_String(currentMenu->menuitems[i].name), PU_CACHE));
 		y += LINEHEIGHT;

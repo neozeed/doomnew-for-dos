@@ -234,7 +234,9 @@ static void DEH_ParseComment(char *comment)
 
     if (strstr(comment, "*allow-long-strings*") != NULL)
     {
-        deh_allow_long_strings = true;
+        //deh_allow_long_strings = true;
+	printf("DEH_Error: Allow Long Strings disabled in this build!"); // FS: FIXME
+	exit(0);
     }
 
     // Allow magic comments to allow longer cheat replacements than
@@ -243,7 +245,9 @@ static void DEH_ParseComment(char *comment)
 
     if (strstr(comment, "*allow-long-cheats*") != NULL)
     {
-        deh_allow_long_cheats = true;
+        //deh_allow_long_cheats = true;
+	printf("DEH_Error: Allow Long Cheats disabled in this build!"); // FS: FIXME
+	exit(0);
     }
 }
 

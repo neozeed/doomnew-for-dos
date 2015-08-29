@@ -1,5 +1,4 @@
 - Automap to show "secrets found: x\y".
-- Fix chainsaw pitch.
 - I_NET.C with WATT32:
   * Fix whatever is stopping it after the first packet is sent.
 - Fix Low Detail mode.
@@ -7,4 +6,7 @@
   * Finish up few stray unimportant texts.
   * Move keys fullscreen a little to the right and space them out a bit.
 - Fix S_ChangeMusic to pause the music if snd_MusicVolume is 0.
-- Finish up DEHACKED parsing from Chocolate Doom.
+- DEHACKED:
+  * Parsing with the Banner from Chocolate Doom.
+  * Allow Long Strings
+  * Allow Long Cheats

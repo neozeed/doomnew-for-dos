@@ -8,6 +8,8 @@
 #include "doomdef.h"
 #include "doomstat.h"
 
+#include "deh_main.h" // FS: For DEH
+
 #define	NCMD_EXIT		0x80000000
 #define	NCMD_RETRANSMIT	0x40000000
 #define	NCMD_SETUP		0x20000000
@@ -247,7 +249,7 @@ void GetPackets (void)
 				continue;
 			nodeingame[netnode] = false;
 			playeringame[netconsole] = false;
-			strcpy (exitmsg, "Player 1 left the game");
+			strncpy (exitmsg, DEH_String("Player 1 left the game"),sizeof(exitmsg));
 			exitmsg[7] += netconsole;
 			players[consoleplayer].message = exitmsg;
 			if (demorecording)

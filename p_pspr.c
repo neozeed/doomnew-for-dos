@@ -296,7 +296,7 @@ A_WeaponReady
     if (player->readyweapon == wp_chainsaw
 	&& psp->state == &states[S_SAW])
     {
-	S_StartSound (player->mo, sfx_sawidl);
+        S_StartSound (player->mo, sfx_sawidl);
     }
     
     // check for change

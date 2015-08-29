@@ -1,3 +1,10 @@
+09-25-13
+ - Fixed the sky never changing in Ultimate Doom.  Silly pack_plut and pack_tnt
+   fuckin' my game up!
+ - Fixed chainsaw pitch.  Just required removing the whole pitch hack in general.
+   Again, thanks to Chocolate Doom.
+ - Added the PC Speaker sound hacks; originally left in Heretic's I_Sound.c.
+
 09-24-13
  - Using -loadgame or -convertsave will set the cursor in the main menu to the
    same slot.  Useful for netgames and just hitting F5 and enter.
