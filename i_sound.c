@@ -8,6 +8,7 @@
 #include "i_sound.h"
 #include "z_zone.h"
 #include "w_wad.h"
+#include "doomstat.h" // FS: For Doom 2 DMXGUSC
 
 /*
 ===============
@@ -277,8 +278,16 @@ void I_sndArbitrateCards(void)
 	if (GF1_Detect()) printf("Dude.  The GUS ain't responding.\n",1);
 	else
 	{
-	  dmxlump = W_GetNumForName("dmxgus");
-	  GF1_SetMap(W_CacheLumpNum(dmxlump, PU_CACHE), lumpinfo[dmxlump].size);
+		if(gamemode == commercial) // FS: For Doom 2
+		{
+			dmxlump = W_GetNumForName("dmxgusc");
+			GF1_SetMap(W_CacheLumpNum(dmxlump, PU_CACHE), lumpinfo[dmxlump].size);
+		}
+		else
+		{
+			dmxlump = W_GetNumForName("dmxgus");
+			GF1_SetMap(W_CacheLumpNum(dmxlump, PU_CACHE), lumpinfo[dmxlump].size);
+		}
 	}
 
   }

@@ -24,6 +24,7 @@
 # --------------------------------------------------------------------------
 
 CCOPTS = /d2 /omaxet /zp1 /4r /ei /j /zq /i=dmx
+#CCOPTS = /d2 /odam /zp1 /4r /ei /j /zq /i=dmx
 
 LOCOBJS = &
  doomdef.obj &

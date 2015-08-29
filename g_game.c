@@ -244,9 +244,11 @@ void G_BuildTiccmd (ticcmd_t* cmd)
     int		forward;
     int		side;
     
-//    ticcmd_t*   base;
+    ticcmd_t*   base;
 
-    memcpy (cmd,0,sizeof(*cmd)); 
+	base = I_BaseTiccmd();
+
+    memcpy (cmd,base,sizeof(*cmd)); 
 	
     cmd->consistancy = 
         consistancy[consoleplayer][(maketic*ticdup)%BACKUPTICS]; 

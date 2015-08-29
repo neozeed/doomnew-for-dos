@@ -166,14 +166,26 @@ void P_MovePlayer (player_t* player)
     // Do not let the player control movement
     //  if not onground.
     onground = (player->mo->z <= player->mo->floorz);
-	
+
+        if(demoplayback)
+        {
+    if (cmd->forwardmove && onground)
+        P_Thrust (player, player->mo->angle, cmd->forwardmove*2048); // FS: Was 2048
+    
+    if (cmd->sidemove && onground)
+        P_Thrust (player, player->mo->angle-ANG90, cmd->sidemove*2048); // FS: Was 2048
+        }
+
+        else
+        {
     if (cmd->forwardmove && onground)
 	P_Thrust (player, player->mo->angle, cmd->forwardmove*2048*2); // FS: Was 2048
     
     if (cmd->sidemove && onground)
 	P_Thrust (player, player->mo->angle-ANG90, cmd->sidemove*2048*2); // FS: Was 2048
+         }
 
-    if ( (cmd->forwardmove || cmd->sidemove) 
+    if ( (cmd->forwardmove || cmd->sidemove)
 	 && player->mo->state == &states[S_PLAY] )
     {
 	P_SetMobjState (player->mo, S_PLAY_RUN1);

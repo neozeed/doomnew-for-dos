@@ -1102,8 +1102,8 @@ void M_QuitDOOM(int choice)
   if (language != english )
     sprintf(endstring,"%s\n\n"DOSY, endmsg[0] );
   else
-    sprintf(endstring,"%s\n\n"DOSY, endmsg[ (gametic%(NUM_QUITMESSAGES-10))+1 ]); // FS: Was 2))+1
-  strcpy(endstring,"Quit out\n");
+    sprintf(endstring,"%s\n\n"DOSY, endmsg[ (gametic%(NUM_QUITMESSAGES-2))+1 ]); // FS: Was 2))+1
+//  strcpy(endstring,"Quit out\n");
   M_StartMessage(endstring,M_QuitResponse,true);
 }
 
@@ -1746,7 +1746,7 @@ void M_Drawer (void)
     static short	y;
     short		i;
     short		max;
-    char		string[40];
+    char                string[256]; // FS: Was 40?
     int			start;
 
     inhelpscreens = false;
@@ -1762,7 +1762,7 @@ void M_Drawer (void)
 	    for (i = 0;i < strlen(messageString+start);i++)
 		if (*(messageString+start+i) == '\n')
 		{
-		    memset(string,0,40);
+                    memset(string,0,256);
 		    strncpy(string,messageString+start,i);
 		    start += i+1;
 		    break;
@@ -1793,7 +1793,6 @@ void M_Drawer (void)
     x = currentMenu->x;
     y = currentMenu->y;
     max = currentMenu->numitems;
-//        UpdateState |= I_FULLSCRN; // FS
 
     for (i=0;i<max;i++)
     {

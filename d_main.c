@@ -385,17 +385,17 @@ void D_DoomLoop (void)
             G_BuildTiccmd (&netcmds[consoleplayer][maketic%BACKUPTICS]);
 	    if (advancedemo)
 		D_DoAdvanceDemo ();
-	    M_Ticker ();
-	    G_Ticker ();
-	    gametic++;
-	    maketic++;
+            M_Ticker ();
+            G_Ticker ();
+            gametic++;
+            maketic++;
 	}
 	else
 	{
 	    TryRunTics (); // will run at least one tic
 	}
 		
-	S_UpdateSounds (players[consoleplayer].mo);// move positional sounds
+        S_UpdateSounds (players[consoleplayer].mo);// move positional sounds
 
 	// Update display, next frame, with current state.
         D_Display ();
@@ -472,9 +472,9 @@ void D_AdvanceDemo (void)
 	gamestate = GS_DEMOSCREEN;
 	pagename = "TITLEPIC";
 	if ( gamemode == commercial )
-          S_StartMusic(mus_dm2ttl);
+		S_StartMusic(mus_dm2ttl);
 	else
-          S_StartMusic (mus_intro);
+		S_StartMusic (mus_intro);
 	break;
       case 1:
         UpdateState |= I_FULLSCRN; // FS
@@ -612,11 +612,62 @@ void IdentifyVersion (void)
 	else*/
 	    D_AddFile (DEVDATA"doom2.wad");
 	    
-	D_AddFile (DEVMAPS"cdata/texture1.lmp");
-	D_AddFile (DEVMAPS"cdata/pnames.lmp");
-	strcpy (basedefault,DEVDATA"default.cfg");
+//	D_AddFile (DEVMAPS"cdata/texture1.lmp");
+//	D_AddFile (DEVMAPS"cdata/pnames.lmp");
+//	strcpy (basedefault,DEVDATA"default.cfg");
+	strcpy(basedefault, "default.cfg");
+	D_AddFile("doom2.wad");
 	return;
     }
+
+	if (M_CheckParm ("-tnt"))
+	{
+		gamemode = commercial;
+		devparm = true;
+
+		strcpy(basedefault, "default.cfg");
+		D_AddFile("tnt.wad");
+		return;
+	}
+	if (M_CheckParm ("-doom2"))
+	{
+		gamemode = commercial;
+		devparm = true;
+
+		strcpy(basedefault, "default.cfg");
+		D_AddFile("doom2.wad");
+		return;
+	}
+	if (M_CheckParm ("-doomu"))
+	{
+		gamemode = retail;
+		devparm = true;
+
+		strcpy(basedefault, "default.cfg");
+		D_AddFile("doomu.wad");
+		return;
+	}
+	if (M_CheckParm ("-plutonia"))
+	{
+		gamemode = commercial;
+		devparm = true;
+
+		strcpy(basedefault, "default.cfg");
+		D_AddFile("plutonia.wad");
+		return;
+	}
+	if (M_CheckParm ("-doom"))
+	{
+		gamemode = registered;
+		devparm = true;
+
+		strcpy(basedefault, "default.cfg");
+		if (!access (doomwad,0)) // FS: Hack for 3-episode version from Ultimate WAD
+			D_AddFile("doom.wad");
+		else
+			D_AddFile("doomu.wad");
+		return;
+	}
 
     if ( !access (doom2fwad,0) )
     {
@@ -769,6 +820,8 @@ void D_DoomMain (void)
     FindResponseFile ();
 	
     IdentifyVersion ();
+
+
     setbuf (stdout, NULL);
     modifiedgame = false;
     nomonsters = M_CheckParm ("-nomonsters");
@@ -860,13 +913,14 @@ void D_DoomMain (void)
 			D_AddFile(myargv[p]);
 		}
 	}
-
         if (M_CheckParm("-gus")) // FS: GUS1M patches
         {
-		if(gamemode == registered || gamemode == retail || gamemode == shareware)
+		if(gamemode == commercial)
+			D_AddFile("GUS1MIID.WAD");
+		else
                 D_AddFile("GUS1M.WAD");
         }
-	
+
    // turbo option
     if ( (p=M_CheckParm ("-turbo")) )
     {
@@ -1113,8 +1167,7 @@ void D_DoomMain (void)
 	
     if ( gameaction != ga_loadgame )
     {
-        UpdateState |= I_FULLSCRN; // FS
-	if (autostart || netgame)
+  	if (autostart || netgame)
 	    G_InitNew (startskill, startepisode, startmap);
 	else
 	    D_StartTitle ();                // start up intro loop

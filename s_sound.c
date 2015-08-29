@@ -165,11 +165,9 @@ void S_Init
   fprintf( stderr, "S_Init: default sfx volume %d\n", sfxVolume);
 
 	I_StartupSound();
-  // Whatever these did with DMX, these are rather dummies now.
   I_SetChannels(snd_Channels);
   
   S_SetSfxVolume(127); // FS: FIXME
-  // No music with Linux - another dummy.
   I_SetMusicVolume(musicVolume);
 
   // Allocating the internal channels for mixing
@@ -236,12 +234,14 @@ void S_Start(void)
     else
       mnum = spmus[gamemap-1];
     }	
-  
+
+//  if (gamemode == commercial && mnum == mus_introa)
+//        mnum = mus_dm2ttl; // FS: Hack
+
+
   // HACK FOR COMMERCIAL
-  //  if (commercial && mnum > mus_e3m9)	
-  //      mnum -= mus_e3m9;
-	if (mnum == -9) // FS: Fix this hack
-		mnum = mus_intro;
+    //if (commercial && mnum > mus_e3m9) 
+        //mnum -= mus_e3m9;
 
   S_ChangeMusic(mnum, true);
   
@@ -324,7 +324,7 @@ S_StartSoundAtVolume
   if (sfx_id >= sfx_sawup
       && sfx_id <= sfx_sawhit)
   {	
-    pitch += 8 - (M_Random()&15);
+    pitch += 1 - (M_Random()&7);
     
     if (pitch<0)
       pitch = 0;
@@ -334,7 +334,7 @@ S_StartSoundAtVolume
   else if (sfx_id != sfx_itemup
 	   && sfx_id != sfx_tink)
   {
-    pitch += 16 - (M_Random()&31);
+    pitch += 1 - (M_Random()&7);
     
     if (pitch<0)
       pitch = 0;
@@ -395,7 +395,7 @@ S_StartSoundAtVolume
 				       pitch,
 				       priority);
 }	
-
+     
 void
 S_StartSound
 ( void*		origin,
@@ -492,7 +492,7 @@ void S_UpdateSounds(void* listener_p)
 #ifdef __WATCOMC__
 			_dpmi_unlockregion(S_sfx[i].data, lumpinfo[S_sfx[i].lumpnum].size);
 #endif
-//		    S_sfx[i].data = 0;
+		    S_sfx[i].data = 0;
 		}
 	    }
 	}

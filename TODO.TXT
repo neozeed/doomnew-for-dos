@@ -1,8 +1,8 @@
-- Fix event handling bombing this includes:
-  * Controls inverted, weird, etc. in netplay and pure DOS.
-  * Event handle bomb from Quit message. **HACKED AROUND**
-- The event handling may be related to gametics.  Refer to G_BaseTicCmd.
 - Fix snd_SfxVolume multiplier. **HACKED AROUND**
   This will also fix the Sound Volume slider in the Menu.
-- Fix Doom2 wad, likely includes Plutonia and TNT.
-- Fix mnum == -9 hack for mus_intro
+- Automap to show "secrets found: x\y".
+- P_SetMessage "ultimate messages" from Heretic.
+- PC Speaker not working?  May be related to the gametics/buffer overflow.
+- Draw Ammo, Health, Armor and Keys in fullscreen.
+- Headbob and Palette Flash on Options Menu.
+

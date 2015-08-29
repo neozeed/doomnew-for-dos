@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <graph.h>
+
 #include "Doomdata.h"
 #include "R_local.h"
 #include "sounds.h"
@@ -29,7 +30,6 @@
 // Public Data
 
 int DisplayTicker = 0;
-//byte    *screens[5]; // FS
 
 // Code
 
@@ -755,8 +755,8 @@ extern unsigned       joystickx, joysticky; // FS: Needed to be extern -- taniwh
 #define MOUSEB3 4
 
 boolean mousepresent;
-//static  int tsm_ID = -1; // tsm init flag
-
+static  int tsm_ID = -1;        // tsm init flag 
+ 
 //===============================
 
 int             ticcount;
@@ -809,6 +809,26 @@ byte        scantokey[128] =
 
 //--------------------------------------------------------------------------
 //
+typedef struct 
+{ 
+	int                     intnum;                 // doom will call this interrupt 
+	ticcmd_t        ticcmd;                 // then the driver will fill in this structure 
+} doomcontrol_t; 
+ 
+ 
+ticcmd_t        emptycmd; 
+ 
+doomcontrol_t   *doomcon; 
+ 
+ 
+ticcmd_t *I_BaseTiccmd (void) 
+{ 
+	if (!doomcon) 
+		return &emptycmd; 
+ 
+	DPMIInt (doomcon->intnum); 
+	return &doomcon->ticcmd; 
+} 
 // FUNC I_GetTime
 //
 // Returns time in 1/35th second tics.
@@ -817,11 +837,12 @@ byte        scantokey[128] =
 
 int I_GetTime (void)
 {
+
 #ifdef NOTIMER
 	ticcount++;
 #endif
-	return(ticcount);
-}
+	return ticcount; 
+} 
 
 //--------------------------------------------------------------------------
 //
@@ -1121,7 +1142,6 @@ void   I_StartTic (void)
 		k &= 0x7f;
 		switch (k)
 		{
-/*
 		case SC_UPARROW:
 			ev.data1 = KEY_UPARROW;
 			break;
@@ -1134,7 +1154,6 @@ void   I_StartTic (void)
 		case SC_RIGHTARROW:
 			ev.data1 = KEY_RIGHTARROW;
 			break;
-*/
 		default:
 			ev.data1 = scantokey[k];
 			break;
@@ -1578,12 +1597,11 @@ void I_StartupDPMI (void)
 //
 	realstackseg = (int)I_AllocLow (1024) >> 4;
 
-//
-// lock the entire program down
-//
-
-//      _dpmi_lockregion (&__begtext, &___argc - &__begtext);
-
+// 
+// lock the entire program down 
+// 
+	_dpmi_lockregion (&__begtext, &___argc - &__begtext); 
+ 
 
 //
 // catch divide by 0 exception
@@ -1709,21 +1727,32 @@ void IO_ShutdownTimer (void)
 
 void I_Init (void)
 {
+	int             i; 
 	extern void I_StartupTimer(void);
 
-        novideo = false; //M_CheckParm("novideo");
+	novideo = M_CheckParm ("novideo"); 
+ 
+// check for an external controler 
+	i = M_CheckParm ("-control");           // -control <flat addres> 
+	if (i) 
+	{ 
+		doomcon = (doomcontrol_t *)atoi(myargv[i+1]); 
+		printf ("Using external control API\n"); 
+	} 
+ 
+ 
         printf("\nI_StartupDPMI\n",1);
 	I_StartupDPMI();
         printf("I_StartupMouse\n",1);
 	I_StartupMouse();
-     printf("I_StartupJoystick\n",1);
-      I_StartupJoystick();
+//      printf("I_StartupJoystick\n",1);
+//	I_StartupJoystick();
         printf("I_StartupKeyboard\n",1);
-        I_StartupKeyboard();
+	I_StartupKeyboard();
         printf("S_Init...\n",1);
         S_Init(snd_SfxVolume,snd_MusicVolume); // FS
-        //IO_StartupTimer();
-	S_Start();
+	//IO_StartupTimer();
+	//S_Start();
 }
 
 
@@ -1827,17 +1856,17 @@ byte *I_ZoneBase (int *size)
 	int386x( 0x31, &regs, &regs, &segregs );
 
 	heap = meminfo[0];
-	printf ("DPMI memory: 0x%x, ",heap);
-
+	printf ("DPMI memory: 0x%x",heap); 
+ 
 	do
 	{
-		heap -= 0x10000;                // leave 64k alone
+		heap -= 0x20000;                // leave 128k alone 
 		if (heap > 0x800000)
 			heap = 0x800000;
 		ptr = malloc (heap);
 	} while (!ptr);
 
-	printf ("0x%x allocated for zone\n", heap);
+	printf (", 0x%x allocated for zone\n", heap); 
 	if (heap < 0x180000)
 		I_Error ("Insufficient DPMI memory!");
 #if 0
@@ -2027,6 +2056,7 @@ void I_InitNetwork (void)
 	// single player game
 	//
 		doomcom = malloc (sizeof (*doomcom) );
+		if (!doomcom) I_Error("malloc() in I_InitNetwork() failed"); 
 		memset (doomcom, 0, sizeof(*doomcom) );
 		netgame = false;
 		doomcom->id = DOOMCOM_ID;

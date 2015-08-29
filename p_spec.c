@@ -1049,6 +1049,11 @@ void P_PlayerInSpecialSector (player_t* player)
 	// SECRET SECTOR
 	player->secretcount++;
 	sector->special = 0;
+	player->message = "YOU FOUND A SECRET AREA!"; // FS: Alert me about a secret area
+	if ( gamemode == commercial ) // FS: Play a sound for secrets
+		S_StartSound(0, sfx_radio);
+	else
+		S_StartSound(0, sfx_tink);
 	break;
 			
       case 11:
