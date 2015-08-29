@@ -234,6 +234,8 @@ int G_CmdChecksum (ticcmd_t* cmd)
 // or reads it from the demo buffer. 
 // If recording a demo, write it out 
 // 
+extern int	isCyberPresent; // FS: From Heretic
+void I_ReadCyberCmd(ticcmd_t *cmd); // FS: From Heretic
 void G_BuildTiccmd (ticcmd_t* cmd) 
 { 
     int		i; 
@@ -253,6 +255,8 @@ void G_BuildTiccmd (ticcmd_t* cmd)
     cmd->consistancy = 
         consistancy[consoleplayer][(maketic*ticdup)%BACKUPTICS]; 
 
+	if(isCyberPresent) // FS: From Heretic
+		I_ReadCyberCmd(cmd);
  
     strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe] 
         || joybuttons[joybstrafe]; 
@@ -260,7 +264,7 @@ void G_BuildTiccmd (ticcmd_t* cmd)
 
 	if (!M_CheckParm("-debug"))
 	{
-		if (gamekeydown[key_speed]) // FS: could cheat with ultrafast movement, from DOSDOOM.
+                if (gamekeydown[key_speed] || joybuttons[joybspeed]) // FS: could cheat with ultrafast movement, from DOSDOOM.
 			speed = !speed;
 	}
  
@@ -539,9 +543,7 @@ boolean G_Responder (event_t* ev)
     { 
 	if (ev->type == ev_keydown ||  
 	    (ev->type == ev_mouse && ev->data1)
-            #if 0
             || (ev->type == ev_joystick && ev->data1)
-            #endif
             )
 	{ 
 	    M_StartControlPanel (); 
@@ -591,24 +593,37 @@ boolean G_Responder (event_t* ev)
 	return false;   // always let key up events filter down 
 		 
       case ev_mouse: 
-	mousebuttons[0] = ev->data1 & 1; 
-	mousebuttons[1] = ev->data1 & 2; 
-	mousebuttons[2] = ev->data1 & 4; 
-	mousex = ev->data2*(mouseSensitivity+5)/10; 
-	mousey = ev->data3*(mouseSensitivity+5)/10; 
-	return true;    // eat events 
-#if 0 
+		mousebuttons[0] = ev->data1 & 1; 
+		mousebuttons[1] = ev->data1 & 2; 
+		mousebuttons[2] = ev->data1 & 4; 
+		mousex = ev->data2*(mouseSensitivity+5)/10; 
+		if (!M_CheckParm("-novert")) // FS: Disable vertical movement
+		{
+			if (mouseSensitivity < 20) // FS: Cap because it gets wonky
+			{
+				mousey = ev->data3*(mouseSensitivity+5)/10;
+			}
+			else
+			{
+				mousey = ev->data3*(25)/10;
+			}
+			return true;    // eat events
+		}
+		else
+		{
+			mousey = 0;
+			return true;
+		}
       case ev_joystick: 
-	joybuttons[0] = ev->data1 & 1; 
-	joybuttons[1] = ev->data1 & 2; 
-	joybuttons[2] = ev->data1 & 4; 
-	joybuttons[3] = ev->data1 & 8; 
-	joyxmove = ev->data2; 
-	joyymove = ev->data3; 
-	return true;    // eat events 
-#endif 
+		joybuttons[0] = ev->data1 & 1; 
+		joybuttons[1] = ev->data1 & 2; 
+		joybuttons[2] = ev->data1 & 4; 
+		joybuttons[3] = ev->data1 & 8; 
+		joyxmove = ev->data2; 
+		joyymove = ev->data3; 
+		return true;    // eat events 
       default: 
-	break; 
+		break; 
     } 
  
     return false; 
@@ -871,7 +886,23 @@ void G_PlayerReborn (int player)
     p->readyweapon = p->pendingweapon = wp_pistol; 
     p->weaponowned[wp_fist] = true; 
     p->weaponowned[wp_pistol] = true; 
-    p->ammo[am_clip] = 50; 
+
+	if(!coop) // FS: More coop stuff
+	{
+		p->ammo[am_clip] = 50; 
+	}
+
+	if(coop)
+	{
+		p->readyweapon = p->pendingweapon = wp_shotgun;
+		p->weaponowned[wp_shotgun] = true;
+
+		if(p->ammo[am_shell] < 15)
+			p->ammo[am_shell] = 15;
+
+		if(p->ammo[am_clip] < 50)
+			p->ammo[am_clip] = 50;
+	}
 
     for (i=0 ; i<NUMAMMO ; i++) 
 	p->maxammo[i] = maxammo[i]; 

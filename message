@@ -1,0 +1,440 @@
+hu_stuff.c:	player->message = message;
+p_doors.c:	if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
+p_doors.c:	    player->message = PD_BLUEK;
+p_doors.c:	if (!player->cards[it_yellowcard] &&
+p_doors.c:	    !player->cards[it_yellowskull])
+p_doors.c:	    player->message = PD_YELLOWK;
+p_doors.c:	if (!player->cards[it_redcard] && !player->cards[it_redskull])
+p_doors.c:	    player->message = PD_REDK;
+p_enemy.c:	if (player->health <= 0)
+p_enemy.c:	if (!P_CheckSight (actor, player->mo))
+p_enemy.c:				  player->mo->x,
+p_enemy.c:				  player->mo->y)
+p_enemy.c:		dist = P_AproxDistance (player->mo->x - actor->x,
+p_enemy.c:					player->mo->y - actor->y);
+p_enemy.c:	actor->target = player->mo;
+p_enemy.c:    S_StartSound (player->mo, sfx_dbopn);
+p_enemy.c:    S_StartSound (player->mo, sfx_dbload);
+p_enemy.c:    S_StartSound (player->mo, sfx_dbcls);
+p_inter.c:    if ( player->ammo[ammo] == player->maxammo[ammo]  )
+p_inter.c:    oldammo = player->ammo[ammo];
+p_inter.c:    player->ammo[ammo] += num;
+p_inter.c:    if (player->ammo[ammo] > player->maxammo[ammo])
+p_inter.c:	player->ammo[ammo] = player->maxammo[ammo];
+p_inter.c:	if (player->readyweapon == wp_fist)
+p_inter.c:	    if (player->weaponowned[wp_chaingun])
+p_inter.c:		player->pendingweapon = wp_chaingun;
+p_inter.c:		player->pendingweapon = wp_pistol;
+p_inter.c:	if (player->readyweapon == wp_fist
+p_inter.c:	    || player->readyweapon == wp_pistol)
+p_inter.c:	    if (player->weaponowned[wp_shotgun])
+p_inter.c:		player->pendingweapon = wp_shotgun;
+p_inter.c:	if (player->readyweapon == wp_fist
+p_inter.c:	    || player->readyweapon == wp_pistol)
+p_inter.c:	    if (player->weaponowned[wp_plasma])
+p_inter.c:		player->pendingweapon = wp_plasma;
+p_inter.c:	if (player->readyweapon == wp_fist)
+p_inter.c:	    if (player->weaponowned[wp_missile])
+p_inter.c:		player->pendingweapon = wp_missile;
+p_inter.c:	if (player->weaponowned[weapon])
+p_inter.c:	player->bonuscount += BONUSADD;
+p_inter.c:	player->weaponowned[weapon] = true;
+p_inter.c:	player->pendingweapon = weapon;
+p_inter.c:    if (player->weaponowned[weapon])
+p_inter.c:	player->weaponowned[weapon] = true;
+p_inter.c:	player->pendingweapon = weapon;
+p_inter.c:    if (player->health >= MAXHEALTH)
+p_inter.c:    player->health += num;
+p_inter.c:    if (player->health > MAXHEALTH)
+p_inter.c:	player->health = MAXHEALTH;
+p_inter.c:    player->mo->health = player->health;
+p_inter.c:    if (player->armorpoints >= hits)
+p_inter.c:    player->armortype = armortype;
+p_inter.c:    player->armorpoints = hits;
+p_inter.c:    if (player->cards[card])
+p_inter.c:    player->bonuscount = BONUSADD;
+p_inter.c:    player->cards[card] = 1;
+p_inter.c:			player->bonuscount = BONUSADD;
+p_inter.c:			player->cards[card] = true;
+p_inter.c:	player->powers[power] = INVULNTICS;
+p_inter.c:	player->powers[power] = INVISTICS;
+p_inter.c:	player->mo->flags |= MF_SHADOW;
+p_inter.c:	player->powers[power] = INFRATICS;
+p_inter.c:	player->powers[power] = IRONTICS;
+p_inter.c:	player->powers[power] = 1;
+p_inter.c:    if (player->powers[power])
+p_inter.c:    player->powers[power] = 1;
+p_inter.c:	player->message = GOTARMOR;
+p_inter.c:	player->message = GOTMEGA;
+p_inter.c:	player->health++;		// can go over 100%
+p_inter.c:	if (player->health > 200)
+p_inter.c:	    player->health = 200;
+p_inter.c:	player->mo->health = player->health;
+p_inter.c:	player->message = GOTHTHBONUS;
+p_inter.c:	player->armorpoints++;		// can go over 100%
+p_inter.c:	if (player->armorpoints > 200)
+p_inter.c:	    player->armorpoints = 200;
+p_inter.c:	if (!player->armortype)
+p_inter.c:	    player->armortype = 1;
+p_inter.c:	player->message = GOTARMBONUS;
+p_inter.c:	player->health += 100;
+p_inter.c:	if (player->health > 200)
+p_inter.c:	    player->health = 200;
+p_inter.c:	player->mo->health = player->health;
+p_inter.c:	player->message = GOTSUPER;
+p_inter.c:	player->health = 200;
+p_inter.c:	player->mo->health = player->health;
+p_inter.c:	player->message = GOTMSPHERE;
+p_inter.c:	if (!player->cards[it_bluecard])
+p_inter.c:	    player->message = GOTBLUECARD;
+p_inter.c:	if (!player->cards[it_yellowcard])
+p_inter.c:	    player->message = GOTYELWCARD;
+p_inter.c:	if (!player->cards[it_redcard])
+p_inter.c:	    player->message = GOTREDCARD;
+p_inter.c:	if (!player->cards[it_blueskull])
+p_inter.c:	    player->message = GOTBLUESKUL;
+p_inter.c:	if (!player->cards[it_yellowskull])
+p_inter.c:	    player->message = GOTYELWSKUL;
+p_inter.c:	if (!player->cards[it_redskull])
+p_inter.c:	    player->message = GOTREDSKULL;
+p_inter.c:	player->message = GOTSTIM;
+p_inter.c:	if (player->health < 25)
+p_inter.c:	    player->message = GOTMEDINEED;
+p_inter.c:	    player->message = GOTMEDIKIT;
+p_inter.c:	player->message = GOTINVUL;
+p_inter.c:	player->message = GOTBERSERK;
+p_inter.c:	if (player->readyweapon != wp_fist)
+p_inter.c:	    player->pendingweapon = wp_fist;
+p_inter.c:	player->message = GOTINVIS;
+p_inter.c:	player->message = GOTSUIT;
+p_inter.c:	player->message = GOTMAP;
+p_inter.c:	player->message = GOTVISOR;
+p_inter.c:	player->message = GOTCLIP;
+p_inter.c:	player->message = GOTCLIPBOX;
+p_inter.c:	player->message = GOTROCKET;
+p_inter.c:	player->message = GOTROCKBOX;
+p_inter.c:	player->message = GOTCELL;
+p_inter.c:	player->message = GOTCELLBOX;
+p_inter.c:	player->message = GOTSHELLS;
+p_inter.c:	player->message = GOTSHELLBOX;
+p_inter.c:	if (!player->backpack)
+p_inter.c:		player->maxammo[i] *= 2;
+p_inter.c:	    player->backpack = true;
+p_inter.c:	player->message = GOTBACKPACK;
+p_inter.c:	player->message = GOTBFG9000;
+p_inter.c:	player->message = GOTCHAINGUN;
+p_inter.c:	player->message = GOTCHAINSAW;
+p_inter.c:	player->message = GOTLAUNCHER;
+p_inter.c:	player->message = GOTPLASMA;
+p_inter.c:	player->message = GOTSHOTGUN;
+p_inter.c:	player->message = GOTSHOTGUN2;
+p_inter.c:	player->itemcount++;
+p_inter.c:    player->bonuscount += BONUSADD;
+p_inter.c:	    source->player->killcount++;	
+p_inter.c:	    source->player->frags[target->player-players]++;
+p_inter.c:	    target->player->frags[target->player-players]++;
+p_inter.c:	target->player->playerstate = PST_DEAD;
+p_inter.c:	    || source->player->readyweapon != wp_chainsaw))
+p_inter.c:	     && ( (player->cheats&CF_GODMODE)
+p_inter.c:		  || player->powers[pw_invulnerability] ) )
+p_inter.c:	if (player->armortype)
+p_inter.c:	    if (player->armortype == 1)
+p_inter.c:	    if (player->armorpoints <= saved)
+p_inter.c:		saved = player->armorpoints;
+p_inter.c:		player->armortype = 0;
+p_inter.c:	    player->armorpoints -= saved;
+p_inter.c:	player->health -= damage; 	// mirror mobj health here for Dave
+p_inter.c:	if (player->health < 0)
+p_inter.c:	    player->health = 0;
+p_inter.c:	player->attacker = source;
+p_inter.c:	player->damagecount += damage;	// add damage after armor / invuln
+p_inter.c:	if (player->damagecount > 100)
+p_inter.c:	    player->damagecount = 100;	// teleport stomp does 10k points...
+p_map.c:    usething = player->mo;
+p_map.c:    angle = player->mo->angle >> ANGLETOFINESHIFT;
+p_map.c:    x1 = player->mo->x;
+p_map.c:    y1 = player->mo->y;
+p_mobj.c:    if (player && player->cheats & CF_NOMOMENTUM)
+p_mobj.c:	    || (player->cmd.forwardmove== 0
+p_mobj.c:		&& player->cmd.sidemove == 0 ) ) )
+p_mobj.c:	if ( player&&(unsigned)((player->mo->state - states)- S_PLAY_RUN1) < 4)
+p_mobj.c:	    P_SetMobjState (player->mo, S_PLAY);
+p_mobj.c:	mo->player->viewheight -= mo->floorz-mo->z;
+p_mobj.c:	mo->player->deltaviewheight
+p_mobj.c:	    = (VIEWHEIGHT - mo->player->viewheight)>>3;
+p_mobj.c:		mo->player->deltaviewheight = mo->momz>>3;
+p_pspr.c:    psp = &player->psprites[position];
+p_pspr.c:    swing = player->bob;
+p_pspr.c:    if (player->pendingweapon == wp_nochange)
+p_pspr.c:	player->pendingweapon = player->readyweapon;
+p_pspr.c:    if (player->pendingweapon == wp_chainsaw)
+p_pspr.c:	S_StartSound (player->mo, sfx_sawup);
+p_pspr.c:    newstate = weaponinfo[player->pendingweapon].upstate;
+p_pspr.c:    player->pendingweapon = wp_nochange;
+p_pspr.c:    player->psprites[ps_weapon].sy = WEAPONBOTTOM;
+p_pspr.c:    ammo = weaponinfo[player->readyweapon].ammo;
+p_pspr.c:    if (player->readyweapon == wp_bfg)
+p_pspr.c:    else if (player->readyweapon == wp_supershotgun)
+p_pspr.c:    if (ammo == am_noammo || player->ammo[ammo] >= count)
+p_pspr.c:	if (player->weaponowned[wp_plasma]
+p_pspr.c:	    && player->ammo[am_cell]
+p_pspr.c:	    player->pendingweapon = wp_plasma;
+p_pspr.c:	else if (player->weaponowned[wp_supershotgun] 
+p_pspr.c:		 && player->ammo[am_shell]>2
+p_pspr.c:	    player->pendingweapon = wp_supershotgun;
+p_pspr.c:	else if (player->weaponowned[wp_chaingun]
+p_pspr.c:		 && player->ammo[am_clip])
+p_pspr.c:	    player->pendingweapon = wp_chaingun;
+p_pspr.c:	else if (player->weaponowned[wp_shotgun]
+p_pspr.c:		 && player->ammo[am_shell])
+p_pspr.c:	    player->pendingweapon = wp_shotgun;
+p_pspr.c:	else if (player->ammo[am_clip])
+p_pspr.c:	    player->pendingweapon = wp_pistol;
+p_pspr.c:	else if (player->weaponowned[wp_chainsaw])
+p_pspr.c:	    player->pendingweapon = wp_chainsaw;
+p_pspr.c:	else if (player->weaponowned[wp_missile]
+p_pspr.c:		 && player->ammo[am_misl])
+p_pspr.c:	    player->pendingweapon = wp_missile;
+p_pspr.c:	else if (player->weaponowned[wp_bfg]
+p_pspr.c:		 && player->ammo[am_cell]>40
+p_pspr.c:	    player->pendingweapon = wp_bfg;
+p_pspr.c:	    player->pendingweapon = wp_fist;
+p_pspr.c:    } while (player->pendingweapon == wp_nochange);
+p_pspr.c:		  weaponinfo[player->readyweapon].downstate);
+p_pspr.c:    P_SetMobjState (player->mo, S_PLAY_ATK1);
+p_pspr.c:    newstate = weaponinfo[player->readyweapon].atkstate;
+p_pspr.c:    P_NoiseAlert (player->mo, player->mo);
+p_pspr.c:		  weaponinfo[player->readyweapon].downstate);
+p_pspr.c:    if (player->mo->state == &states[S_PLAY_ATK1]
+p_pspr.c:	|| player->mo->state == &states[S_PLAY_ATK2] )
+p_pspr.c:	P_SetMobjState (player->mo, S_PLAY);
+p_pspr.c:    if (player->readyweapon == wp_chainsaw
+p_pspr.c:	S_StartSound (player->mo, sfx_sawidl);
+p_pspr.c:    if (player->pendingweapon != wp_nochange || !player->health)
+p_pspr.c:	newstate = weaponinfo[player->readyweapon].downstate;
+p_pspr.c:    if (player->cmd.buttons & BT_ATTACK)
+p_pspr.c:	if ( !player->attackdown
+p_pspr.c:	     || (player->readyweapon != wp_missile
+p_pspr.c:		 && player->readyweapon != wp_bfg) )
+p_pspr.c:	    player->attackdown = true;
+p_pspr.c:	player->attackdown = false;
+p_pspr.c:    psp->sx = FRACUNIT + FixedMul (player->bob, finecosine[angle]);
+p_pspr.c:    psp->sy = WEAPONTOP + FixedMul (player->bob, finesine[angle]);
+p_pspr.c:    if ( (player->cmd.buttons & BT_ATTACK) 
+p_pspr.c:	 && player->pendingweapon == wp_nochange
+p_pspr.c:	 && player->health)
+p_pspr.c:	player->refire++;
+p_pspr.c:	player->refire = 0;
+p_pspr.c:    if (player->ammo[am_shell]<2)
+p_pspr.c:    if (player->playerstate == PST_DEAD)
+p_pspr.c:    if (!player->health)
+p_pspr.c:    player->readyweapon = player->pendingweapon; 
+p_pspr.c:    newstate = weaponinfo[player->readyweapon].readystate;
+p_pspr.c:    P_SetMobjState (player->mo, S_PLAY_ATK2);
+p_pspr.c:    P_SetPsprite (player,ps_flash,weaponinfo[player->readyweapon].flashstate);
+p_pspr.c:    if (player->powers[pw_strength])	
+p_pspr.c:    angle = player->mo->angle;
+p_pspr.c:    slope = P_AimLineAttack (player->mo, angle, MELEERANGE);
+p_pspr.c:    P_LineAttack (player->mo, angle, MELEERANGE, slope, damage);
+p_pspr.c:	S_StartSound (player->mo, sfx_punch);
+p_pspr.c:	player->mo->angle = R_PointToAngle2 (player->mo->x,
+p_pspr.c:					     player->mo->y,
+p_pspr.c:    angle = player->mo->angle;
+p_pspr.c:    slope = P_AimLineAttack (player->mo, angle, MELEERANGE+1);
+p_pspr.c:    P_LineAttack (player->mo, angle, MELEERANGE+1, slope, damage);
+p_pspr.c:	S_StartSound (player->mo, sfx_sawful);
+p_pspr.c:    S_StartSound (player->mo, sfx_sawhit);
+p_pspr.c:    angle = R_PointToAngle2 (player->mo->x, player->mo->y,
+p_pspr.c:    if (angle - player->mo->angle > ANG180)
+p_pspr.c:	if (angle - player->mo->angle < -ANG90/20)
+p_pspr.c:	    player->mo->angle = angle + ANG90/21;
+p_pspr.c:	    player->mo->angle -= ANG90/20;
+p_pspr.c:	if (angle - player->mo->angle > ANG90/20)
+p_pspr.c:	    player->mo->angle = angle - ANG90/21;
+p_pspr.c:	    player->mo->angle += ANG90/20;
+p_pspr.c:    player->mo->flags |= MF_JUSTATTACKED;
+p_pspr.c:    player->ammo[weaponinfo[player->readyweapon].ammo]--;
+p_pspr.c:    P_SpawnPlayerMissile (player->mo, MT_ROCKET);
+p_pspr.c:    player->ammo[weaponinfo[player->readyweapon].ammo] -= BFGCELLS;
+p_pspr.c:    P_SpawnPlayerMissile (player->mo, MT_BFG);
+p_pspr.c:    player->ammo[weaponinfo[player->readyweapon].ammo]--;
+p_pspr.c:		  weaponinfo[player->readyweapon].flashstate+(P_Random ()&1) );
+p_pspr.c:    P_SpawnPlayerMissile (player->mo, MT_PLASMA);
+p_pspr.c:    S_StartSound (player->mo, sfx_pistol);
+p_pspr.c:    P_SetMobjState (player->mo, S_PLAY_ATK2);
+p_pspr.c:    player->ammo[weaponinfo[player->readyweapon].ammo]--;
+p_pspr.c:		  weaponinfo[player->readyweapon].flashstate);
+p_pspr.c:    P_BulletSlope (player->mo);
+p_pspr.c:    P_GunShot (player->mo, !player->refire);
+p_pspr.c:    S_StartSound (player->mo, sfx_shotgn);
+p_pspr.c:    P_SetMobjState (player->mo, S_PLAY_ATK2);
+p_pspr.c:    player->ammo[weaponinfo[player->readyweapon].ammo]--;
+p_pspr.c:		  weaponinfo[player->readyweapon].flashstate);
+p_pspr.c:    P_BulletSlope (player->mo);
+p_pspr.c:	P_GunShot (player->mo, false);
+p_pspr.c:    S_StartSound (player->mo, sfx_dshtgn);
+p_pspr.c:    P_SetMobjState (player->mo, S_PLAY_ATK2);
+p_pspr.c:    player->ammo[weaponinfo[player->readyweapon].ammo]-=2;
+p_pspr.c:		  weaponinfo[player->readyweapon].flashstate);
+p_pspr.c:    P_BulletSlope (player->mo);
+p_pspr.c:	angle = player->mo->angle;
+p_pspr.c:	P_LineAttack (player->mo,
+p_pspr.c:    S_StartSound (player->mo, sfx_pistol);
+p_pspr.c:    if (!player->ammo[weaponinfo[player->readyweapon].ammo])
+p_pspr.c:    P_SetMobjState (player->mo, S_PLAY_ATK2);
+p_pspr.c:    player->ammo[weaponinfo[player->readyweapon].ammo]--;
+p_pspr.c:		  weaponinfo[player->readyweapon].flashstate
+p_pspr.c:    P_BulletSlope (player->mo);
+p_pspr.c:    P_GunShot (player->mo, !player->refire);
+p_pspr.c:    player->extralight = 0;
+p_pspr.c:    player->extralight = 1;
+p_pspr.c:    player->extralight = 2;
+p_pspr.c:    S_StartSound (player->mo, sfx_bfg);
+p_pspr.c:	player->psprites[i].state = NULL;
+p_pspr.c:    player->pendingweapon = player->readyweapon;
+p_pspr.c:    psp = &player->psprites[0];
+p_pspr.c:    player->psprites[ps_flash].sx = player->psprites[ps_weapon].sx;
+p_pspr.c:    player->psprites[ps_flash].sy = player->psprites[ps_weapon].sy;
+p_saveg.c:		mobj->player = (player_t *)((mobj->player-players) + 1);
+p_saveg.c:		mobj->player = &players[(int)mobj->player-1];
+p_saveg.c:		mobj->player->mo = mobj;
+p_spec.c:    sector = player->mo->subsector->sector;
+p_spec.c:    if (player->mo->z != sector->floorheight)
+p_spec.c:	if (!player->powers[pw_ironfeet])
+p_spec.c:		P_DamageMobj (player->mo, NULL, NULL, 10);
+p_spec.c:	if (!player->powers[pw_ironfeet])
+p_spec.c:		P_DamageMobj (player->mo, NULL, NULL, 5);
+p_spec.c:	if (!player->powers[pw_ironfeet]
+p_spec.c:		P_DamageMobj (player->mo, NULL, NULL, 20);
+p_spec.c:	player->secretcount++;
+p_spec.c:	player->cheats &= ~CF_GODMODE;
+p_spec.c:	    P_DamageMobj (player->mo, NULL, NULL, 20);
+p_spec.c:	if (player->health <= 10)
+p_telept.c:		    thing->player->viewz = thing->z+thing->player->viewheight;
+p_user.c:    player->mo->momx += FixedMul(move,finecosine[angle]); 
+p_user.c:    player->mo->momy += FixedMul(move,finesine[angle]);
+p_user.c:    player->bob =
+p_user.c:	FixedMul (player->mo->momx, player->mo->momx)
+p_user.c:	+ FixedMul (player->mo->momy,player->mo->momy);
+p_user.c:    player->bob >>= 2;
+p_user.c:    if (player->bob>maxbob)
+p_user.c:	player->bob = maxbob;
+p_user.c:    if ((player->cheats & CF_NOMOMENTUM) || !onground)
+p_user.c:	player->viewz = player->mo->z + VIEWHEIGHT;
+p_user.c:	if (player->viewz > player->mo->ceilingz-4*FRACUNIT)
+p_user.c:	    player->viewz = player->mo->ceilingz-4*FRACUNIT;
+p_user.c:	player->viewz = player->mo->z + player->viewheight;
+p_user.c:    bob = FixedMul ( player->bob/2, finesine[angle]);
+p_user.c:    if (player->playerstate == PST_LIVE)
+p_user.c:	player->viewheight += player->deltaviewheight;
+p_user.c:	if (player->viewheight > VIEWHEIGHT)
+p_user.c:	    player->viewheight = VIEWHEIGHT;
+p_user.c:	    player->deltaviewheight = 0;
+p_user.c:	if (player->viewheight < VIEWHEIGHT/2)
+p_user.c:	    player->viewheight = VIEWHEIGHT/2;
+p_user.c:	    if (player->deltaviewheight <= 0)
+p_user.c:		player->deltaviewheight = 1;
+p_user.c:	if (player->deltaviewheight)	
+p_user.c:	    player->deltaviewheight += FRACUNIT/4;
+p_user.c:	    if (!player->deltaviewheight)
+p_user.c:		player->deltaviewheight = 1;
+p_user.c:    player->viewz = player->mo->z + player->viewheight + bob;
+p_user.c:    if (player->viewz > player->mo->ceilingz-4*FRACUNIT)
+p_user.c:	player->viewz = player->mo->ceilingz-4*FRACUNIT;
+p_user.c:		bob = player->bob = 0; // FS: Hate bob
+p_user.c:    cmd = &player->cmd;
+p_user.c:    player->mo->angle += (cmd->angleturn<<16);
+p_user.c:    onground = (player->mo->z <= player->mo->floorz);
+p_user.c:        P_Thrust (player, player->mo->angle, cmd->forwardmove*2048); // FS: Was 2048
+p_user.c:        P_Thrust (player, player->mo->angle-ANG90, cmd->sidemove*2048); // FS: Was 2048
+p_user.c:	P_Thrust (player, player->mo->angle, cmd->forwardmove*2048*2); // FS: Was 2048
+p_user.c:	P_Thrust (player, player->mo->angle-ANG90, cmd->sidemove*2048*2); // FS: Was 2048
+p_user.c:	 && player->mo->state == &states[S_PLAY] )
+p_user.c:	P_SetMobjState (player->mo, S_PLAY_RUN1);
+p_user.c:    if (player->viewheight > 6*FRACUNIT)
+p_user.c:	player->viewheight -= FRACUNIT;
+p_user.c:    if (player->viewheight < 6*FRACUNIT)
+p_user.c:	player->viewheight = 6*FRACUNIT;
+p_user.c:    player->deltaviewheight = 0;
+p_user.c:    onground = (player->mo->z <= player->mo->floorz);
+p_user.c:    if (player->attacker && player->attacker != player->mo)
+p_user.c:	angle = R_PointToAngle2 (player->mo->x,
+p_user.c:				 player->mo->y,
+p_user.c:				 player->attacker->x,
+p_user.c:				 player->attacker->y);
+p_user.c:	delta = angle - player->mo->angle;
+p_user.c:	    player->mo->angle = angle;
+p_user.c:	    if (player->damagecount)
+p_user.c:		player->damagecount--;
+p_user.c:	    player->mo->angle += ANG5;
+p_user.c:	    player->mo->angle -= ANG5;
+p_user.c:    else if (player->damagecount)
+p_user.c:	player->damagecount--;
+p_user.c:    if (player->cmd.buttons & BT_USE)
+p_user.c:	player->playerstate = PST_REBORN;
+p_user.c:    if (player->cheats & CF_NOCLIP)
+p_user.c:	player->mo->flags |= MF_NOCLIP;
+p_user.c:	player->mo->flags &= ~MF_NOCLIP;
+p_user.c:    cmd = &player->cmd;
+p_user.c:    if (player->mo->flags & MF_JUSTATTACKED)
+p_user.c:	player->mo->flags &= ~MF_JUSTATTACKED;
+p_user.c:    if (player->playerstate == PST_DEAD)
+p_user.c:    if (player->mo->reactiontime)
+p_user.c:	player->mo->reactiontime--;
+p_user.c:    if (player->mo->subsector->sector->special)
+p_user.c:	    && player->weaponowned[wp_chainsaw]
+p_user.c:	    && !(player->readyweapon == wp_chainsaw
+p_user.c:		 && player->powers[pw_strength]))
+p_user.c:	    && player->weaponowned[wp_supershotgun]
+p_user.c:	    && player->readyweapon != wp_supershotgun)
+p_user.c:	if (player->weaponowned[newweapon]
+p_user.c:	    && newweapon != player->readyweapon)
+p_user.c:		player->pendingweapon = newweapon;
+p_user.c:	if (!player->usedown)
+p_user.c:	    player->usedown = true;
+p_user.c:	player->usedown = false;
+p_user.c:    if (player->powers[pw_strength])
+p_user.c:	player->powers[pw_strength]++;	
+p_user.c:    if (player->powers[pw_invulnerability])
+p_user.c:	player->powers[pw_invulnerability]--;
+p_user.c:    if (player->powers[pw_invisibility])
+p_user.c:	if (! --player->powers[pw_invisibility] )
+p_user.c:	    player->mo->flags &= ~MF_SHADOW;
+p_user.c:    if (player->powers[pw_infrared])
+p_user.c:	player->powers[pw_infrared]--;
+p_user.c:    if (player->powers[pw_ironfeet])
+p_user.c:	player->powers[pw_ironfeet]--;
+p_user.c:    if (player->damagecount)
+p_user.c:	player->damagecount--;
+p_user.c:    if (player->bonuscount)
+p_user.c:	player->bonuscount--;
+p_user.c:    if (player->powers[pw_invulnerability])
+p_user.c:	if (player->powers[pw_invulnerability] > 4*32
+p_user.c:	    || (player->powers[pw_invulnerability]&8) )
+p_user.c:	    player->fixedcolormap = INVERSECOLORMAP;
+p_user.c:	    player->fixedcolormap = 0;
+p_user.c:    else if (player->powers[pw_infrared])	
+p_user.c:	if (player->powers[pw_infrared] > 4*32
+p_user.c:	    || (player->powers[pw_infrared]&8) )
+p_user.c:	    player->fixedcolormap = 1;
+p_user.c:	    player->fixedcolormap = 0;
+p_user.c:	player->fixedcolormap = 0;
+r_main.c:    viewx = player->mo->x;
+r_main.c:    viewy = player->mo->y;
+r_main.c:    viewangle = player->mo->angle + viewangleoffset;
+r_main.c:    extralight = player->extralight;
+r_main.c:    viewz = player->viewz;
+r_main.c:    if (player->fixedcolormap)
+r_main.c:	    + player->fixedcolormap*256*sizeof(lighttable_t);
+r_things.c:    if (viewplayer->powers[pw_invisibility] > 4*32
+r_things.c:	|| viewplayer->powers[pw_invisibility] & 8)
+r_things.c:	(viewplayer->mo->subsector->sector->lightlevel >> LIGHTSEGSHIFT) 
+r_things.c:    for (i=0, psp=viewplayer->psprites;
+wi_stuff.c:	    if (player->cmd.buttons & BT_ATTACK)
+wi_stuff.c:		if (!player->attackdown)
+wi_stuff.c:		player->attackdown = true;
+wi_stuff.c:		player->attackdown = false;
+wi_stuff.c:	    if (player->cmd.buttons & BT_USE)
+wi_stuff.c:		if (!player->usedown)
+wi_stuff.c:		player->usedown = true;
+wi_stuff.c:		player->usedown = false;

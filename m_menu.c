@@ -1102,8 +1102,7 @@ void M_QuitDOOM(int choice)
   if (language != english )
     sprintf(endstring,"%s\n\n"DOSY, endmsg[0] );
   else
-    sprintf(endstring,"%s\n\n"DOSY, endmsg[ (gametic%(NUM_QUITMESSAGES-2))+1 ]); // FS: Was 2))+1
-//  strcpy(endstring,"Quit out\n");
+    sprintf(endstring,"%s\n\n"DOSY, endmsg[ (gametic%(NUM_QUITMESSAGES-2))+1 ]);
   M_StartMessage(endstring,M_QuitResponse,true);
 }
 
@@ -1130,11 +1129,11 @@ void M_ChangeSensitivity(int choice)
 
 void M_ChangeDetail(int choice)
 {
-    choice = 0;
-    detailLevel = 1 - detailLevel;
-
-    // FIXME - does not work. Remove anyway?
-    fprintf( stderr, "M_ChangeDetail: low detail mode n.a.\n");
+//    choice = 0;
+//    detailLevel = 1 - detailLevel;
+	detailLevel = 0;
+    // FS: FIXME - moron fucked this up too...
+    P_SetMessage(&players[consoleplayer], "low detail mode disabled in this build!",true);
 
     return;
     
@@ -1777,8 +1776,6 @@ void M_Drawer (void)
 	    x = 160 - M_StringWidth(string)/2;
 	    M_WriteText(x,y,string);
 	    y += SHORT(hu_font[0]->height);
-//                UpdateState |= I_FULLSCRN; // FS
-
 	}
 	return;
     }

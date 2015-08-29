@@ -1,3 +1,5 @@
+#ifdef USE_WATT32 // FS: Use WATT32
+
 // Emacs style mode select   -*- C++ -*- 
 //-----------------------------------------------------------------------------
 //
@@ -346,3 +348,4 @@ void I_NetCmd (void)
 	I_Error ("Bad net cmd: %i\n",doomcom->command);
 }
 
+#endif

@@ -124,7 +124,8 @@ boolean		autostart;
 FILE*		debugfile;
 
 boolean		advancedemo;
-
+boolean		plutonia; // FS
+boolean		tnt; // FS
 
 
 
@@ -138,7 +139,7 @@ void D_CheckNetGame (void);
 void D_ProcessEvents (void);
 void G_BuildTiccmd (ticcmd_t* cmd);
 void D_DoAdvanceDemo (void);
-
+void mprintf(char *string); // FS: From OG Doom
 
 //
 // EVENT HANDLING
@@ -243,10 +244,11 @@ void D_Display (void)
 	    break;
 	if (automapactive)
 	    AM_Drawer ();
-	if (wipe || (viewheight != 200 && fullscreen) )
+      if (wipe || (viewheight != 200 && fullscreen) )
 	    redrawsbar = true;
 	if (inhelpscreensstate && !inhelpscreens)
 	    redrawsbar = true;              // just put away the help screen
+
 	ST_Drawer (viewheight == 200, redrawsbar );
         UpdateState |= I_FULLVIEW; // FS
         fullscreen = viewheight == 200;
@@ -531,13 +533,87 @@ void D_StartTitle (void)
     D_AdvanceDemo ();
 }
 
+#ifdef __WATCOMC__
+//====================================================
+//
+// Print (in color) a string
+//
+//====================================================
+int getx(void)
+{
+   union REGS r;
+   r.h.ah = 3;
+   r.h.bh = 0;
+   int386(0x10,&r,&r);
+   return r.h.dl;
+}
+int gety(void)
+{
+   union REGS r;
+   r.h.ah = 3;
+   r.h.bh = 0;
+   int386(0x10,&r,&r);
+   return r.h.dh;
+}
+void setxy(int x,int y)
+{
+   union REGS r;
+	r.h.ah = 2;
+	r.h.bh = 0;
+	r.h.dh = y;
+	r.h.dl = x;
+	int386(0x10,&r,&r);
+}
+
+void dprint(char *string,int fg,int bg)
+{
+   union REGS r;
+   int   i,x,y;
+   char  color;
+
+   color = (bg << 4) | fg;
+
+	x = getx();
+	y = gety();
+
+   for (i = 0; i < strlen(string); i++)
+   {
+      r.h.ah = 9;
+      r.h.al = string[i];
+      r.h.bh = 0;
+      r.h.bl = color;
+      r.w.cx = 1;
+      int386(0x10,&r,&r);
+
+      x++;
+      if (x > 79)
+	 x = 0;
+		setxy(x,y);
+   }
+}
+#endif
+
 
 
 
 //      print title for every printed line
 char            title[128];
-
-
+void mprintf(char *string)
+{
+#ifdef __WATCOMC__
+	int x;
+	int     y;
+#endif
+	
+	printf(string);
+#ifdef __WATCOMC__
+	x = getx();
+	y = gety();
+	setxy(0,0);     
+	dprint (title,FGCOLOR,BGCOLOR);
+	setxy(x,y);
+#endif
+}
 
 //
 // D_AddFile
@@ -624,7 +700,7 @@ void IdentifyVersion (void)
 	{
 		gamemode = commercial;
 		devparm = true;
-
+		tnt = true; // FS
 		strcpy(basedefault, "default.cfg");
 		D_AddFile("tnt.wad");
 		return;
@@ -636,6 +712,26 @@ void IdentifyVersion (void)
 
 		strcpy(basedefault, "default.cfg");
 		D_AddFile("doom2.wad");
+		return;
+	}
+	if (M_CheckParm ("-helltopay") || M_CheckParm("-hell2pay")) // FS: Hell to pay commercial WAD
+	{
+		gamemode = commercial;
+		devparm = true;
+
+		strcpy(basedefault, "default.cfg");
+		D_AddFile("hell2pay.wad");
+		D_AddFile("htpdmo19.wad");
+		return;
+	}
+	if (M_CheckParm ("-perdgate")) // FS: Perdition's Gate commercial WAD
+	{
+		gamemode = commercial;
+		devparm = true;
+
+		strcpy(basedefault, "default.cfg");
+		D_AddFile("perdgate.wad");
+		D_AddFile("pgdemo19.WAD");
 		return;
 	}
 	if (M_CheckParm ("-doomu"))
@@ -651,7 +747,7 @@ void IdentifyVersion (void)
 	{
 		gamemode = commercial;
 		devparm = true;
-
+		plutonia = true; // FS
 		strcpy(basedefault, "default.cfg");
 		D_AddFile("plutonia.wad");
 		return;
@@ -690,6 +786,7 @@ void IdentifyVersion (void)
     if ( !access (plutoniawad, 0) )
     {
       gamemode = commercial;
+	plutonia = true; // FS
       D_AddFile (plutoniawad);
       return;
     }
@@ -697,6 +794,7 @@ void IdentifyVersion (void)
     if ( !access ( tntwad, 0) )
     {
       gamemode = commercial;
+	tnt = true; // FS
       D_AddFile (tntwad);
       return;
     }
@@ -710,7 +808,10 @@ void IdentifyVersion (void)
 
     if ( !access (doomwad,0) )
     {
-      gamemode = registered;
+	if (W_CheckNumForName("e4m1")<0) // FS: If Episode 4 exists, then we assume it's Ultimate Doom
+		gamemode = retail;
+	else
+		gamemode = registered;
       D_AddFile (doomwad);
       return;
     }
@@ -722,12 +823,11 @@ void IdentifyVersion (void)
       return;
     }
 
-    printf("Game mode indeterminate.\n");
-    gamemode = indetermined;
+	//printf("Game mode indeterminate.\n");
+	//gamemode = indetermined;
 
-    // We don't abort. Let's see what the PWAD contains.
-    //exit(1);
-    //I_Error ("Game mode indeterminate\n");
+    exit(1);
+    I_Error ("Game mode indeterminate\n");
 }
 
 //
@@ -836,58 +936,72 @@ void D_DoomMain (void)
     switch ( gamemode )
     {
       case retail:
-	sprintf (title,
-		 "                         "
-		 "The Ultimate DOOM Startup v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
+		sprintf (title,
+		"                         "
+		"The Ultimate DOOM Startup v%i.%i"
+		"                           ",
+		VERSION/100,VERSION%100);
+		break;
       case shareware:
-	sprintf (title,
-		 "                            "
-		 "DOOM Shareware Startup v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
+		sprintf (title,
+		"                            "
+		"DOOM Shareware Startup v%i.%i"
+		"                           ",
+		VERSION/100,VERSION%100);
+		break;
       case registered:
-	sprintf (title,
-		 "                            "
-		 "DOOM Registered Startup v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
+		sprintf (title,
+		"                            "
+		"DOOM Registered Startup v%i.%i"
+		"                           ",
+		VERSION/100,VERSION%100);
+		break;
       case commercial:
-	sprintf (title,
-		 "                         "
-		 "DOOM 2: Hell on Earth v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
-/*FIXME
-       case pack_plut:
-	sprintf (title,
-		 "                   "
-		 "DOOM 2: Plutonia Experiment v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
-      case pack_tnt:
-	sprintf (title,
-		 "                     "
-		 "DOOM 2: TNT - Evilution v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
-*/
+		if(plutonia)
+		{
+			sprintf (title,
+			"                   "
+			"DOOM 2: Plutonia Experiment v%i.%i"
+			"                             ",
+			VERSION/100,VERSION%100);
+		}
+		else if(tnt)
+		{
+			sprintf (title,
+			"                     "
+			"DOOM 2: TNT - Evilution v%i.%i"
+			"                               ",
+			VERSION/100,VERSION%100);
+		}
+		else
+		{
+			sprintf (title,
+			"                         "
+			"DOOM 2: Hell on Earth v%i.%i"
+			"                             ",
+			VERSION/100,VERSION%100);
+		}
+		break;
       default:
-	sprintf (title,
-		 "                     "
-		 "Public DOOM - v%i.%i"
-		 "                           ",
-		 VERSION/100,VERSION%100);
-	break;
+		sprintf (title,
+		"                     "
+		"Public DOOM - v%i.%i"
+		"                           ",
+		VERSION/100,VERSION%100);
+		break;
     }
-    printf ("%s\n",title);
+#ifdef __WATCOMC__
+	{  
+		union REGS regs;
+		regs.w.ax = 3;
+		int386(0x10,&regs,&regs);
+	  dprint (title,FGCOLOR,BGCOLOR);
+		// ADD SPACES TO BUMP EXE SIZE
+      printf("\nP_Init: Checking cmd-line parameters...\n");
+	}
+#else
+	printf ("%s\n",title);
+#endif
 
 	fp = fopen(wadfiles[0], "rb");
 	if(fp)
@@ -1046,7 +1160,7 @@ void D_DoomMain (void)
     // Iff additonal PWAD files are used, print modified banner
     if (modifiedgame)
     {
-	/*m*/printf (
+	printf (
 	    "===========================================================================\n"
 	    "ATTENTION:  This version of DOOM has been modified.  If you would like to\n"
 	    "get a copy of the original game, call 1-800-IDGAMES or see the readme file.\n"
@@ -1061,7 +1175,7 @@ void D_DoomMain (void)
 #endif
     }
 	
-
+/*
     // Check and print which version is executed.
     switch ( gamemode )
     {
@@ -1088,27 +1202,51 @@ void D_DoomMain (void)
 	// Ouch.
 	break;
     }
+*/
 
-    printf ("M_Init: Init miscellaneous info.\n");
-    M_Init ();
+//
+// check which version
+//
+	if (gamemode == registered)
+	{
+		mprintf ("	registered version.\n");
+		mprintf (
+"===========================================================================\n"
+"             This version is NOT SHAREWARE, do not distribute!\n"
+"         Please report software piracy to the SPA: 1-800-388-PIR8\n"
+"===========================================================================\n"
+	);
+	}
+	
+	if (gamemode == shareware)
+		mprintf ("	shareware version.\n");
 
-    printf ("R_Init: Init DOOM refresh daemon - ");
-    R_Init ();
+	if (gamemode == commercial)
+	{
+		mprintf ("	commercial version.\n");
+		mprintf (
+"===========================================================================\n"
+"                            Do not distribute!\n"
+"         Please report software piracy to the SPA: 1-800-388-PIR8\n"
+"===========================================================================\n"
+	);
+//              shareware = false;
+	}
 
-    printf ("\nP_Init: Init Playloop state.\n");
-    P_Init ();
-
-    printf ("I_Init: Setting up machine state.\n");
-    I_Init ();
-
-    printf ("D_CheckNetGame: Checking network game status.\n");
-    D_CheckNetGame ();
-
-    printf ("HU_Init: Setting up heads up display.\n");
-    HU_Init ();
-
-    printf ("ST_Init: Init status bar.\n");
-    ST_Init ();
+mprintf ("M_Init: Init miscellaneous info.\n");
+	M_Init ();
+mprintf ("R_Init: Init DOOM refresh daemon - ");
+	R_Init ();
+mprintf ("\nP_Init: Init Playloop state.\n");
+	P_Init ();
+mprintf ("I_Init: Setting up machine state.\n");
+	I_Init ();
+mprintf ("D_CheckNetGame: Checking network game status.\n");
+	D_CheckNetGame ();
+mprintf ("HU_Init: Setting up heads up display.\n");
+	HU_Init ();
+mprintf ("ST_Init: Init status bar.\n");
+	ST_Init ();
 
     // check for a driver that wants intermission stats
     p = M_CheckParm ("-statcopy");

@@ -1146,7 +1146,9 @@ void ST_diffDraw(void)
 
 void ST_Drawer (boolean fullscreen, boolean refresh)
 {
-  
+  	if (fullscreen && !automapactive) // FS
+		ST_DrawFullScreenStuff();
+
     st_statusbaron = (!fullscreen) || automapactive;
     st_firsttime = st_firsttime || refresh;
 
@@ -1510,4 +1512,9 @@ void ST_Init (void)
     veryfirsttime = 0;
     ST_loadData();
     screens[4] = (byte *) Z_Malloc(ST_WIDTH*ST_HEIGHT, PU_STATIC, 0);
+}
+
+void ST_DrawFullScreenStuff (void)
+{
+
 }

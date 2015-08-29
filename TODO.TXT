@@ -7,5 +7,5 @@
 - Draw Ammo, Health, Armor and Keys in fullscreen.
 - Headbob and Palette Flash on Options Menu.
 - Fix endstring/quit messages to work for proper gamemodes.
-- novert paramater.
-- ifdef WATCOMC for colour bar at startup.
+- Fix chainsaw pitch.
+- I_NET.C with WATT32

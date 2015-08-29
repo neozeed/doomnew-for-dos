@@ -1,3 +1,15 @@
+09-14-13
+ - Imported the Cyberman/Tactile stuff from Heretic.
+ - Added the original mprintf from DOS Doom.
+ - Original gamemode determination banners, WATCOM specific stuff.
+ - linear.asm from Heretic.  Might have some faster drawing on
+   some 486-era stuff?
+ - Joystick support working.
+ - Fixed bug with joystick super speed.
+ - Fixed byte *savep warning.
+ - DOOM.WAD will search for Episode 4 and auto-load Ultimate Doom.
+   Can be overridden with -doom parameter.
+
 09-13-13
  - Fixed out of control input.
  - From Heretic v1.3a port:
@@ -6,6 +18,8 @@
    * Secret Area found message.
    * Massacre Cheat.
    * HHSCOTT Cheat -- instantly finish level.
+ - Added -perdgate, -hell2pay, and -helltopay to load Perdition's Gate and
+   Hell to Pay commercial Mega WADs.
 
 09-12-13
  - Fixed music loading issues, doom 2 loading, etc.

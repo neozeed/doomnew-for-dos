@@ -95,6 +95,11 @@ byte*			dc_source;
 // just for profiling 
 int			dccount;
 
+/*
+// FS: Use linear.asm
+#ifndef __WATCOMC__
+#ifndef __i386
+#ifndef __m68k
 //
 // A column is a vertical slice/span from a wall texture that,
 //  given the DOOM style restrictions on the view orientation,
@@ -146,68 +151,12 @@ void R_DrawColumn (void)
 	
     } while (count--); 
 } 
-
-
-
-// UNUSED.
-// Loop unrolled.
-#if 0
-void R_DrawColumn (void) 
-{ 
-    int			count; 
-    byte*		source;
-    byte*		dest;
-    byte*		colormap;
-    
-    unsigned		frac;
-    unsigned		fracstep;
-    unsigned		fracstep2;
-    unsigned		fracstep3;
-    unsigned		fracstep4;	 
- 
-    count = dc_yh - dc_yl + 1; 
-
-    source = dc_source;
-    colormap = dc_colormap;		 
-    dest = ylookup[dc_yl] + columnofs[dc_x];  
-	 
-    fracstep = dc_iscale<<9; 
-    frac = (dc_texturemid + (dc_yl-centery)*dc_iscale)<<9; 
- 
-    fracstep2 = fracstep+fracstep;
-    fracstep3 = fracstep2+fracstep;
-    fracstep4 = fracstep3+fracstep;
-	
-    while (count >= 8) 
-    { 
-	dest[0] = colormap[source[frac>>25]]; 
-	dest[SCREENWIDTH] = colormap[source[(frac+fracstep)>>25]]; 
-	dest[SCREENWIDTH*2] = colormap[source[(frac+fracstep2)>>25]]; 
-	dest[SCREENWIDTH*3] = colormap[source[(frac+fracstep3)>>25]];
-	
-	frac += fracstep4; 
-
-	dest[SCREENWIDTH*4] = colormap[source[frac>>25]]; 
-	dest[SCREENWIDTH*5] = colormap[source[(frac+fracstep)>>25]]; 
-	dest[SCREENWIDTH*6] = colormap[source[(frac+fracstep2)>>25]]; 
-	dest[SCREENWIDTH*7] = colormap[source[(frac+fracstep3)>>25]]; 
-
-	frac += fracstep4; 
-	dest += SCREENWIDTH*8; 
-	count -= 8;
-    } 
-	
-    while (count > 0)
-    { 
-	*dest = colormap[source[frac>>25]]; 
-	dest += SCREENWIDTH; 
-	frac += fracstep; 
-	count--;
-    } 
-}
 #endif
+#endif
+#endif
+*/
 
-
+/*
 void R_DrawColumnLow (void) 
 { 
     int			count; 
@@ -250,6 +199,62 @@ void R_DrawColumnLow (void)
 	frac += fracstep; 
 
     } while (count--);
+}
+*/
+void R_DrawColumnLow (void)
+{
+	int			count;
+	byte		*dest;
+	fixed_t		frac, fracstep;	
+
+	count = dc_yh - dc_yl;
+	if (count < 0)
+		return;
+				
+#ifdef RANGECHECK
+	if ((unsigned)dc_x >= SCREENWIDTH || dc_yl < 0 || dc_yh >= SCREENHEIGHT)
+		I_Error ("R_DrawColumn: %i to %i at %i", dc_yl, dc_yh, dc_x);
+//	dccount++;
+#endif
+
+	dest = ylookup[dc_yl] + columnofs[dc_x]; 
+	
+	fracstep = dc_iscale;
+	frac = dc_texturemid + (dc_yl-centery)*fracstep;
+
+	do
+	{
+		*dest = dc_colormap[dc_source[(frac>>FRACBITS)&127]];
+		dest += SCREENWIDTH;
+		frac += fracstep;
+	} while (count--);
+}
+
+void R_DrawSpanLow (void)
+{
+	fixed_t		xfrac, yfrac;
+	byte		*dest;
+	int			count, spot;
+	
+#ifdef RANGECHECK
+	if (ds_x2 < ds_x1 || ds_x1<0 || ds_x2>=SCREENWIDTH 
+	|| (unsigned)ds_y>SCREENHEIGHT)
+		I_Error ("R_DrawSpan: %i to %i at %i",ds_x1,ds_x2,ds_y);
+//	dscount++;
+#endif
+	
+	xfrac = ds_xfrac;
+	yfrac = ds_yfrac;
+	
+	dest = ylookup[ds_y] + columnofs[ds_x1];	
+	count = ds_x2 - ds_x1;
+	do
+	{
+		spot = ((yfrac>>(16-6))&(63*64)) + ((xfrac>>16)&63);
+		*dest++ = ds_colormap[ds_source[spot]];
+		xfrac += ds_xstep;
+		yfrac += ds_ystep;
+	} while (count--);
 }
 
 
@@ -514,7 +519,11 @@ byte*			ds_source;
 // just for profiling
 int			dscount;
 
-
+/*
+// FS: Use linear.asm
+#ifndef __WATCOMC__
+#ifndef __i386
+#ifndef __m68k
 //
 // Draws the actual span.
 void R_DrawSpan (void) 
@@ -561,82 +570,12 @@ void R_DrawSpan (void)
 	
     } while (count--); 
 } 
-
-
-
-// UNUSED.
-// Loop unrolled by 4.
-#if 0
-void R_DrawSpan (void) 
-{ 
-    unsigned	position, step;
-
-    byte*	source;
-    byte*	colormap;
-    byte*	dest;
-    
-    unsigned	count;
-    usingned	spot; 
-    unsigned	value;
-    unsigned	temp;
-    unsigned	xtemp;
-    unsigned	ytemp;
-		
-    position = ((ds_xfrac<<10)&0xffff0000) | ((ds_yfrac>>6)&0xffff);
-    step = ((ds_xstep<<10)&0xffff0000) | ((ds_ystep>>6)&0xffff);
-		
-    source = ds_source;
-    colormap = ds_colormap;
-    dest = ylookup[ds_y] + columnofs[ds_x1];	 
-    count = ds_x2 - ds_x1 + 1; 
-	
-    while (count >= 4) 
-    { 
-	ytemp = position>>4;
-	ytemp = ytemp & 4032;
-	xtemp = position>>26;
-	spot = xtemp | ytemp;
-	position += step;
-	dest[0] = colormap[source[spot]]; 
-
-	ytemp = position>>4;
-	ytemp = ytemp & 4032;
-	xtemp = position>>26;
-	spot = xtemp | ytemp;
-	position += step;
-	dest[1] = colormap[source[spot]];
-	
-	ytemp = position>>4;
-	ytemp = ytemp & 4032;
-	xtemp = position>>26;
-	spot = xtemp | ytemp;
-	position += step;
-	dest[2] = colormap[source[spot]];
-	
-	ytemp = position>>4;
-	ytemp = ytemp & 4032;
-	xtemp = position>>26;
-	spot = xtemp | ytemp;
-	position += step;
-	dest[3] = colormap[source[spot]]; 
-		
-	count -= 4;
-	dest += 4;
-    } 
-    while (count > 0) 
-    { 
-	ytemp = position>>4;
-	ytemp = ytemp & 4032;
-	xtemp = position>>26;
-	spot = xtemp | ytemp;
-	position += step;
-	*dest++ = colormap[source[spot]]; 
-	count--;
-    } 
-} 
 #endif
+#endif
+#endif
+*/
 
-
+/*
 //
 // Again..
 //
@@ -684,6 +623,9 @@ void R_DrawSpanLow (void)
 
     } while (count--); 
 }
+*/
+
+
 
 //
 // R_InitBuffer 

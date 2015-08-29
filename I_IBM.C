@@ -1316,6 +1316,8 @@ int I_ResetMouse (void)
 ================
 */
 
+void I_StartupCyberMan(void); // FS: From Heretic
+
 void I_StartupMouse (void)
 {
    int  (far *function)();
@@ -1335,6 +1337,8 @@ void I_StartupMouse (void)
 	printf ("Mouse: detected ",0);
 
 	mousepresent = 1;
+
+	I_StartupCyberMan(); // FS: From Heretic
 }
 
 
@@ -1745,8 +1749,8 @@ void I_Init (void)
 	I_StartupDPMI();
         printf("I_StartupMouse\n",1);
 	I_StartupMouse();
-//      printf("I_StartupJoystick\n",1);
-//	I_StartupJoystick();
+        printf("I_StartupJoystick\n",1);
+        I_StartupJoystick();
         printf("I_StartupKeyboard\n",1);
 	I_StartupKeyboard();
         printf("S_Init...\n",1);

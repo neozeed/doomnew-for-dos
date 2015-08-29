@@ -33,6 +33,9 @@ LOCOBJS = &
  i_ibm_a.obj &
  i_ibm.obj &
  i_sound.obj &
+ i_cyber.obj &
+ i_net.obj &
+ linear.obj &
  tables.obj &
  f_finale.obj &
  f_wipe.obj  &
