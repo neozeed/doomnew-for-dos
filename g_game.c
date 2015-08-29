@@ -1147,24 +1147,26 @@ void G_DoCompleted (void)
 		AM_Stop (); 
 	
 	if ( gamemode != commercial)
+	{
 		switch(gamemap)
 		{
-		case 5:
-			if(chex)
-			{
+			case 5:
+				if(chex)
+				{
+					gameaction = ga_victory;
+					return;
+				}
+				break;
+			case 8:
 				gameaction = ga_victory;
 				return;
-			}
-			return;
-		case 8:
-			gameaction = ga_victory;
-			return;
-		case 9: 
-			for (i=0 ; i<MAXPLAYERS ; i++) 
-				players[i].didsecret = true; 
-			break;
+			case 9: 
+				for (i=0 ; i<MAXPLAYERS ; i++) 
+					players[i].didsecret = true; 
+				break;
 		}
-		
+	}
+	
 //#if 0  Hmmm - why?
 	if ( (gamemap == 8) && (gamemode != commercial) ) 
 	{

@@ -131,7 +131,7 @@ typedef	struct
 	int channelCount;
 	int musicVolume;
 	int soundVolume;
-	ChanInfo_t chan[8];
+	ChanInfo_t chan[MAX_CHANNELS]; // FS: Was 8
 } SoundInfo_t;
 
 

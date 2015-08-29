@@ -186,6 +186,7 @@ extern int	detailLevel;
 extern int	screenblocks;
 
 extern int	showMessages;
+extern int	grmode; // FS: Disable disk flash
             
 extern char*	chat_macros[];
 
@@ -281,6 +282,7 @@ default_t defaults[] =
 	{ "wpn_chaingun", &wpn_chaingun, 45, 1 }, // FS: X
 	{ "wpn_rocket", &wpn_rocket, 16, 1 }, // FS: Q
 	{ "wpn_plasma", &wpn_plasma, 46, 1 }, // FS: C
+	{ "disk_flash_icon", &grmode, 1 }, // FS: Disk Flashing
  
     {"chatmacro0", (int *) &chat_macros[0], (int) HUSTR_CHATMACRO0 },
     {"chatmacro1", (int *) &chat_macros[1], (int) HUSTR_CHATMACRO1 },

@@ -143,7 +143,7 @@ void DEH_CloseFile(deh_context_t *context)
     }
     else if (context->type == DEH_INPUT_LUMP)
     {
-      Z_ChangeTag(context->lumpnum, PU_CACHE);//  W_ReleaseLumpNum(context->lumpnum);
+      Z_ChangeTag((void*)context->lumpnum, PU_CACHE);//  FS: W_ReleaseLumpNum(context->lumpnum);
     }
 
     Z_Free(context->readbuffer);

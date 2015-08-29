@@ -1,31 +1,6 @@
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:
-//	Gamma correction LUT stuff.
-//	Functions to draw patches (by post) directly to screen.
-//	Functions to blit a block to the screen.
-//
-//-----------------------------------------------------------------------------
-
-
-static const char
-rcsid[] = "$Id: v_video.c,v 1.5 1997/02/03 22:45:13 b1 Exp $";
+// V_Video.c:	Gamma correction LUT stuff. 
+// 				Functions to draw patches (by post) directly to screen.
+//				Functions to blit a block to the screen.
 
 
 #include "i_system.h"
@@ -41,14 +16,14 @@ rcsid[] = "$Id: v_video.c,v 1.5 1997/02/03 22:45:13 b1 Exp $";
 
 
 // Each screen is [SCREENWIDTH*SCREENHEIGHT]; 
-byte*				screens[5];	
+byte*	screens[5];	
  
-int				dirtybox[4]; 
+int		dirtybox[4]; 
 
 
 
 // Now where did these came from?
-byte gammatable[5][256] =
+byte	gammatable[5][256] =
 {
     {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,
      17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,
@@ -139,32 +114,18 @@ int	usegamma;
 //
 // V_MarkRect 
 // 
-void
-V_MarkRect
-( int		x,
-  int		y,
-  int		width,
-  int		height ) 
-{ 
-    M_AddToBox (dirtybox, x, y); 
-    M_AddToBox (dirtybox, x+width-1, y+height-1); 
+void V_MarkRect (int x, int y, int width, int height) 
+{
+	M_AddToBox (dirtybox, x, y); 
+	M_AddToBox (dirtybox, x+width-1, y+height-1); 
 } 
  
 
 //
 // V_CopyRect 
 // 
-void
-V_CopyRect
-( int		srcx,
-  int		srcy,
-  int		srcscrn,
-  int		width,
-  int		height,
-  int		destx,
-  int		desty,
-  int		destscrn ) 
-{ 
+void V_CopyRect (int srcx, int srcy, int srcscrn, int width, int height, int destx, int desty, int destscrn) 
+{
     byte*	src;
     byte*	dest; 
 	 
@@ -481,13 +442,13 @@ V_GetBlock
 // 
 void V_Init (void) 
 { 
-    int		i;
-    byte*	base;
+	int		i;
+	byte*	base;
 		
     // stick these in low dos memory on PCs
 
-    base = I_AllocLow (SCREENWIDTH*SCREENHEIGHT*4);
+	base = I_AllocLow (SCREENWIDTH*SCREENHEIGHT*4);
 
-    for (i=0 ; i<4 ; i++)
-	screens[i] = base + i*SCREENWIDTH*SCREENHEIGHT;
+	for (i=0 ; i<4 ; i++)
+		screens[i] = base + i*SCREENWIDTH*SCREENHEIGHT;
 }

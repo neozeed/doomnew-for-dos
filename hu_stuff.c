@@ -57,7 +57,7 @@ rcsid[] = "$Id: hu_stuff.c,v 1.4 1997/02/03 16:47:52 b1 Exp $";
 #define HU_TITLET	(mapnamest[gamemap-1])
 #define HU_TITLEHEIGHT	1
 #define HU_TITLEX	0
-#define HU_TITLEY	(167 - SHORT(hu_font[0]->height))
+#define HU_TITLEY	(157 - SHORT(hu_font[0]->height)) // FS: Was 167
 
 #define HU_INPUTTOGGLE	't'
 #define HU_INPUTX	HU_MSGX
@@ -65,6 +65,9 @@ rcsid[] = "$Id: hu_stuff.c,v 1.4 1997/02/03 16:47:52 b1 Exp $";
 #define HU_INPUTWIDTH	64
 #define HU_INPUTHEIGHT	1
 
+ // FS: SECRETS FOUND automap text
+#define HU_SECRETX 0
+#define HU_SECRETY (167 - SHORT(hu_font[0]->height))
 
 
 char*	chat_macros[] =
@@ -94,6 +97,7 @@ char			chat_char; // remove later.
 static player_t*	plr;
 patch_t*		hu_font[HU_FONTSIZE];
 static hu_textline_t	w_title;
+static hu_textline_t	w_secret; // FS: SECRETS FOUND automap text
 boolean			chat_on;
 static hu_itext_t	w_chat;
 static boolean		always_off = false;
@@ -445,7 +449,6 @@ const char english_shiftxform[] =
 
 
 // FS: From Heretic -- Yeah yeah, should be in P_Inter.c but fuck it.
-
 void P_SetMessage(player_t *player, char *message, boolean ultmsg)
 {
 	if(!message_on && !ultmsg)
@@ -510,6 +513,14 @@ void HU_Start(void)
 		       HU_TITLEX, HU_TITLEY,
 		       hu_font,
 		       HU_FONTSTART);
+
+    // FS: SECRETS FOUND automap text
+    // create the secrets found widget
+    HUlib_initTextLine(&w_secret,
+		       HU_SECRETX, HU_SECRETY,
+		       hu_font,
+		       HU_FONTSTART);
+    
     
 	switch ( gamemode )
 	{
@@ -565,14 +576,30 @@ void HU_Start(void)
 
 }
 
+// FS: Draw the SECRETS FOUND text on the Automap
+void HU_SetupSecretsText(void)
+{
+	char	*secrets;
+	
+	HUlib_clearTextLine(&w_secret); // FS: Clear the old string
+	
+	sprintf(secrets, "SECRETS FOUND: %i/%i", players[consoleplayer].secretcount, totalsecret);
+	while (*secrets)
+
+	HUlib_addCharToTextLine(&w_secret, *(secrets++)); // FS: Add it all in...
+	HUlib_drawTextLine(&w_secret, false); // FS: Now draw it!
+}
+
 void HU_Drawer(void)
 {
 
     HUlib_drawSText(&w_message);
     HUlib_drawIText(&w_chat);
     if (automapactive)
-	HUlib_drawTextLine(&w_title, false);
-
+    {
+		HUlib_drawTextLine(&w_title, false);
+		HU_SetupSecretsText(); // FS: SECRETS FOUND automap text
+	}
 }
 
 void HU_Erase(void)
@@ -581,7 +608,7 @@ void HU_Erase(void)
     HUlib_eraseSText(&w_message);
     HUlib_eraseIText(&w_chat);
     HUlib_eraseTextLine(&w_title);
-
+	HUlib_eraseTextLine(&w_secret); // FS: SECRETS FOUND automap text
 }
 
 void HU_Ticker(void)

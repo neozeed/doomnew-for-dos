@@ -1,31 +1,6 @@
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:
-//	Status bar code.
-//	Does the face/direction indicator animatin.
-//	Does palette indicators as well (red pain/berserk, bright pickup)
-//
-//-----------------------------------------------------------------------------
-
-static const char
-rcsid[] = "$Id: st_stuff.c,v 1.6 1997/02/03 22:45:13 b1 Exp $";
-
+// ST_Stuff.c:	Status bar code.
+//				Does the face/direction indicator animatin.
+//				Does palette indicators as well (red pain/berserk, bright pickup)
 
 #include <stdio.h>
 
@@ -1546,32 +1521,40 @@ void ST_Init (void)
 // FS: Draw Health in Full Screen
 void ST_DrawFullScreenHealth(int x)
 {
-
+	int i = 9;
 	char namebuf[9];
 
-		if (plyr->mo->health >= 100)
-		{
-			sprintf(namebuf,"STTNUM%d", plyr->mo->health / 100);
-			V_DrawPatchDirect(5, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+	if (plyr->mo->health > 999) // FS: Some DEHacked uses this dumb shit
+	{
+		sprintf(namebuf,"STTNUM%d", i);
+		V_DrawPatchDirect(5, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+		V_DrawPatchDirect(20, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));		
+		V_DrawPatchDirect(35, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+	}
+	else if (plyr->mo->health > 99)
+	{
+		sprintf(namebuf,"STTNUM%d", plyr->mo->health / 100);
+		V_DrawPatchDirect(5, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
 
-			sprintf(namebuf,"STTNUM%d", (plyr->mo->health / 10) % 10);
+		sprintf(namebuf,"STTNUM%d", (plyr->mo->health / 10) % 10);
+		V_DrawPatchDirect(20, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+		sprintf(namebuf,"STTNUM%d", (plyr->mo->health / 1) % 10);
+		V_DrawPatchDirect(35, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+	}
+	else if (plyr->mo->health < 100 && plyr->mo->health > 0)
+	{
+		if( (plyr->mo->health / 10) % 10 > 0)
+		{
+			sprintf(namebuf,"STTNUM%d", (plyr->mo->health /10) % 10);
 			V_DrawPatchDirect(20, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+		}
+		sprintf(namebuf,"STTNUM%d", (plyr->mo->health / 1) % 10);
+		V_DrawPatchDirect(35, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+	}
+	else
+		V_DrawPatchDirect(35,180, 0, W_CacheLumpName("STTNUM0", PU_CACHE));
 
-			sprintf(namebuf,"STTNUM%d", (plyr->mo->health / 1) % 10);
-			V_DrawPatchDirect(35, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
-		}
-		else if (plyr->mo->health < 100 && plyr->mo->health > 0)
-		{
-			if( (plyr->mo->health / 10) % 10 > 0)
-			{
-				sprintf(namebuf,"STTNUM%d", (plyr->mo->health /10) % 10);
-				V_DrawPatchDirect(20, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
-			}
-			sprintf(namebuf,"STTNUM%d", (plyr->mo->health / 1) % 10);
-			V_DrawPatchDirect(35, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
-		}
-		else
-			V_DrawPatchDirect(35,180, 0, W_CacheLumpName("STTNUM0", PU_CACHE));
 	V_DrawPatchDirect(50,180, 0, W_CacheLumpName("STTPRCNT", PU_STATIC));
 }
 
@@ -1588,15 +1571,8 @@ void ST_DrawFullScreenAmmo(int x)
 	{
 		sprintf(namebuf,"STTNUM%d", i);
 		V_DrawPatchDirect(5, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
-
-		sprintf(namebuf,"STTNUM%d", i);
 		V_DrawPatchDirect(20, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
-
-		sprintf(namebuf,"STTNUM%d", i);
 		V_DrawPatchDirect(35, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
-
-		sprintf(namebuf,"STTNUM%d", i);
-		V_DrawPatchDirect(50, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
 	}
 	else if (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] > 99)
 	{
@@ -1621,7 +1597,7 @@ void ST_DrawFullScreenAmmo(int x)
 	}
 }
 
-// FS: Draw Ammo in Full Screen
+// FS: Draw Armor in Full Screen
 void ST_DrawFullScreenArmor(int x)
 {
 	char namebuf[9];
@@ -1649,26 +1625,36 @@ void ST_DrawFullScreenArmor(int x)
 		}
 }
 
+// FS: Draw Keys in Full Screen
+void ST_DrawFullScreenKeys (void)
+{
+	int keyx = 260;
+	
+	if(chex)
+		keyx = 255; // FS: Offset it a bit because Chex's font is larger.
+		
+	if(plyr->cards[0] && !plyr->cards[3]) // Blue
+	    V_DrawPatchDirect(keyx,176, 0, W_CacheLumpName("STKEYS0",PU_CACHE));
+	if(plyr->cards[1] && !plyr->cards[4]) // Yellow
+	    V_DrawPatchDirect(keyx,183, 0, W_CacheLumpName("STKEYS1",PU_CACHE));
+	if(plyr->cards[2] && !plyr->cards[5]) // Read
+	    V_DrawPatchDirect(keyx,190, 0, W_CacheLumpName("STKEYS2",PU_CACHE));
+	if(plyr->cards[3]) // Blue
+	    V_DrawPatchDirect(keyx,170, 0, W_CacheLumpName("STKEYS3",PU_CACHE));
+	if(plyr->cards[4]) // Yellow
+	    V_DrawPatchDirect(keyx,180, 0, W_CacheLumpName("STKEYS4",PU_CACHE));
+	if(plyr->cards[5]) // Read
+	    V_DrawPatchDirect(keyx,190, 0, W_CacheLumpName("STKEYS5",PU_CACHE));
+}
+
 // FS: Draw Cards/Keys, Health, Ammo, and Armor in Full Screen
 extern boolean 	readthisfullscreenhack; // FS: Hack for Read This!/Credits so DrawFullScreenStuff doesn't draw over it.
 void ST_DrawFullScreenStuff (void)
 {
-        if(readthisfullscreenhack || gamestate != GS_LEVEL || automapactive)
+	if(readthisfullscreenhack || gamestate != GS_LEVEL || automapactive)
 		return;
 
-	if(plyr->cards[0] && !plyr->cards[3]) // Blue
-	    V_DrawPatchDirect(260,176, 0, W_CacheLumpName("STKEYS0",PU_CACHE));
-	if(plyr->cards[1] && !plyr->cards[4]) // Yellow
-	    V_DrawPatchDirect(260,183, 0, W_CacheLumpName("STKEYS1",PU_CACHE));
-	if(plyr->cards[2] && !plyr->cards[5]) // Read
-	    V_DrawPatchDirect(260,190, 0, W_CacheLumpName("STKEYS2",PU_CACHE));
-	if(plyr->cards[3]) // Blue
-	    V_DrawPatchDirect(260,170, 0, W_CacheLumpName("STKEYS3",PU_CACHE));
-	if(plyr->cards[4]) // Yellow
-	    V_DrawPatchDirect(260,180, 0, W_CacheLumpName("STKEYS4",PU_CACHE));
-	if(plyr->cards[5]) // Read
-	    V_DrawPatchDirect(260,190, 0, W_CacheLumpName("STKEYS5",PU_CACHE));
-
+	ST_DrawFullScreenKeys();
 	ST_DrawFullScreenHealth(plyr->mo->health);
 	ST_DrawFullScreenAmmo(plyr->ammo[weaponinfo[plyr->readyweapon].ammo]);
 	ST_DrawFullScreenArmor(plyr->armorpoints);

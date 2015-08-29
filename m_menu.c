@@ -1,29 +1,5 @@
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:
-//	DOOM selection menu, options, episode etc.
-//	Sliders and icons. Kinda widget stuff.
-//
-//-----------------------------------------------------------------------------
-
-static const char
-rcsid[] = "$Id: m_menu.c,v 1.7 1997/02/03 22:45:10 b1 Exp $";
+// M_menu.c:	DOOM selection menu, options, episode etc.
+//				Sliders and icons. Kinda widget stuff.
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -196,7 +172,7 @@ void M_WriteText(int x, int y, char *string);
 int  M_StringWidth(char *string);
 int  M_StringHeight(char *string);
 void M_StartControlPanel(void);
-void M_StartMessage(char *string,void *routine,boolean input);
+void M_StartMessage(char *string,void *routine,boolean input, boolean keepactive); // FS: Hack
 void M_StopMessage(void);
 void M_ClearMenus (void);
 
@@ -565,8 +541,8 @@ void M_LoadGame (int choice)
 {
     if (netgame)
     {
-	M_StartMessage(DEH_String(LOADNET),NULL,false);
-	return;
+		M_StartMessage(DEH_String(LOADNET),NULL,false, false);
+		return;
     }
 	
     M_SetupNextMenu(&LoadDef);
@@ -584,14 +560,14 @@ void M_DrawSave(void)
     V_DrawPatchDirect (72,28,0,W_CacheLumpName(DEH_String("M_SAVEG"),PU_CACHE));
     for (i = 0;i < load_end; i++)
     {
-	M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
-	M_WriteText(LoadDef.x,LoadDef.y+LINEHEIGHT*i,savegamestrings[i]);
+		M_DrawSaveLoadBorder(LoadDef.x,LoadDef.y+LINEHEIGHT*i);
+		M_WriteText(LoadDef.x,LoadDef.y+LINEHEIGHT*i,savegamestrings[i]);
     }
 	
     if (saveStringEnter)
     {
-	i = M_StringWidth(savegamestrings[saveSlot]);
-	M_WriteText(LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,"_");
+		i = M_StringWidth(savegamestrings[saveSlot]);
+		M_WriteText(LoadDef.x + i,LoadDef.y+LINEHEIGHT*saveSlot,"_");
     }
 }
 
@@ -630,12 +606,12 @@ void M_SaveGame (int choice)
 {
     if (!usergame)
     {
-	M_StartMessage(DEH_String(SAVEDEAD),NULL,false);
-	return;
+		M_StartMessage(DEH_String(SAVEDEAD),NULL,false, false);
+		return;
     }
 	
     if (gamestate != GS_LEVEL)
-	return;
+		return;
 	
     M_SetupNextMenu(&SaveDef);
     M_ReadSaveStrings();
@@ -666,6 +642,7 @@ void M_DeleteSaveResponse(int ch) // FS: Ask if we want to delete the save game
 		sprintf(savename,SAVEGAMENAME"%d.dsg",itemOn);
 		remove(savename);
 		S_StartSound(NULL,sfx_swtchx);
+		M_ReadSaveStrings();
 	}
 }
 
@@ -689,7 +666,7 @@ void M_QuickSave(void)
 	return;
     }
     sprintf(tempstring,QSPROMPT,savegamestrings[quickSaveSlot]);
-    M_StartMessage(tempstring,M_QuickSaveResponse,true);
+    M_StartMessage(tempstring,M_QuickSaveResponse,true,false);
 }
 
 
@@ -711,17 +688,17 @@ void M_QuickLoad(void)
 {
     if (netgame)
     {
-	M_StartMessage(DEH_String(QLOADNET),NULL,false);
-	return;
+		M_StartMessage(DEH_String(QLOADNET),NULL,false, false);
+		return;
     }
 	
     if (quickSaveSlot < 0)
     {
-	M_StartMessage(DEH_String(QSAVESPOT),NULL,false);
-	return;
+		M_StartMessage(DEH_String(QSAVESPOT),NULL,false,false);
+		return;
     }
     sprintf(tempstring,QLPROMPT,savegamestrings[quickSaveSlot]);
-    M_StartMessage(tempstring,M_QuickLoadResponse,true);
+    M_StartMessage(tempstring,M_QuickLoadResponse,true,false);
 }
 
 
@@ -733,20 +710,31 @@ void M_QuickLoad(void)
 //
 void M_DrawReadThis1(void)
 {
+    char *lumpname = "CREDIT";
+    int skullx = 330, skully = 175;
+    
     inhelpscreens = true;
     switch ( gamemode )
     {
-      case commercial:
-	V_DrawPatchDirect (0,0,0,W_CacheLumpName(DEH_String("HELP"),PU_CACHE));
-	break;
-      case shareware:
-      case registered:
-      case retail:
-	V_DrawPatchDirect (0,0,0,W_CacheLumpName(DEH_String("HELP1"),PU_CACHE));
-	break;
-      default:
-	break;
-    }
+		case commercial:
+			lumpname = "HELP";
+			skullx = 330;
+			skully = 165;			
+			break;
+		case shareware:
+		case registered:
+		case retail:
+			lumpname = "HELP1";
+			break;
+		default:
+			break;
+	}
+
+    lumpname = DEH_String(lumpname);
+	V_DrawPatchDirect (0,0,0,W_CacheLumpName(lumpname,PU_CACHE));
+
+    ReadDef1.x = skullx;
+    ReadDef1.y = skully;
     return;
 }
 
@@ -757,22 +745,22 @@ void M_DrawReadThis1(void)
 //
 void M_DrawReadThis2(void)
 {
-    inhelpscreens = true;
-    switch ( gamemode )
-    {
-      case retail:
-      case commercial:
-		// This hack keeps us from having to change menus.
-		V_DrawPatchDirect (0,0,0,W_CacheLumpName(DEH_String("CREDIT"),PU_CACHE));
-	break;
-      case shareware:
-      case registered:
-		V_DrawPatchDirect (0,0,0,W_CacheLumpName(DEH_String("HELP2"),PU_CACHE));
-	break;
-      default:
-	break;
-    }
-    return;
+	inhelpscreens = true;
+	switch ( gamemode )
+	{
+		case retail:
+		case commercial:
+			// This hack keeps us from having to change menus.
+			V_DrawPatchDirect (0,0,0,W_CacheLumpName(DEH_String("CREDIT"),PU_CACHE));
+			break;
+		case shareware:
+		case registered:
+			V_DrawPatchDirect (0,0,0,W_CacheLumpName(DEH_String("HELP2"),PU_CACHE));
+			break;
+		default:
+			break;
+	}
+	return;
 }
 
 
@@ -783,11 +771,9 @@ void M_DrawSound(void)
 {
     V_DrawPatchDirect (60,38,0,W_CacheLumpName(DEH_String("M_SVOL"),PU_CACHE));
 
-    M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),
-                 16,snd_SfxVolume);
+    M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1), 16,snd_SfxVolume);
 
-    M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(music_vol+1),
-		 16,snd_MusicVolume);
+    M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(music_vol+1), 16,snd_MusicVolume);
 }
 
 void M_Sound(int choice)
@@ -799,34 +785,34 @@ void M_SfxVol(int choice)
 {
     switch(choice)
     {
-      case 0:
-	if (snd_SfxVolume)
-	    snd_SfxVolume--;
-	break;
-      case 1:
-        if (snd_SfxVolume < 15)
-	    snd_SfxVolume++;
-	break;
-    }
+		case 0:
+			if (snd_SfxVolume)
+				snd_SfxVolume--;
+			break;
+		case 1:
+			if (snd_SfxVolume < 15)
+				snd_SfxVolume++;
+			break;
+	}
 	
-    S_SetSfxVolume(snd_SfxVolume /* *8 */);
+    S_SetSfxVolume(snd_SfxVolume);
 }
 
 void M_MusicVol(int choice)
 {
-    switch(choice)
-    {
-      case 0:
-	if (snd_MusicVolume)
-	    snd_MusicVolume--;
-	break;
-      case 1:
-	if (snd_MusicVolume < 15)
-	    snd_MusicVolume++;
-	break;
-    }
+	switch(choice)
+	{
+		case 0:
+			if (snd_MusicVolume)
+				snd_MusicVolume--;
+			break;
+		case 1:
+			if (snd_MusicVolume < 15)
+				snd_MusicVolume++;
+			break;
+	}
 	
-    S_SetMusicVolume(snd_MusicVolume /* *8 */);
+	S_SetMusicVolume(snd_MusicVolume);
 }
 
 
@@ -837,7 +823,7 @@ void M_MusicVol(int choice)
 //
 void M_DrawMainMenu(void)
 {
-    V_DrawPatchDirect (94,2,0,W_CacheLumpName(DEH_String("M_DOOM"),PU_CACHE));
+	V_DrawPatchDirect (94,2,0,W_CacheLumpName(DEH_String("M_DOOM"),PU_CACHE));
 }
 
 
@@ -854,16 +840,16 @@ void M_DrawNewGame(void)
 
 void M_NewGame(int choice)
 {
-    if (netgame && !demoplayback)
-    {
-	M_StartMessage(DEH_String(NEWGAME),NULL,false);
-	return;
-    }
+	if (netgame && !demoplayback)
+	{
+		M_StartMessage(DEH_String(NEWGAME),NULL,false,false);
+		return;
+	}
 	
-    if ( gamemode == commercial || chex) // FS: Chex Quest doesn't have an Episode screen.
-	M_SetupNextMenu(&NewDef);
-    else
-	M_SetupNextMenu(&EpiDef);
+	if ( gamemode == commercial || chex) // FS: Chex Quest doesn't have an Episode screen.
+		M_SetupNextMenu(&NewDef);
+	else
+		M_SetupNextMenu(&EpiDef);
 }
 
 
@@ -888,14 +874,14 @@ void M_VerifyNightmare(int ch)
 
 void M_ChooseSkill(int choice)
 {
-    if (choice == nightmare)
+	if (choice == nightmare)
     {
-	if(chex) // FS: Chex Quest Nightmare Text
-		M_StartMessage(CHEXNIGHTMARE,M_VerifyNightmare,true);
-	else
-		M_StartMessage(DEH_String(NIGHTMARE),M_VerifyNightmare,true);
-	return;
-    }
+		if(chex) // FS: Chex Quest Nightmare Text
+			M_StartMessage(CHEXNIGHTMARE,M_VerifyNightmare,true,false);
+		else
+			M_StartMessage(DEH_String(NIGHTMARE),M_VerifyNightmare,true,false);
+		return;
+	}
 	
     G_DeferedInitNew(choice,epi+1,1);
     M_ClearMenus ();
@@ -906,10 +892,10 @@ void M_Episode(int choice)
     if ( (gamemode == shareware)
 	 && choice)
     {
-	M_StartMessage(DEH_String(SWSTRING),NULL,false);
-	M_SetupNextMenu(&ReadDef1);
-	readthisfullscreenhack = true;
-	return;
+		M_StartMessage(DEH_String(SWSTRING),NULL,false,true);
+		M_SetupNextMenu(&ReadDef2);
+//		readthisfullscreenhack = true;
+		return;
     }
 
     // Yet another hack...
@@ -1000,11 +986,11 @@ void M_EndGame(int choice)
 	
     if (netgame)
     {
-	M_StartMessage(DEH_String(NETEND),NULL,false);
-	return;
+		M_StartMessage(DEH_String(NETEND),NULL,false,false);
+		return;
     }
 	
-    M_StartMessage(DEH_String(ENDGAME),M_EndGameResponse,true);
+    M_StartMessage(DEH_String(ENDGAME),M_EndGameResponse,true,false);
 }
 
 
@@ -1022,7 +1008,20 @@ void M_ReadThis2(int choice)
 {
     choice = 0;
 	readthisfullscreenhack = true;
-    M_SetupNextMenu(&ReadDef2);
+	switch(gamemode) // FS: Hacking around shit
+	{
+		case shareware:
+		case registered:
+			M_SetupNextMenu(&ReadDef2);
+			break;
+		case retail:
+		case commercial:
+			M_FinishReadThis(0);
+			break;
+		default:
+			M_FinishReadThis(0);
+			break;
+	}
 }
 
 void M_FinishReadThis(int choice)
@@ -1091,7 +1090,7 @@ void M_QuitDOOM(int choice)
 		sprintf(endstring,"%s\n\n"DOSY, endmsg2[gametic%NUM_QUITMESSAGES]);
 	else
 		sprintf(endstring,"%s\n\n"DOSY, endmsg[gametic%NUM_QUITMESSAGES]);
-	M_StartMessage(endstring,M_QuitResponse,true);
+	M_StartMessage(endstring,M_QuitResponse,true,false);
 }
 
 
@@ -1215,19 +1214,15 @@ M_DrawSelCell
 }
 
 
-void
-M_StartMessage
-( char*		string,
-  void*		routine,
-  boolean	input )
+void M_StartMessage(char* string, void* routine, boolean input, boolean keepactive) // FS: Hack
 {
-    messageLastMenuActive = menuactive;
-    messageToPrint = 1;
-    messageString = string;
-    messageRoutine = routine;
-    messageNeedsInput = input;
-    menuactive = true;
-    return;
+	messageLastMenuActive = keepactive; //menuactive;
+	messageToPrint = 1;
+	messageString = string;
+	messageRoutine = routine;
+	messageNeedsInput = input;
+	menuactive = true;
+	return;
 }
 
 
@@ -1485,18 +1480,18 @@ boolean M_Responder (event_t* ev)
     // Take care of any messages that need input
     if (messageToPrint)
     {
-	if (messageNeedsInput == true &&
-	    !(ch == ' ' || ch == 'n' || ch == 'y' || ch == KEY_ESCAPE))
-	    return false;
+		if (messageNeedsInput == true &&
+		    !(ch == ' ' || ch == 'n' || ch == 'y' || ch == KEY_ESCAPE))
+		    return false;
 		
-	menuactive = messageLastMenuActive;
-	messageToPrint = 0;
-	if (messageRoutine)
-	    messageRoutine(ch);
-			
-	menuactive = false;
-	S_StartSound(NULL,sfx_swtchx);
-	return true;
+		menuactive = messageLastMenuActive;
+		messageToPrint = 0;
+		if (messageRoutine)
+		    messageRoutine(ch);
+
+//		menuactive = false; // FS: Hacked around
+		S_StartSound(NULL,sfx_swtchx);
+		return true;
     }
 	
     if (devparm && ch == KEY_F1)
@@ -1527,9 +1522,10 @@ boolean M_Responder (event_t* ev)
 	  case KEY_F1:            // Help key
 	    M_StartControlPanel ();
 
-	    if ( gamemode == retail )
-	      currentMenu = &ReadDef2;
-	    else
+
+//	    if ( gamemode == retail )
+//	      currentMenu = &ReadDef2;
+//	    else
 	      currentMenu = &ReadDef1;
 		readthisfullscreenhack = true;
 	    itemOn = 0;
@@ -1624,7 +1620,7 @@ boolean M_Responder (event_t* ev)
 			if(!access(savename,0))
 			{
 				sprintf(tempstring,"ARE YOU SURE YOU WANT TO DELETE THIS SAVE?\n\nPRESS Y OR N.");
-    				M_StartMessage(tempstring,M_DeleteSaveResponse,true);
+    			M_StartMessage(tempstring,M_DeleteSaveResponse,true,true);
 			}
 		}
 		return true;
@@ -1764,18 +1760,20 @@ void M_Drawer (void)
 	{
 		start = 0;
 		y = 100 - M_StringHeight(messageString)/2;
-		while(*(messageString+start))
+		while(*(messageString+start) != '\0')
 		{
-			for (i = 0;i < strlen(messageString+start);i++)
-			if (*(messageString+start+i) == '\n')
+			int foundnewline = 0;
+		    for (i = 0; i < strlen(messageString + start); i++)
+			if (messageString[start + i] == '\n')
 			{
-				memset(string,0,sizeof(string)); // FS: Fickst'd
-				strncpy(string,messageString+start,i);
-				start += i+1;
-				break;
+			    memset(string, 0, sizeof(string));
+			    strncpy(string, messageString + start, i);
+			    foundnewline = 1;
+			    start += i + 1;
+			    break;
 			}
 				
-			if (i == strlen(messageString+start))
+		    if (!foundnewline)
 			{
 				strcpy(string,messageString+start);
 				start += i;
@@ -1791,6 +1789,9 @@ void M_Drawer (void)
 	if (!menuactive)
 		return;
 
+	if (currentMenu == &ReadDef2) // FS: Some hack shit
+		readthisfullscreenhack = true;
+		
 	if (currentMenu->routine)
 		currentMenu->routine();         // call Draw routine
 
@@ -1895,6 +1896,8 @@ void M_Init (void)
  		case shareware:
 			// Episode 2 and 3 are handled,
 		//  branching to an ad screen.
+			ReadDef2.x = 280;
+			ReadDef2.y = 185;		
 	      case registered:
 			// We need to remove the fourth episode.
 			EpiDef.numitems--;

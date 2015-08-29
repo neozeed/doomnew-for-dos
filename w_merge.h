@@ -18,25 +18,35 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
 //
-//-----------------------------------------------------------------------------
+// DESCRIPTION:
+// Handles merging of PWADs, similar to deutex's -merge option
 //
-// Dehacked I/O code (does all reads from dehacked files)
+// Ideally this should work exactly the same as in deutex, but trying to
+// read the deutex source code made my brain hurt.
 //
 //-----------------------------------------------------------------------------
 
-#ifndef DEH_IO_H
-#define DEH_IO_H
+#ifndef W_MERGE_H
+#define W_MERGE_H
 
-#include "deh_defs.h"
+#define W_NWT_MERGE_SPRITES   0x1
+#define W_NWT_MERGE_FLATS     0x2
 
+// Add a new WAD and merge it into the main directory
 
-deh_context_t *DEH_OpenFile(char *filename);
-deh_context_t *DEH_OpenLump(int lumpnum);
-void DEH_CloseFile(deh_context_t *context);
-int DEH_GetChar(deh_context_t *context);
-char *DEH_ReadLine(deh_context_t *context);
-void DEH_Error(deh_context_t *context, char *msg, ...);
-void DEH_Warning(deh_context_t *context, char *msg, ...);
+void W_MergeFile(char *filename);
 
-#endif /* #ifndef DEH_IO_H */
+// NWT-style merging
+
+void W_NWTMergeFile(char *filename, int flags);
+
+// Acts the same as NWT's "-merge" option.
+
+void W_NWTDashMerge(char *filename);
+
+// Debug function that prints the WAD directory.
+
+void W_PrintDirectory(void);
+
+#endif /* #ifndef W_MERGE_H */
 

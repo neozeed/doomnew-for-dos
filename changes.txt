@@ -1,3 +1,26 @@
+09-29-13
+ - Put a "return" instead of a "break" in switch(gamemap) for Chex Quest.
+   Was causing Map 5 finishes to trigger the Finale or nothing at all!
+ - Fixed any menu displayed after M_SetMessage not displaying.
+   i.e. The shareware Read This! screen after selecting Episode 2 or 3.
+   Apparently, this bug was in the final v1.9 of Doom Shareware as well.
+ - Fixed key spacing in fullscreen mode with Chex Quest.
+ - Automap now shows "SECRETS FOUND: x/y".
+
+09-28-13
+ - Fixed "-skill 0" to be an invalid option as well as any other invalid
+   number passed to "-skill".
+ - Specify the main game WAD with -mainwad.  Useful for DEUSF stuff and you
+   don't want to remember if you un-DEUSF'd something.
+ - Fixed a few sillies with I_Update()'s.  Now the help screen doesn't have a 
+   partial weird wipe going through it if you're viewing it during a demo
+   transition.
+
+09-26-13
+ - Disk/CD-ROM flashing icon returns.  Again, thanks to Chocolate Doom.
+ - Disk/CD-ROM flashing icon now toggable from DEFAULT.CFG with
+   disk_flash_icon.
+
 09-25-13
  - Fixed the sky never changing in Ultimate Doom.  Silly pack_plut and pack_tnt
    fuckin' my game up!

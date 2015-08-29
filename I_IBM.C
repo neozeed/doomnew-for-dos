@@ -60,6 +60,11 @@ extern  int     usemouse, usejoystick;
 
 extern void **lumpcache;
 
+static byte *disk_image = NULL; // FS: From Chocolate Doom
+static byte *saved_background; // FS: From Chocolate Doom
+#define LOADING_DISK_W 16
+#define LOADING_DISK_H 16
+
 /*
 ===============================================================================
 
@@ -593,12 +598,12 @@ void S_Init(void)
 {
 	soundCurve = Z_Malloc(MAX_SND_DIST, PU_STATIC, NULL);
 	I_StartupSound();
-//	if(snd_Channels > 8) // FS: FIX THIS
+	if(snd_Channels > 8) // FS: FIX THIS
 	{
 		snd_Channels = 8;
 	}
 	I_SetChannels(snd_Channels);
-        I_SetMusicVolume(4);
+	I_SetMusicVolume(snd_MusicVolume);
 	S_SetMaxVolume(true);
 }
 void S_GetChannelInfo(SoundInfo_t *s)
@@ -721,7 +726,7 @@ void S_ShutDown(void)
 #define PEL_DATA                0x3c9
 #define PEL_MASK                0x3c6
 
-boolean grmode;
+int grmode;
 
 //==================================================
 //
@@ -985,7 +990,7 @@ void I_Update (void)
 
 void I_InitGraphics(void)
 {
-	grmode = true;
+//	grmode = 1; // FS: Now in CFG
 	regs.w.ax = 0x13;
 	int386(0x10, &regs, &regs);//(const union REGS *)&regs, &regs); // FS: Compiler Warning?
 	pcscreen = destscreen = (byte *)0xa0000;
@@ -1841,60 +1846,89 @@ byte *I_ZoneBase (int *size)
 
 void I_InitDiskFlash (void)
 {
-#if 0
-	void    *pic;
-	byte    *temp;
+    patch_t *disk;
+    char *disk_name;
+    int y;
+    int xoffset = SCREENWIDTH - LOADING_DISK_W;
+    int yoffset = SCREENHEIGHT - LOADING_DISK_H;
+    char buf[20];
 
-	pic = W_CacheLumpName (DEH_String("STDISK"),PU_CACHE);
-	temp = destscreen;
-	destscreen = (byte *)0xac000;
-	V_DrawPatchDirect (SCREENWIDTH-16,SCREENHEIGHT-16,0,pic);
-	destscreen = temp;
-#endif
+    if (M_CheckParm("-cdrom") > 0)
+        disk_name = DEH_String("STCDROM");
+    else
+        disk_name = DEH_String("STDISK");
+
+    disk = W_CacheLumpName(disk_name, PU_STATIC);
+
+    // Draw the disk to the screen:
+
+    V_DrawPatch(SCREENWIDTH - LOADING_DISK_W,
+                SCREENHEIGHT - LOADING_DISK_H,
+                0, disk);
+
+    disk_image = Z_Malloc(LOADING_DISK_W * LOADING_DISK_H, PU_STATIC, NULL);
+    saved_background = Z_Malloc(LOADING_DISK_W * LOADING_DISK_H, PU_STATIC, NULL);
+
+    for (y=0; y<LOADING_DISK_H; ++y) 
+    {
+        memcpy(disk_image + LOADING_DISK_W * y,
+               screens[0] + SCREENWIDTH * (y + yoffset) + xoffset,
+               LOADING_DISK_W);
+    }
+
+    Z_ChangeTag(disk, PU_CACHE);
+
 }
 
 // draw disk icon
 void I_BeginRead (void)
 {
-#if 0
-#endif
+    byte *screenloc = screens[0]
+                    + (SCREENHEIGHT - LOADING_DISK_H) * SCREENWIDTH
+                    + (SCREENWIDTH - LOADING_DISK_W);
+    int y;
+
+    if (!grmode || disk_image == NULL)
+        return;
+
+    // save background and copy the disk image in
+
+    for (y=0; y<LOADING_DISK_H; ++y)
+    {
+        memcpy(saved_background + y * LOADING_DISK_W,
+               screenloc,
+               LOADING_DISK_W);
+        memcpy(screenloc,
+               disk_image + y * LOADING_DISK_W,
+               LOADING_DISK_W);
+
+        screenloc += SCREENWIDTH;
+    }
+	I_Update();
 }
 
 // erase disk icon
 void I_EndRead (void)
 {
-#if 0
-	byte    *src,*dest;
-	int             y;
+    byte *screenloc = screens[0]
+                    + (SCREENHEIGHT - LOADING_DISK_H) * SCREENWIDTH
+                    + (SCREENWIDTH - LOADING_DISK_W);
+    int y;
 
-	if (!grmode)
-		return;
+    if (!grmode || disk_image == NULL)
+        return;
 
-// write through all planes
-	outp (SC_INDEX,SC_MAPMASK);
-	outp (SC_INDEX+1,15);
-// set write mode 1
-	outp (GC_INDEX,GC_MODE);
-	outp (GC_INDEX+1,inp(GC_INDEX+1)|1);
+    // save background and copy the disk image in
 
+    for (y=0; y<LOADING_DISK_H; ++y)
+    {
+        memcpy(screenloc,
+               saved_background + y * LOADING_DISK_W,
+               LOADING_DISK_W);
 
-// copy disk over
-	dest = currentscreen + 184*80 + 304/4;
-	src = (byte *)0xac000 + 184*80 + 288/4;
-	for (y=0 ; y<16 ; y++)
-	{
-		dest[0] = src[0];
-		dest[1] = src[1];
-		dest[2] = src[2];
-		dest[3] = src[3];
-		src += 80;
-		dest += 80;
-	}
-
-// set write mode 0
-	outp (GC_INDEX,GC_MODE);
-	outp (GC_INDEX+1,inp(GC_INDEX+1)&~1);
-#endif
+        screenloc += SCREENWIDTH;
+    }
+	I_Update();
 }
 
 

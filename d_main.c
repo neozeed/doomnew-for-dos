@@ -88,10 +88,10 @@ boolean	autostart;
 FILE*		debugfile;
 
 boolean	advancedemo;
-boolean	plutonia; // FS
-boolean	tnt; // FS
-boolean	chex; // FS: For Chex(R) Quest
-boolean	chex2; // FS: For Chex Quest 2
+boolean	plutonia = false; // FS
+boolean	tnt = false; // FS
+boolean	chex = false; // FS: For Chex(R) Quest
+boolean	chex2 = false; // FS: For Chex Quest 2
 
 char	wadfile[1024];		// primary wad file
 char	mapdir[1024];		   // directory of development maps
@@ -225,7 +225,6 @@ void D_Display (void)
 	{
 		wipe = true;
 		wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
-		I_Update();
 	}
 	else
 		wipe = false;
@@ -264,7 +263,7 @@ void D_Display (void)
 	}
 	
 	// draw buffered stuff to screen
-//	I_Update ();
+//	I_UpdateNoBlit (); // FS: Not needed.
 	
 	// draw the view directly
 	if (gamestate == GS_LEVEL && !automapactive && gametic)
@@ -325,27 +324,30 @@ void D_Display (void)
 		I_Update ();			  // page flip or blit buffer
 		return;
 	}
-	
-	// wipe update
-	wipe_EndScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
 
-	wipestart = I_GetTime () - 1;
-
-	do
+	if (!inhelpscreensstate) // FS: Don't draw this if we're in the Read This! Menu, makes things a little faster.
 	{
+		// wipe update
+		wipe_EndScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
+
+		wipestart = I_GetTime () - 1;
+
 		do
 		{
-			nowtime = I_GetTime ();
-			tics = nowtime - wipestart;
+			do
+			{
+				nowtime = I_GetTime ();
+				tics = nowtime - wipestart;
+			}
+			while (!tics);
+			wipestart = nowtime;
+			done = wipe_ScreenWipe(wipe_Melt, 0, 0, SCREENWIDTH, SCREENHEIGHT, tics);
+			//I_UpdateNoBlit ();	// FS: Not needed.
+			M_Drawer ();							// menu is drawn even on top of wipes
+			I_Update ();					  // page flip or blit buffer
 		}
-		while (!tics);
-		wipestart = nowtime;
-		done = wipe_ScreenWipe(wipe_Melt, 0, 0, SCREENWIDTH, SCREENHEIGHT, tics);
-		I_Update ();
-		M_Drawer ();							// menu is drawn even on top of wipes
-		I_Update ();					  // page flip or blit buffer
+		while (!done);
 	}
-	while (!done);
 }
 
 
@@ -672,13 +674,7 @@ void IdentifyVersion (void)
 	{
 		gamemode = commercial;
 		devparm = true;
-		/* I don't bother
-		if(plutonia)
-			D_AddFile (DEVDATA"plutonia.wad");
-		else if(tnt)
-			D_AddFile (DEVDATA"tnt.wad");
-		else*/
-			D_AddFile (DEVDATA"doom2.wad");
+		D_AddFile (DEVDATA"doom2.wad");
 		
 		D_AddFile (DEVMAPS"cdata/texture1.lmp");
 		D_AddFile (DEVMAPS"cdata/pnames.lmp");
@@ -789,6 +785,16 @@ void IdentifyVersion (void)
 		return;
 	}
 
+	if(M_CheckParm("-shareware"))
+	{
+		gamemode = shareware;
+		devparm = false;
+		
+		strcpy(basedefault, "default.cfg");
+		D_AddFile("doom1.wad");
+		return;
+	}
+	
 	if ( !access (doom2wad,0) )
 	{
 		gamemode = commercial;
@@ -984,12 +990,33 @@ void D_DoomMain (void)
 	char					file[256];
 	FILE *fp;
 	boolean devMap;
-
+	char *bannerbuffer; // FS
+	
 	FindResponseFile ();
 
 	devparm = M_CheckParm ("-devparm"); // FS: Needs to be sooner in case you use -regdev, etc.
-	
-	IdentifyVersion ();
+
+	// FS: Define a custom main WAD
+	p = M_CheckParm("-mainwad");
+	if(p)
+	{
+		sprintf(basedefault, "default.cfg");
+		wadfiles[0] = myargv[p+1];
+		W_AddFile(wadfiles[0]);
+
+		if(W_CheckNumForName("MAP01") != -1)
+			gamemode = commercial;
+		else if(W_CheckNumForName("E4M1") != -1)
+			gamemode = retail;
+		else if(W_CheckNumForName("E3M1") != -1)
+			gamemode = registered;
+		else if(W_CheckNumForName("E1M1") != -1)
+			gamemode = shareware;
+		else
+			I_Error("Unable to determine game version!");
+	}
+	else
+		IdentifyVersion ();
 
 
 	setbuf (stdout, NULL);
@@ -1106,7 +1133,7 @@ void D_DoomMain (void)
 	}
 	else
 	{ // Change to look for shareware wad
-				wadfiles[0] = "doom.wad";
+		wadfiles[0] = "doom.wad";
 	}
 
 	// Check for -CDROM
@@ -1134,7 +1161,7 @@ void D_DoomMain (void)
 		if(gamemode == commercial)
 			D_AddFile("GUS1MIID.WAD");
 		else
-				D_AddFile("GUS1M.WAD");
+			D_AddFile("GUS1M.WAD");
 	}
 
 	// turbo option
@@ -1181,6 +1208,8 @@ void D_DoomMain (void)
 	if (p && p < myargc-1)
 	{
 		startskill = myargv[p+1][0]-'1';
+		if(startskill < sk_baby || startskill > sk_nightmare) // FS: Make sure it's valid.  Was fucking up my Kali gamin'!
+			I_Error("Invalid Skill parameter! Valid options are 1 through 5.");		
 		autostart = true;
 	}
 
@@ -1225,10 +1254,6 @@ void D_DoomMain (void)
 	V_Init ();
 	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
-#if TITLEBARTEST // FS: Test the alignment of the title bar banner
-	getchar();
-#endif
-
 	printf ("M_LoadDefaults: Load system defaults.\n");
 	M_LoadDefaults ();			  // load before initing other systems
 	CheckAbortStartup(); // FS: Check if ESC key is held during startup
@@ -1240,6 +1265,11 @@ void D_DoomMain (void)
 	printf ("W_Init: Init WADfiles.\n");
 	W_InitMultipleFiles (wadfiles);
 	CheckAbortStartup(); // FS: Check if ESC key is held during startup
+
+#ifdef FEATURE_DEHACKED // FS: DEH
+    printf("DEH_Init: Init Dehacked support.\n");
+    DEH_Init();
+#endif
 
 	// Check for -file in shareware
 	if (modifiedgame)
@@ -1289,34 +1319,30 @@ void D_DoomMain (void)
 //
 	if (gamemode == registered || gamemode == retail) // FS
 	{
-		mprintf ("	registered version.\n");
-		mprintf (
+		DEH_printf ("	registered version.\n");
+		DEH_snprintf(bannerbuffer, 285,
 			"===========================================================================\n"
 			"             This version is NOT SHAREWARE, do not distribute!\n"
 			"         Please report software piracy to the SPA: 1-800-388-PIR8\n"
 			"===========================================================================\n"
 		);
+		DEH_printf(bannerbuffer);
 	}
 	
 	if (gamemode == shareware)
-		mprintf ("	shareware version.\n");
+		DEH_printf ("	shareware version.\n");
 
 	if (gamemode == commercial)
 	{
-		mprintf ("	commercial version.\n");
-		mprintf (
+		DEH_printf ("	commercial version.\n");
+		DEH_snprintf(bannerbuffer, 269,
 			"===========================================================================\n"
 			"                            Do not distribute!\n"
 			"         Please report software piracy to the SPA: 1-800-388-PIR8\n"
 			"===========================================================================\n"
 		);
-		// shareware = false;
+		DEH_printf(bannerbuffer);
 	}
-
-#ifdef FEATURE_DEHACKED // FS: DEH
-    printf("DEH_Init: Init Dehacked support.\n");
-    DEH_Init();
-#endif
 
 	DEH_printf ("M_Init: Init miscellaneous info.\n");
 	M_Init ();
