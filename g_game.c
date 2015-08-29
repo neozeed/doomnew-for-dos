@@ -214,7 +214,7 @@ int		bodyqueslot;
  
 void*		statcopy;				// for statistics driver
  
-
+ 
  
 int G_CmdChecksum (ticcmd_t* cmd) 
 { 
@@ -244,21 +244,27 @@ void G_BuildTiccmd (ticcmd_t* cmd)
     int		forward;
     int		side;
     
-    ticcmd_t*	base;
+//    ticcmd_t*   base;
 
-    base = 0;             // empty, or external driver
-    memcpy (cmd,base,sizeof(*cmd)); 
+    memcpy (cmd,0,sizeof(*cmd)); 
 	
     cmd->consistancy = 
-	consistancy[consoleplayer][maketic%BACKUPTICS]; 
+        consistancy[consoleplayer][(maketic*ticdup)%BACKUPTICS]; 
 
  
     strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe] 
-	|| joybuttons[joybstrafe]; 
+        || joybuttons[joybstrafe]; 
     speed = gamekeydown[key_speed] || joybuttons[joybspeed];
+
+	if (!M_CheckParm("-debug"))
+	{
+		if (gamekeydown[key_speed]) // FS: could cheat with ultrafast movement, from DOSDOOM.
+			speed = !speed;
+	}
  
+
     forward = side = 0;
-    
+   
     // use two stage accelerative turning
     // on the keyboard and joystick
     if (joyxmove < 0
@@ -272,8 +278,10 @@ void G_BuildTiccmd (ticcmd_t* cmd)
     if (turnheld < SLOWTURNTICS) 
 	tspeed = 2;             // slow turn 
     else 
+
 	tspeed = speed;
-    
+
+
     // let movement keys cancel each other out
     if (strafe) 
     { 
@@ -315,7 +323,9 @@ void G_BuildTiccmd (ticcmd_t* cmd)
 	// fprintf(stderr, "down\n");
 	forward -= forwardmove[speed]; 
     }
-    if (joyymove < 0) 
+
+
+    if (joyymove < 0)
 	forward += forwardmove[speed]; 
     if (joyymove > 0) 
 	forward -= forwardmove[speed]; 
@@ -409,7 +419,8 @@ void G_BuildTiccmd (ticcmd_t* cmd)
 	cmd->angleturn -= mousex*0x8; 
 
     mousex = mousey = 0; 
-	 
+
+
     if (forward > MAXPLMOVE) 
 	forward = MAXPLMOVE; 
     else if (forward < -MAXPLMOVE) 
@@ -421,7 +432,8 @@ void G_BuildTiccmd (ticcmd_t* cmd)
  
     cmd->forwardmove += forward; 
     cmd->sidemove += side;
-    
+
+
     // special buttons
     if (sendpause) 
     { 
@@ -434,7 +446,8 @@ void G_BuildTiccmd (ticcmd_t* cmd)
 	sendsave = false; 
 	cmd->buttons = BT_SPECIAL | BTS_SAVEGAME | (savegameslot<<BTS_SAVESHIFT); 
     } 
-} 
+
+}
  
 
 //
@@ -523,8 +536,11 @@ boolean G_Responder (event_t* ev)
 	) 
     { 
 	if (ev->type == ev_keydown ||  
-	    (ev->type == ev_mouse && ev->data1) || 
-	    (ev->type == ev_joystick && ev->data1) ) 
+	    (ev->type == ev_mouse && ev->data1)
+            #if 0
+            || (ev->type == ev_joystick && ev->data1)
+            #endif
+            )
 	{ 
 	    M_StartControlPanel (); 
 	    return true; 
@@ -579,7 +595,7 @@ boolean G_Responder (event_t* ev)
 	mousex = ev->data2*(mouseSensitivity+5)/10; 
 	mousey = ev->data3*(mouseSensitivity+5)/10; 
 	return true;    // eat events 
- 
+#if 0 
       case ev_joystick: 
 	joybuttons[0] = ev->data1 & 1; 
 	joybuttons[1] = ev->data1 & 2; 
@@ -588,7 +604,7 @@ boolean G_Responder (event_t* ev)
 	joyxmove = ev->data2; 
 	joyymove = ev->data3; 
 	return true;    // eat events 
- 
+#endif 
       default: 
 	break; 
     } 

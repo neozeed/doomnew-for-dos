@@ -1,0 +1,8 @@
+- Fix event handling bombing this includes:
+  * Controls inverted, weird, etc. in netplay and pure DOS.
+  * Event handle bomb from Quit message. **HACKED AROUND**
+- The event handling may be related to gametics.  Refer to G_BaseTicCmd.
+- Fix snd_SfxVolume multiplier. **HACKED AROUND**
+  This will also fix the Sound Volume slider in the Menu.
+- Fix Doom2 wad, likely includes Plutonia and TNT.
+- Fix mnum == -9 hack for mus_intro

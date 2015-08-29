@@ -400,12 +400,12 @@ void NetUpdate (void)
     for (i=0 ; i<newtics ; i++)
     {
 	I_StartTic ();
-	D_ProcessEvents ();
+        D_ProcessEvents ();
 	if (maketic - gameticdiv >= BACKUPTICS/2-1)
 	    break;          // can't hold any more
 	
 	//printf ("mk:%i ",maketic);
-	G_BuildTiccmd (&localcmds[maketic%BACKUPTICS]);
+        G_BuildTiccmd (&localcmds[maketic%BACKUPTICS]);
 	maketic++;
     }
 
@@ -571,12 +571,13 @@ void D_CheckNetGame (void)
     
     netbuffer = &doomcom->data;
     consoleplayer = displayplayer = doomcom->consoleplayer;
-    if (netgame)
+    if (netgame) // FS: Don't show the printf it not a real netgame
+        {
 	D_ArbitrateNetStart ();
 
     printf ("startskill %i  deathmatch: %i  startmap: %i  startepisode: %i\n",
 	    startskill, deathmatch, startmap, startepisode);
-	
+        } 
     // read values out of doomcom
     ticdup = doomcom->ticdup;
     maxsend = BACKUPTICS/(2*ticdup)-1;
@@ -588,9 +589,12 @@ void D_CheckNetGame (void)
     for (i=0 ; i<doomcom->numnodes ; i++)
 	nodeingame[i] = true;
 	
+        if(netgame) // FS: Don't show the printf if not a real netgame
+        {
     printf ("player %i of %i (%i nodes)\n",
 	    consoleplayer+1, doomcom->numplayers, doomcom->numnodes);
 
+        }
 }
 
 

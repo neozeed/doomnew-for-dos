@@ -608,7 +608,7 @@ ST_Responder (event_t* ev)
 	  if (((buf[0]-'0')*10 + buf[1]-'0') > 35)
 	    plyr->message = STSTR_NOMUS;
 	  else
-            S_StartSong(musnum, 1);
+	    S_ChangeMusic(musnum, 1);
 	}
 	else
 	{
@@ -617,7 +617,7 @@ ST_Responder (event_t* ev)
 	  if (((buf[0]-'1')*9 + buf[1]-'1') > 31)
 	    plyr->message = STSTR_NOMUS;
 	  else
-            S_StartSong(musnum, 1);
+	    S_ChangeMusic(musnum, 1);
 	}
       }
       // Simplified, accepting both "noclip" and "idspispopd".
@@ -1041,6 +1041,8 @@ void ST_doPaletteStuff(void)
 	palette = RADIATIONPAL;
     else
 	palette = 0;
+
+	palette = 0; // FS: FIXME MAKE USEPALFLASH
 
     if (palette != st_palette)
     {

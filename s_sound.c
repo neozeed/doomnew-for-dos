@@ -110,10 +110,10 @@ static channel_t*	channels;
 // These are not used, but should be (menu).
 // Maximum volume of a sound effect.
 // Internal default is max out of 0-15.
-int 		snd_SfxVolume = 15;
+int             snd_SfxVolume;
 
 // Maximum volume of music. Useless so far.
-int 		snd_MusicVolume = 15; 
+extern	int 		snd_MusicVolume; 
 
 
 
@@ -126,8 +126,7 @@ static musicinfo_t*	mus_playing=0;
 // following is set
 //  by the defaults code in M_misc:
 // number of channels available
-int			numChannels = 8;	
-
+extern	int	snd_Channels; // FS
 static int		nextcleanup;
 
 
@@ -152,7 +151,6 @@ S_AdjustSoundParams
 void S_StopChannel(int cnum);
 void S_StartSong(int mnum); // FS
 
-
 //
 // Initializes sound stuff, including volume
 // Sets channels, SFX and music volume,
@@ -168,20 +166,20 @@ void S_Init
 
 	I_StartupSound();
   // Whatever these did with DMX, these are rather dummies now.
-  I_SetChannels(8);
+  I_SetChannels(snd_Channels);
   
-  S_SetSfxVolume(sfxVolume); // FS: FIXME
+  S_SetSfxVolume(127); // FS: FIXME
   // No music with Linux - another dummy.
-  I_SetMusicVolume(musicVolume); // FS: FIXME
+  I_SetMusicVolume(musicVolume);
 
   // Allocating the internal channels for mixing
   // (the maximum numer of sounds rendered
   // simultaneously) within zone memory.
   channels =
-    (channel_t *) Z_Malloc(numChannels*sizeof(channel_t), PU_STATIC, 0);
+    (channel_t *) Z_Malloc(snd_Channels*sizeof(channel_t), PU_STATIC, 0);
   
   // Free all channels for use
-  for (i=0 ; i<numChannels ; i++)
+  for (i=0 ; i<snd_Channels ; i++)
     channels[i].sfxinfo = 0;
   
   // no sounds are playing, and they are not mus_paused
@@ -207,7 +205,7 @@ void S_Start(void)
 
   // kill all playing sounds at start of level
   //  (trust me - a good idea)
-  for (cnum=0 ; cnum<numChannels ; cnum++)
+  for (cnum=0 ; cnum<snd_Channels ; cnum++)
     if (channels[cnum].sfxinfo)
       S_StopChannel(cnum);
   
@@ -242,7 +240,7 @@ void S_Start(void)
   // HACK FOR COMMERCIAL
   //  if (commercial && mnum > mus_e3m9)	
   //      mnum -= mus_e3m9;
-	if (mnum == -9)
+	if (mnum == -9) // FS: Fix this hack
 		mnum = mus_intro;
 
   S_ChangeMusic(mnum, true);
@@ -267,9 +265,10 @@ S_StartSoundAtVolume
   mobj_t*	origin = (mobj_t *) origin_p;
   
   
-  // FS: Debug.
-  //printf("S_StartSoundAtVolume: playing sound %d (%s)\n",
-//           sfx_id, S_sfx[sfx_id].name ); // FS
+  // Debug.
+  /*fprintf( stderr,
+  	   "S_StartSoundAtVolume: playing sound %d (%s)\n",
+  	   sfx_id, S_sfx[sfx_id].name );*/
   
   // check for bogus sound #
   if (sfx_id < 1 || sfx_id > NUMSFX)
@@ -287,7 +286,7 @@ S_StartSoundAtVolume
     if (volume < 1)
       return;
     
-    if (volume > snd_SfxVolume)
+//    if (volume > snd_SfxVolume)
       volume = snd_SfxVolume;
   }	
   else
@@ -351,7 +350,7 @@ S_StartSoundAtVolume
   
   if (cnum<0)
     return;
-  //printf("Found a channel: %i\n", cnum); // FS: turn to dprintf
+
   //
   // This is supposed to handle the loading/caching.
   // For some odd reason, the caching is done nearly
@@ -361,17 +360,21 @@ S_StartSoundAtVolume
   // get lumpnum if necessary
   if (sfx->lumpnum < 0)
     sfx->lumpnum = I_GetSfxLumpNum(sfx);
-        //printf("Got past I_GetSfxLumpNum\n"); // FS: Turn to dprintf
 
 #ifndef SNDSRV
   // cache data if necessary
   if (!sfx->data)
   {
 //    fprintf( stderr,
-//	     "S_StartSoundAtVolume: 16bit and not pre-cached - wtf?\n");
+//             "S_StartSoundAtVolume: 16bit and not pre-cached - wtf?\n");
 
     // DOS remains, 8bit handling
     sfx->data = (void *) W_CacheLumpNum(sfx->lumpnum, PU_MUSIC);
+		#ifdef __WATCOMC__
+		_dpmi_lockregion(sfx->data,
+                        lumpinfo[sfx->lumpnum].size);
+		#endif
+
 //     fprintf( stderr,
 //           "S_StartSoundAtVolume: loading %d (lump %d) : 0x%x\n",
 //           sfx_id, sfx->lumpnum, (int)sfx->data );
@@ -387,7 +390,7 @@ S_StartSoundAtVolume
   //  mix/output buffer.
   channels[cnum].handle = I_StartSound(sfx_id,
                                        sfx->data,
-				       volume,
+                                       volume,
 				       sep,
 				       pitch,
 				       priority);
@@ -406,70 +409,16 @@ S_StartSound
     S_StartSoundAtVolume(origin, sfx_id, snd_SfxVolume);
 
 
-    // UNUSED. We had problems, had we not?
-#ifdef SAWDEBUG
-{
-    int i;
-    int n;
-	
-    static mobj_t*      last_saw_origins[10] = {1,1,1,1,1,1,1,1,1,1};
-    static int		first_saw=0;
-    static int		next_saw=0;
-	
-    if (sfx_id == sfx_sawidl
-	|| sfx_id == sfx_sawful
-	|| sfx_id == sfx_sawhit)
-    {
-	for (i=first_saw;i!=next_saw;i=(i+1)%10)
-	    if (last_saw_origins[i] != origin)
-		fprintf(stderr, "old origin 0x%lx != "
-			"origin 0x%lx for sfx %d\n",
-			last_saw_origins[i],
-			origin,
-			sfx_id);
-	    
-	last_saw_origins[next_saw] = origin;
-	next_saw = (next_saw + 1) % 10;
-	if (next_saw == first_saw)
-	    first_saw = (first_saw + 1) % 10;
-	    
-	for (n=i=0; i<numChannels ; i++)
-	{
-	    if (channels[i].sfxinfo == &S_sfx[sfx_sawidl]
-		|| channels[i].sfxinfo == &S_sfx[sfx_sawful]
-		|| channels[i].sfxinfo == &S_sfx[sfx_sawhit]) n++;
-	}
+}
 
-	if (n>1)
-	{
-	    for (i=0; i<numChannels ; i++)
-	    {
-		if (channels[i].sfxinfo == &S_sfx[sfx_sawidl]
-		    || channels[i].sfxinfo == &S_sfx[sfx_sawful]
-		    || channels[i].sfxinfo == &S_sfx[sfx_sawhit])
-		{
-		    fprintf(stderr,
-			    "chn: sfxinfo=0x%lx, origin=0x%lx, "
-			    "handle=%d\n",
-			    channels[i].sfxinfo,
-			    channels[i].origin,
-			    channels[i].handle);
-		}
-	    }
-	    fprintf(stderr, "\n");
-	}
-    }
-}
-#endif
- 
-}
+
+
 
 void S_StopSound(void *origin)
 {
-
     int cnum;
 
-    for (cnum=0 ; cnum<numChannels ; cnum++)
+    for (cnum=0 ; cnum<snd_Channels ; cnum++)
     {
 	if (channels[cnum].sfxinfo && channels[cnum].origin == origin)
 	{
@@ -478,6 +427,13 @@ void S_StopSound(void *origin)
 	}
     }
 }
+
+
+
+
+
+
+
 
 
 //
@@ -533,14 +489,17 @@ void S_UpdateSounds(void* listener_p)
 		if (--S_sfx[i].usefulness == -1)
 		{
 		    Z_ChangeTag(S_sfx[i].data, PU_CACHE);
-		    S_sfx[i].data = 0;
+#ifdef __WATCOMC__
+			_dpmi_unlockregion(S_sfx[i].data, lumpinfo[S_sfx[i].lumpnum].size);
+#endif
+//		    S_sfx[i].data = 0;
 		}
 	    }
 	}
 	nextcleanup = gametic + 15;
     }
     
-    for (cnum=0 ; cnum<numChannels ; cnum++)
+    for (cnum=0 ; cnum<snd_Channels ; cnum++)
     {
 	c = &channels[cnum];
 	sfx = c->sfxinfo;
@@ -616,6 +575,8 @@ void S_SetMusicVolume(int volume)
     snd_MusicVolume = volume;
 }
 
+
+
 void S_SetSfxVolume(int volume)
 {
 
@@ -637,7 +598,6 @@ void S_StartSong(int m_id)
     S_ChangeMusic(m_id, false);
 }
 
-
 void
 S_ChangeMusic
 ( int			musicnum,
@@ -646,14 +606,13 @@ S_ChangeMusic
     musicinfo_t*	music;
     char		namebuf[9];
 
-    
     if ( (musicnum <= mus_None)
-         || (musicnum >= NUMMUSIC) )
+	 || (musicnum >= NUMMUSIC) )
     {
 	I_Error("Bad music number %d", musicnum);
     }
     else
-        music = &S_music[musicnum];
+	music = &S_music[musicnum];
 
     if (mus_playing == music)
 	return;
@@ -671,7 +630,9 @@ S_ChangeMusic
     // load & register it
     music->data = (void *) W_CacheLumpNum(music->lumpnum, PU_MUSIC);
     music->handle = I_RegisterSong(music->data);
-
+	#ifdef __WATCOMC__
+		_dpmi_lockregion(music->data, lumpinfo[music->lumpnum].size);
+	#endif
     // play it
     I_PlaySong(music->handle, looping);
 
@@ -689,11 +650,16 @@ void S_StopMusic(void)
 	I_StopSong(mus_playing->handle);
 	I_UnRegisterSong(mus_playing->handle);
 	Z_ChangeTag(mus_playing->data, PU_CACHE);
-	
+		#ifdef __WATCOMC__
+			_dpmi_unlockregion(mus_playing->data, lumpinfo[mus_playing->lumpnum].size);
+		#endif	
 	mus_playing->data = 0;
 	mus_playing = 0;
     }
 }
+
+
+
 
 void S_StopChannel(int cnum)
 {
@@ -715,7 +681,7 @@ void S_StopChannel(int cnum)
 
 	// check to see
 	//  if other channels are playing the sound
-	for (i=0 ; i<numChannels ; i++)
+	for (i=0 ; i<snd_Channels ; i++)
 	{
 	    if (cnum != i
 		&& c->sfxinfo == channels[i].sfxinfo)
@@ -807,6 +773,9 @@ S_AdjustSoundParams
     return (*vol > 0);
 }
 
+
+
+
 //
 // S_getChannel :
 //   If none available, return -1.  Otherwise channel #.
@@ -822,7 +791,7 @@ S_getChannel
     channel_t*	c;
 
     // Find an open channel
-    for (cnum=0 ; cnum<numChannels ; cnum++)
+    for (cnum=0 ; cnum<snd_Channels ; cnum++)
     {
 	if (!channels[cnum].sfxinfo)
 	    break;
@@ -834,13 +803,13 @@ S_getChannel
     }
 
     // None available
-    if (cnum == numChannels)
+    if (cnum == snd_Channels)
     {
 	// Look for lower priority
-	for (cnum=0 ; cnum<numChannels ; cnum++)
+	for (cnum=0 ; cnum<snd_Channels ; cnum++)
 	    if (channels[cnum].sfxinfo->priority >= sfxinfo->priority) break;
 
-	if (cnum == numChannels)
+	if (cnum == snd_Channels)
 	{
 	    // FUCK!  No lower priority.  Sorry, Charlie.    
 	    return -1;

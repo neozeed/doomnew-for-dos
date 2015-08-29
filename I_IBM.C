@@ -18,7 +18,7 @@
 #include "doomstat.h"
 #include "v_video.h"
 #include "d_event.h"
-
+#include "doomdef.h" // FS ?
 
 // Macros
 
@@ -93,7 +93,6 @@ int AmbChan;
 void S_Start(void)
 {
 	int i;
-        snd_Channels = 8; // FS
 
 	S_StartSong((gameepisode-1)*9 + gamemap-1, true);
 
@@ -593,7 +592,7 @@ void S_Init(void)
 {
 	soundCurve = Z_Malloc(MAX_SND_DIST, PU_STATIC, NULL);
 	I_StartupSound();
-//	if(snd_Channels > 8)
+//	if(snd_Channels > 8) // FS: FIX THIS
 	{
 		snd_Channels = 8;
 	}
@@ -730,12 +729,8 @@ boolean grmode;
 //==================================================
 
 boolean         joystickpresent;
-unsigned       joystickx, joysticky; // FS: Needed to be extern -- taniwha
+extern unsigned       joystickx, joysticky; // FS: Needed to be extern -- taniwha
 
-boolean I_ReadJoystick (void)
-{
-        return false;          // returns false if not connected
-}
 
 //==================================================
 
@@ -968,7 +963,7 @@ void I_Update (void)
 //
 // blit screen to video
 //
-	if(UpdateState == I_NOUPDATE)
+/*        if(UpdateState == I_NOUPDATE)
 	{
 		return;
 	}
@@ -1001,7 +996,7 @@ void I_Update (void)
 	if(UpdateState&I_STATBAR)
 	{
 		memcpy(pcscreen+SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
-                        screens[4]+SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
+                        screens[1]+SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
 			SCREENWIDTH*SBARHEIGHT);
 		UpdateState &= ~I_STATBAR;
 	}
@@ -1010,7 +1005,7 @@ void I_Update (void)
                 memcpy(pcscreen, screens[0], SCREENWIDTH*28);
 		UpdateState &= ~I_MESSAGES;
 	}
-
+*/
   memcpy(pcscreen, screens[0], SCREENHEIGHT*SCREENWIDTH);
 }
 
@@ -1075,64 +1070,6 @@ void I_ReadScreen(byte *scr)
 ===================
 */
 
-/*
- OLD STARTTIC STUFF
-
-void   I_StartTic (void)
-{
-	int             k;
-	event_t ev;
-
-
-	I_ReadMouse ();
-
-//
-// keyboard events
-//
-	while (kbdtail < kbdhead)
-	{
-		k = keyboardque[kbdtail&(KBDQUESIZE-1)];
-
-//      if (k==14)
-//              I_Error ("exited");
-
-		kbdtail++;
-
-		// extended keyboard shift key bullshit
-		if ( (k&0x7f)==KEY_RSHIFT )
-		{
-			if ( keyboardque[(kbdtail-2)&(KBDQUESIZE-1)]==0xe0 )
-				continue;
-			k &= 0x80;
-			k |= KEY_RSHIFT;
-		}
-
-		if (k==0xe0)
-			continue;               // special / pause keys
-		if (keyboardque[(kbdtail-2)&(KBDQUESIZE-1)] == 0xe1)
-			continue;                               // pause key bullshit
-
-		if (k==0xc5 && keyboardque[(kbdtail-2)&(KBDQUESIZE-1)] == 0x9d)
-		{
-			ev.type = ev_keydown;
-			ev.data1 = KEY_PAUSE;
-			D_PostEvent (&ev);
-			continue;
-		}
-
-		if (k&0x80)
-			ev.type = ev_keyup;
-		else
-			ev.type = ev_keydown;
-		k &= 0x7f;
-
-		ev.data1 = k;
-		//ev.data1 = scantokey[k];
-
-		D_PostEvent (&ev);
-	}
-}
-*/
 
 #define SC_UPARROW              0x48
 #define SC_DOWNARROW    0x50
@@ -1184,6 +1121,7 @@ void   I_StartTic (void)
 		k &= 0x7f;
 		switch (k)
 		{
+/*
 		case SC_UPARROW:
 			ev.data1 = KEY_UPARROW;
 			break;
@@ -1196,6 +1134,7 @@ void   I_StartTic (void)
 		case SC_RIGHTARROW:
 			ev.data1 = KEY_RIGHTARROW;
 			break;
+*/
 		default:
 			ev.data1 = scantokey[k];
 			break;
@@ -1777,13 +1716,13 @@ void I_Init (void)
 	I_StartupDPMI();
         printf("I_StartupMouse\n",1);
 	I_StartupMouse();
-//      printf("I_StartupJoystick\n",1);
-//	I_StartupJoystick();
+     printf("I_StartupJoystick\n",1);
+      I_StartupJoystick();
         printf("I_StartupKeyboard\n",1);
-	I_StartupKeyboard();
+        I_StartupKeyboard();
         printf("S_Init...\n",1);
         S_Init(snd_SfxVolume,snd_MusicVolume); // FS
-	//IO_StartupTimer();
+        //IO_StartupTimer();
 	S_Start();
 }
 
@@ -2117,8 +2056,8 @@ void I_NetCmd (void)
 }
 
 int i_Vector;
-//externdata_t *i_ExternData;
-//boolean useexterndriver;
+externdata_t *i_ExternData;
+boolean useexterndriver;
 
 //=========================================================================
 //
@@ -2130,8 +2069,8 @@ int i_Vector;
 
 void I_CheckExternDriver(void)
 {
-/*
-	int i;
+
+       int i;
 
 	if(!(i = M_CheckParm("-externdriver")))
 	{
@@ -2141,7 +2080,7 @@ void I_CheckExternDriver(void)
 	i_Vector = i_ExternData->vector;
 
 	useexterndriver = true;
-*/
+
 }
 
 //=========================================================================
@@ -2153,12 +2092,12 @@ void I_CheckExternDriver(void)
 
 void I_ReadExternDriver(void)
 {
-/*
+
 	event_t ev;
 
 	if(useexterndriver)
 	{
 		DPMIInt(i_Vector);
 	}
-*/
+
 }

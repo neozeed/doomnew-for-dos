@@ -1,0 +1,9 @@
+File DSTRINGS.C:
+char* endmsg[NUM_QUITMESSAGES+1]=^J{^J  // DOOM1^J  QUITMSG,^J  "please don't leave, there's more\ndemons to toast!",^J  "let's beat it -- this is turning\ninto a bloodbath!",^J  "i wouldn't leave if i were you.\ndos is much worse.",^J  "you're trying to say you like dos\nbetter than me, right?",^J  "don't leave yet -- there's a\ndemon around that corner!",^J  "ya know, next time you come in here\ni'm gonna toast ya.",^J  "go ahead and leave. see if i care."^J^J  // QuitDOOM II messages^J  "you want to quit?\nthen, thou hast lost an eighth!",^J  "don't go now, there's a \ndimensional shambler waiting\nat the dos prompt!",^J  "get outta here and go back\nto your boring programs.",^J  "if i were your boss, i'd \n deathmatch ya in a minute!",^J  "look, bud. you leave now\nand you forfeit your body count!",^J  "just leave. when you come\nback, i'll be waiting with a bat.",^J  "you're lucky i don't smack\nyou for thinking about leaving."^J^J  // FinalDOOM?^J  "fuck you, pussy!\nget the fuck out!",^J  "you quit and i'll jizz\nin your cystholes!",^J  "if you leave, i'll make\nthe lord drink my jizz.",^J  "hey, ron! can we say\n'fuck' in the game?",^J  "i'd leave: this is just\nmore monsters and levels.\nwhat a load.",^J  "suck it down, asshole!\nyou're a fucking wimp!",^J  "don't quit now! we're \nstill spending your money!",^J^J  // Internal debug. Different style, too.^J  "THIS IS NO MESSAGE!\nPage intentionally left blank."^J};^J^J^J  ^J^J
+File INFO.C:
+Error: Line too long (file may be binary) - search aborted
+File M_MENU.C:
+    sprintf(endstring,"%s\n\n"DOSY, endmsg[0] );
+    sprintf(endstring,"%s\n\n"DOSY, endmsg[ (gametic%(NUM_QUITMESSAGES-2))+1 ]);
+File TABLES.C:
+Error: Line too long (file may be binary) - search aborted

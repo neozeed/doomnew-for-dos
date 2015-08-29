@@ -29,6 +29,7 @@ LOCOBJS = &
  doomdef.obj &
  doomstat.obj &
  dstrings.obj &
+ i_ibm_a.obj &
  i_ibm.obj &
  i_sound.obj &
  tables.obj &

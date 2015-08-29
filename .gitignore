@@ -10,4 +10,7 @@
 *.map
 *.bak
 *.lnk
+*.wad
+*.dsg
+*.pif
 out.txt

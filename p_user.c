@@ -49,7 +49,7 @@ rcsid[] = "$Id: p_user.c,v 1.3 1997/01/28 22:08:29 b1 Exp $";
 #define MAXBOB	0x100000	
 
 boolean		onground;
-
+extern int headBob; // FS: Head bob toggle
 
 //
 // P_Thrust
@@ -77,8 +77,14 @@ P_Thrust
 void P_CalcHeight (player_t* player) 
 {
     int		angle;
+	int maxbob;
     fixed_t	bob;
     
+	if (headBob < 1)
+		maxbob = 0; // FS: Hate bob
+	else
+		maxbob = 0x100000;
+
     // Regular movement bobbing
     // (needs to be calculated for gun swing
     // even if not on ground)
@@ -91,8 +97,8 @@ void P_CalcHeight (player_t* player)
     
     player->bob >>= 2;
 
-    if (player->bob>MAXBOB)
-	player->bob = MAXBOB;
+    if (player->bob>maxbob)
+	player->bob = maxbob;
 
     if ((player->cheats & CF_NOMOMENTUM) || !onground)
     {
@@ -138,6 +144,10 @@ void P_CalcHeight (player_t* player)
 
     if (player->viewz > player->mo->ceilingz-4*FRACUNIT)
 	player->viewz = player->mo->ceilingz-4*FRACUNIT;
+
+	if (headBob < 1)
+		bob = player->bob = 0; // FS: Hate bob
+
 }
 
 
@@ -158,10 +168,10 @@ void P_MovePlayer (player_t* player)
     onground = (player->mo->z <= player->mo->floorz);
 	
     if (cmd->forwardmove && onground)
-	P_Thrust (player, player->mo->angle, cmd->forwardmove*2048);
+	P_Thrust (player, player->mo->angle, cmd->forwardmove*2048*2); // FS: Was 2048
     
     if (cmd->sidemove && onground)
-	P_Thrust (player, player->mo->angle-ANG90, cmd->sidemove*2048);
+	P_Thrust (player, player->mo->angle-ANG90, cmd->sidemove*2048*2); // FS: Was 2048
 
     if ( (cmd->forwardmove || cmd->sidemove) 
 	 && player->mo->state == &states[S_PLAY] )

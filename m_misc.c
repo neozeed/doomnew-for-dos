@@ -233,7 +233,7 @@ extern int     snd_SBport, snd_SBirq, snd_SBdma;       // sound blaster variable
 extern int     snd_Mport;                              // midi variables
 //#endif
 
-//extern boolean usePalFlash; // FS
+boolean usePalFlash; // FS
 
 default_t defaults[] =
 {
@@ -242,7 +242,7 @@ default_t defaults[] =
     {"music_volume",&snd_MusicVolume, 8},
     {"show_messages",&showMessages, 1},
     
-//#ifdef __WATCOMC__
+#ifdef __WATCOMC__
 #define SC_UPARROW              0x48
 #define SC_DOWNARROW            0x50
 #define SC_LEFTARROW            0x4b
@@ -272,7 +272,7 @@ default_t defaults[] =
 	{ "key_use", &key_use, SC_SPACE, 1 },
 	{ "key_strafe", &key_strafe, SC_RALT, 1 },
 	{ "key_speed", &key_speed, SC_RSHIFT, 1 },
-//#endif
+#endif
 
     {"use_mouse",&usemouse, 1},
     {"mouseb_fire",&mousebfire,0},
@@ -297,7 +297,7 @@ default_t defaults[] =
 	{ "snd_mport", &snd_Mport, -1 },
 
 	{ "usegamma", &usegamma, 0 },
-//        { "usePalFlash", &usePalFlash, 1 }, // FS: Palette Flashing
+	{ "usePalFlash", &usePalFlash, 1 }, // FS: Palette Flashing
 	{ "headBob", &headBob, 1 }, // FS: Head bob
 
     {"chatmacro0", (int *) &chat_macros[0], (int) HUSTR_CHATMACRO0 },
@@ -332,10 +332,12 @@ void M_SaveDefaults (void)
 		
     for (i=0 ; i<numdefaults ; i++)
     {
+
 #ifdef __WATCOMC__
 		if (defaults[i].scantranslate)
 			defaults[i].location = &defaults[i].untranslated;
 #endif
+
 	if (defaults[i].defaultvalue > -0xfff
 	    && defaults[i].defaultvalue < 0xfff)
 	{
@@ -419,6 +421,7 @@ void M_LoadDefaults (void)
 		
 	fclose (f);
     }
+
 #ifdef __WATCOMC__
 	for(i = 0; i < numdefaults; i++)
 	{
@@ -430,6 +433,7 @@ void M_LoadDefaults (void)
 		}
 	}
 #endif
+
 }
 
 

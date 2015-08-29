@@ -370,7 +370,7 @@ void I_StartupSound (void)
   }
 
   // inits DMX sound library
-  printf("  calling DMX_Init",0);
+  printf("  calling DMX_Init\n",0);
   rc = DMX_Init(SND_TICRATE, SND_MAXSONGS, dmxCodes[snd_MusicDevice],
 	dmxCodes[snd_SfxDevice]);
 
@@ -392,6 +392,5 @@ void I_ShutdownSound (void)
 
 void I_SetChannels(int channels)
 {
-  channels = 8; // FS
   WAV_PlayMode(channels, SND_SAMPLERATE);
 }

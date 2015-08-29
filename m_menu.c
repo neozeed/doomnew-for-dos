@@ -802,7 +802,7 @@ void M_DrawSound(void)
     V_DrawPatchDirect (60,38,0,W_CacheLumpName("M_SVOL",PU_CACHE));
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),
-                 16,snd_MaxVolume);
+                 16,snd_SfxVolume/8);
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(music_vol+1),
 		 16,snd_MusicVolume);
@@ -818,16 +818,16 @@ void M_SfxVol(int choice)
     switch(choice)
     {
       case 0:
-        if (snd_MaxVolume)
-            snd_MaxVolume--;
+	if (snd_SfxVolume)
+	    snd_SfxVolume--;
 	break;
       case 1:
-        if (snd_MaxVolume < 15)
-            snd_MaxVolume++;
+        if (snd_SfxVolume < 15*8)
+	    snd_SfxVolume++;
 	break;
     }
 	
-//    S_SetSfxVolume(snd_MaxVolume /* *8 */);
+    S_SetSfxVolume(snd_SfxVolume /* *8 */);
 }
 
 void M_MusicVol(int choice)
@@ -959,7 +959,7 @@ void M_DrawOptions(void)
 		       W_CacheLumpName(msgNames[showMessages],PU_CACHE));
 
     M_DrawThermo(OptionsDef.x,OptionsDef.y+LINEHEIGHT*(mousesens+1),
-		 10,mouseSensitivity);
+		 10,mouseSensitivity/5); // FS: Go up to 5 now
 	
     M_DrawThermo(OptionsDef.x,OptionsDef.y+LINEHEIGHT*(scrnsize+1),
 		 9,screenSize);
@@ -1102,8 +1102,8 @@ void M_QuitDOOM(int choice)
   if (language != english )
     sprintf(endstring,"%s\n\n"DOSY, endmsg[0] );
   else
-    sprintf(endstring,"%s\n\n"DOSY, endmsg[ (gametic%(NUM_QUITMESSAGES-2))+1 ]);
-  
+    sprintf(endstring,"%s\n\n"DOSY, endmsg[ (gametic%(NUM_QUITMESSAGES-10))+1 ]); // FS: Was 2))+1
+  strcpy(endstring,"Quit out\n");
   M_StartMessage(endstring,M_QuitResponse,true);
 }
 
@@ -1119,7 +1119,7 @@ void M_ChangeSensitivity(int choice)
 	    mouseSensitivity--;
 	break;
       case 1:
-	if (mouseSensitivity < 9)
+	if (mouseSensitivity < 50) // FS: Go up to 50 now (from 9)
 	    mouseSensitivity++;
 	break;
     }
@@ -1601,6 +1601,9 @@ boolean M_Responder (event_t* ev)
 	    players[consoleplayer].message = gammamsg[usegamma];
 	    I_SetPalette (W_CacheLumpName ("PLAYPAL",PU_CACHE));
 	    return true;
+		case KEY_F12: // FS
+		G_ScreenShot();
+		return true;
 				
 	}
 
@@ -1774,7 +1777,7 @@ void M_Drawer (void)
 	    x = 160 - M_StringWidth(string)/2;
 	    M_WriteText(x,y,string);
 	    y += SHORT(hu_font[0]->height);
-		UpdateState |= I_FULLSCRN; // FS
+//                UpdateState |= I_FULLSCRN; // FS
 
 	}
 	return;
@@ -1790,7 +1793,7 @@ void M_Drawer (void)
     x = currentMenu->x;
     y = currentMenu->y;
     max = currentMenu->numitems;
-	UpdateState |= I_FULLSCRN; // FS
+//        UpdateState |= I_FULLSCRN; // FS
 
     for (i=0;i<max;i++)
     {

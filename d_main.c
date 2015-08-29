@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 
-//static const char rcsid[] = "$Id: d_main.c,v 1.8 1997/02/03 22:45:09 b1 Exp $";
+static const char rcsid[] = "$Id: d_main.c,v 1.8 1997/02/03 22:45:09 b1 Exp $";
 
 #define	BGCOLOR		7
 #define	FGCOLOR		8
@@ -131,7 +131,8 @@ boolean		advancedemo;
 char		wadfile[1024];		// primary wad file
 char		mapdir[1024];           // directory of development maps
 char		basedefault[1024];      // default file
-
+extern int headBob; // FS: Head bob toggle
+extern boolean usePalFlash; // FS
 
 void D_CheckNetGame (void);
 void D_ProcessEvents (void);
@@ -168,7 +169,7 @@ void D_PostEvent (event_t* ev)
 void D_ProcessEvents (void)
 {
     event_t*	ev;
-	
+
     for ( ; eventtail != eventhead ; eventtail = (++eventtail)&(MAXEVENTS-1) )
     {
 	ev = &events[eventtail];
@@ -265,7 +266,7 @@ void D_Display (void)
     }
     
     // draw buffered stuff to screen
-    I_Update ();
+//    I_Update ();
     
     // draw the view directly
     if (gamestate == GS_LEVEL && !automapactive && gametic)
@@ -380,8 +381,8 @@ void D_DoomLoop (void)
 	if (singletics)
 	{
 	    I_StartTic ();
-	    D_ProcessEvents ();
-	    G_BuildTiccmd (&netcmds[consoleplayer][maketic%BACKUPTICS]);
+            D_ProcessEvents ();
+            G_BuildTiccmd (&netcmds[consoleplayer][maketic%BACKUPTICS]);
 	    if (advancedemo)
 		D_DoAdvanceDemo ();
 	    M_Ticker ();
@@ -541,60 +542,18 @@ char            title[128];
 //
 // D_AddFile
 //
-
-#define MAPDIR "\\data\\"
-
-#define SHAREWAREWADNAME "doom1.wad"
-
-char exrnwads[80];
-char exrnwads2[80];
-
-void wadprintf(void)
+void D_AddFile (char *file)
 {
-	#ifdef __WATCOMC__
-	_settextposition(23, 2);
-	_setbkcolor(1);
-	_settextcolor(0);
-	_outtext(exrnwads);
-	_settextposition(24, 2);
-	_outtext(exrnwads2);
-	#endif
-}
-void D_AddFile(char *file)
-{
-	int numwadfiles;
-	char *new;
-//	char text[256];
+    int     numwadfiles;
+    char    *newfile;
+	
+    for (numwadfiles = 0 ; wadfiles[numwadfiles] ; numwadfiles++)
+	;
 
-	for(numwadfiles = 0; wadfiles[numwadfiles]; numwadfiles++);
-	new = malloc(strlen(file)+1);
-	strcpy(new, file);
-	if(strlen(exrnwads)+strlen(file) < 78)
-	{
-		if(strlen(exrnwads))
-		{
-			strcat(exrnwads, ", ");
-		}
-		else
-		{
-			strcpy(exrnwads, "External Wadfiles: ");
-		}
-		strcat(exrnwads, file);
-	}
-	else if(strlen(exrnwads2)+strlen(file) < 79)
-	{
-		if(strlen(exrnwads2))
-		{
-			strcat(exrnwads2, ", ");
-		}
-		else
-		{
-			strcpy(exrnwads2, "     ");
-			strcat(exrnwads, ",");
-		}
-		strcat(exrnwads2, file);
-	}
-	wadfiles[numwadfiles] = new;
+    newfile = malloc (strlen(file)+1);
+    strcpy (newfile, file);
+
+    wadfiles[numwadfiles] = newfile;
 }
 
 //
@@ -821,7 +780,62 @@ void D_DoomMain (void)
     else if (M_CheckParm ("-deathmatch"))
 	deathmatch = 1;
 
-	// wadfiles[0] is a char * to the main wad
+    switch ( gamemode )
+    {
+      case retail:
+	sprintf (title,
+		 "                         "
+		 "The Ultimate DOOM Startup v%i.%i"
+		 "                           ",
+		 VERSION/100,VERSION%100);
+	break;
+      case shareware:
+	sprintf (title,
+		 "                            "
+		 "DOOM Shareware Startup v%i.%i"
+		 "                           ",
+		 VERSION/100,VERSION%100);
+	break;
+      case registered:
+	sprintf (title,
+		 "                            "
+		 "DOOM Registered Startup v%i.%i"
+		 "                           ",
+		 VERSION/100,VERSION%100);
+	break;
+      case commercial:
+	sprintf (title,
+		 "                         "
+		 "DOOM 2: Hell on Earth v%i.%i"
+		 "                           ",
+		 VERSION/100,VERSION%100);
+	break;
+/*FIXME
+       case pack_plut:
+	sprintf (title,
+		 "                   "
+		 "DOOM 2: Plutonia Experiment v%i.%i"
+		 "                           ",
+		 VERSION/100,VERSION%100);
+	break;
+      case pack_tnt:
+	sprintf (title,
+		 "                     "
+		 "DOOM 2: TNT - Evilution v%i.%i"
+		 "                           ",
+		 VERSION/100,VERSION%100);
+	break;
+*/
+      default:
+	sprintf (title,
+		 "                     "
+		 "Public DOOM - v%i.%i"
+		 "                           ",
+		 VERSION/100,VERSION%100);
+	break;
+    }
+    printf ("%s\n",title);
+
 	fp = fopen(wadfiles[0], "rb");
 	if(fp)
 	{
@@ -847,6 +861,31 @@ void D_DoomMain (void)
 		}
 	}
 
+        if (M_CheckParm("-gus")) // FS: GUS1M patches
+        {
+		if(gamemode == registered || gamemode == retail || gamemode == shareware)
+                D_AddFile("GUS1M.WAD");
+        }
+	
+   // turbo option
+    if ( (p=M_CheckParm ("-turbo")) )
+    {
+	int     scale = 200;
+	extern int forwardmove[2];
+	extern int sidemove[2];
+	
+	if (p<myargc-1)
+	    scale = atoi (myargv[p+1]);
+	if (scale < 10)
+	    scale = 10;
+	if (scale > 400)
+	    scale = 400;
+	printf ("turbo scale: %i%%\n",scale);
+	forwardmove[0] = forwardmove[0]*scale/100;
+	forwardmove[1] = forwardmove[1]*scale/100;
+	sidemove[0] = sidemove[0]*scale/100;
+	sidemove[1] = sidemove[1]*scale/100;
+    }
 
     p = M_CheckParm ("-playdemo");
 
@@ -1011,9 +1050,6 @@ void D_DoomMain (void)
     printf ("D_CheckNetGame: Checking network game status.\n");
     D_CheckNetGame ();
 
-    printf ("S_Init: Setting up sound.\n");
-//S_Init (snd_SfxVolume*8, snd_MusicVolume*8);
-
     printf ("HU_Init: Setting up heads up display.\n");
     HU_Init ();
 
@@ -1064,6 +1100,16 @@ void D_DoomMain (void)
 	    sprintf(file, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
 	G_LoadGame (file);
     }
+
+        if (M_CheckParm("-noheadbob")) // FS
+        {
+                headBob = 0;
+        }
+
+        if (M_CheckParm("-nopalflash")) // FS
+        {
+                usePalFlash = 0;
+        }
 	
     if ( gameaction != ga_loadgame )
     {
