@@ -17,6 +17,7 @@
  - From Heretic:
    * Hold down ESC during startup to abort execution of the game.
  - Checks for unnaturally high volume levels.
+ - Fixed Plutonia and TNT (Final Doom) intermission text.
 
 09-13-13
  - Fixed out of control input.

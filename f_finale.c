@@ -85,6 +85,9 @@ char*	t6text = T6TEXT;
 char*	finaletext;
 char*	finaleflat;
 
+extern boolean plutonia; // FS: For Plutonia intermission text
+extern boolean tnt; // FS: For TNT intermission text
+
 void	F_StartCast (void);
 void	F_CastTicker (void);
 boolean F_CastResponder (event_t *ev);
@@ -95,99 +98,128 @@ void	F_CastDrawer (void);
 //
 void F_StartFinale (void)
 {
-    gameaction = ga_nothing;
-    gamestate = GS_FINALE;
-    viewactive = false;
-    automapactive = false;
+	// FS: Fixed this filth for TNT and Plutonia
+	gameaction = ga_nothing;
+	gamestate = GS_FINALE;
+	viewactive = false;
+	automapactive = false;
 
-    // Okay - IWAD dependend stuff.
-    // This has been changed severly, and
-    //  some stuff might have changed in the process.
-    switch ( gamemode )
-    {
-
-      // DOOM 1 - E1, E3 or E4, but each nine missions
-      case shareware:
-      case registered:
-      case retail:
-      {
-	S_ChangeMusic(mus_victor, true);
-	
-	switch (gameepisode)
+	// Okay - IWAD dependend stuff.
+	// This has been changed severly, and
+	//  some stuff might have changed in the process.
+	switch ( gamemode )
 	{
-	  case 1:
-	    finaleflat = "FLOOR4_8";
-	    finaletext = e1text;
-	    break;
-	  case 2:
-	    finaleflat = "SFLR6_1";
-	    finaletext = e2text;
-	    break;
-	  case 3:
-	    finaleflat = "MFLR8_4";
-	    finaletext = e3text;
-	    break;
-	  case 4:
-	    finaleflat = "MFLR8_3";
-	    finaletext = e4text;
-	    break;
-	  default:
-	    // Ouch.
-	    break;
+		// DOOM 1 - E1, E3 or E4, but each nine missions
+		case shareware:
+		case registered:
+		case retail:
+		{
+			S_ChangeMusic(mus_victor, true);
+	
+			switch (gameepisode)
+			{
+			case 1:
+				finaleflat = "FLOOR4_8";
+				finaletext = e1text;
+				break;
+			case 2:
+				finaleflat = "SFLR6_1";
+				finaletext = e2text;
+				break;
+			case 3:
+				finaleflat = "MFLR8_4";
+				finaletext = e3text;
+				break;
+			case 4:
+				finaleflat = "MFLR8_3";
+				finaletext = e4text;
+				break;
+			default:
+				// Ouch.
+				break;
+		}
+		break;
 	}
-	break;
-      }
       
-      // DOOM II and missions packs with E1, M34
-      case commercial:
-      {
-	  S_ChangeMusic(mus_read_m, true);
+		// DOOM II and missions packs with E1, M34
+		case commercial:
+		{
+			S_ChangeMusic(mus_read_m, true);
 
-	  switch (gamemap)
-	  {
-	    case 6:
-	      finaleflat = "SLIME16";
-	      finaletext = c1text;
-	      break;
-	    case 11:
-	      finaleflat = "RROCK14";
-	      finaletext = c2text;
-	      break;
-	    case 20:
-	      finaleflat = "RROCK07";
-	      finaletext = c3text;
-	      break;
-	    case 30:
-	      finaleflat = "RROCK17";
-	      finaletext = c4text;
-	      break;
-	    case 15:
-	      finaleflat = "RROCK13";
-	      finaletext = c5text;
-	      break;
-	    case 31:
-	      finaleflat = "RROCK19";
-	      finaletext = c6text;
-	      break;
-	    default:
-	      // Ouch.
-	      break;
-	  }
-	  break;
-      }	
+			switch (gamemap)
+			{
+				case 6:
+					finaleflat = "SLIME16";
+					if(plutonia)
+						finaletext = p1text;
+					else if(tnt)
+						finaletext = t1text;
+					else
+						finaletext = c1text;
+					break;
+				case 11:
+					finaleflat = "RROCK14";
+					if(plutonia)
+						finaletext = p2text;
+					else if(tnt)
+						finaletext = t2text;
+					else
+						finaletext = c2text;
+					break;
+				case 20:
+					finaleflat = "RROCK07";
+					if(plutonia)
+						finaletext = p3text;
+					else if(tnt)
+						finaletext = t3text;
+					else
+						finaletext = c3text;
+					break;
+				case 30:
+					finaleflat = "RROCK17";
+					if(plutonia)
+						finaletext = p4text;
+					else if(tnt)
+						finaletext = t4text;
+					else
+						finaletext = c4text;
+					break;
+				case 15:
+					finaleflat = "RROCK13";
+					if(plutonia)
+						finaletext = p5text;
+					else if(tnt)
+						finaletext = t5text;
+					else
+						finaletext = c5text;
+					break;
+				case 31:
+					finaleflat = "RROCK19";
+					if(plutonia)
+						finaletext = p6text;
+					else if(tnt)
+						finaletext = t6text;
+					else
+						finaletext = c6text;
+					break;
+				default:
+					// Ouch.
+					break;
+			}
+			break;
+		}	
 
-   
-      // Indeterminate.
-      default:
-	S_ChangeMusic(mus_read_m, true);
-	finaleflat = "F_SKY1"; // Not used anywhere else.
-	finaletext = c1text;  // FIXME - other text, music?
-	break;
-    }
+		// Indeterminate.
+	      default:
+			S_ChangeMusic(mus_read_m, true);
+			finaleflat = "F_SKY1"; // Not used anywhere else.
+			finaletext = c1text;  // FIXME - other text, music?
+			break;
+	}
     
     finalestage = 0;
     finalecount = 0;
-	
+
 }
 
 
