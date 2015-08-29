@@ -1,11 +1,11 @@
 - Automap to show "secrets found: x\y".
 - PC Speaker not working.  Not sure if it requires the snd_Prefixen
   or some other special I_Sound.C missing things.
-- Headbob and Palette Flash on Options Menu.
 - Fix chainsaw pitch.
 - I_NET.C with WATT32
 - Fix Low Detail mode.
-- Finish up Chex Quest text and solution to coop intermission.
+- Chex Quest
+  * Finish up few stray unimportant texts.
+  * Move keys fullscreen a little to the right and space them out a bit.
 - Fix S_ChangeMusic to pause the music if snd_MusicVolume is 0.
-- Change RANGECHECK to be a parameter.
 - Import DEHACKED parsing from Chocolate Doom.

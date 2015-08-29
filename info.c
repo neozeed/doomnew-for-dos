@@ -670,9 +670,9 @@ state_t	states[NUMSTATES] = {
     {SPR_BOSS,2,3,{A_Chase},S_BOSS_RUN7,0,0},	// S_BOSS_RUN6
     {SPR_BOSS,3,3,{A_Chase},S_BOSS_RUN8,0,0},	// S_BOSS_RUN7
     {SPR_BOSS,3,3,{A_Chase},S_BOSS_RUN1,0,0},	// S_BOSS_RUN8
-    {SPR_BOSS,4,8,{A_FaceTarget},S_BOSS_ATK2,0,0},	// S_BOSS_ATK1
-    {SPR_BOSS,5,8,{A_FaceTarget},S_BOSS_ATK3,0,0},	// S_BOSS_ATK2
-    {SPR_BOSS,6,8,{A_BruisAttack},S_BOSS_RUN1,0,0},	// S_BOSS_ATK3
+    {SPR_BOSS,4,8,{A_FaceTarget},S_BOSS_ATK2,0,0},	// S_BOSS_ATK1 // FS: Chex Quest 537
+    {SPR_BOSS,5,8,{A_FaceTarget},S_BOSS_ATK3,0,0},	// S_BOSS_ATK2 // FS: Chex Quest 538
+    {SPR_BOSS,6,8,{A_BruisAttack},S_BOSS_RUN1,0,0},	// S_BOSS_ATK3 // FS: Chex Quest539
     {SPR_BOSS,7,2,{NULL},S_BOSS_PAIN2,0,0},	// S_BOSS_PAIN
     {SPR_BOSS,7,2,{A_Pain},S_BOSS_RUN1,0,0},	// S_BOSS_PAIN2
     {SPR_BOSS,8,8,{NULL},S_BOSS_DIE2,0,0},	// S_BOSS_DIE1

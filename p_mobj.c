@@ -42,7 +42,7 @@ rcsid[] = "$Id: p_mobj.c,v 1.5 1997/02/03 22:45:12 b1 Exp $";
 
 void G_PlayerReborn (int player);
 void P_SpawnMapThing (mapthing_t*	mthing);
-
+extern boolean	chex; // FS: Chex Quest Hack
 
 //
 // P_SetMobjState
@@ -71,6 +71,28 @@ P_SetMobjState
 	mobj->tics = st->tics;
 	mobj->sprite = st->sprite;
 	mobj->frame = st->frame;
+
+	if(chex) // FS: Chex Quest Hack
+	{
+		switch(mobj->info->doomednum)
+		{
+			case 3003:
+				if(state == 537)
+				{
+					st->tics = mobj->tics = 3;
+				}
+				if(state == 538)
+				{
+					st->tics = mobj->tics = 3;
+				}
+				if(state == 539)
+				{
+					st->tics = mobj->tics = 0;
+				}
+				break;
+		}
+	}
+
 
 	// Modified handling.
 	// Call action functions when the state is set
@@ -472,7 +494,6 @@ void P_MobjThinker (mobj_t* mobj)
 
 }
 
-
 //
 // P_SpawnMobj
 //
@@ -499,6 +520,29 @@ P_SpawnMobj
     mobj->height = info->height;
     mobj->flags = info->flags;
     mobj->health = info->spawnhealth;
+
+	if(chex) // FS: Chex Quest Hack
+	{
+		switch(mobj->info->doomednum)
+		{
+			case 9: // FS: Shotgun guy
+				info->meleestate = mobj->info->meleestate = 217;
+				info->missilestate = mobj->info->missilestate = 0;
+				break;
+			case 3003: // FS: BOSS
+				info->speed = mobj->info->speed = 0;
+				info->radius = mobj->info->radius = 44*FRACUNIT;
+				info->height = mobj->info->height = 100*FRACUNIT;
+				break;
+			case 3004: // FS: Zombie
+				info->meleestate = mobj->info->meleestate = 184;
+				info->missilestate = mobj->info->missilestate = 0;
+				break;
+			case 3006: // FS: Lost Soul
+				info->height = mobj->info->height = 0*FRACUNIT;
+				break;
+		}
+	}
 
     if (gameskill != sk_nightmare)
 	mobj->reactiontime = info->reactiontime;

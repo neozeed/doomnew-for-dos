@@ -57,6 +57,7 @@ int		finalecount;
 #define	TEXTWAIT	250
 
 char*	e1text = E1TEXT;
+char*	e1chextext = E1CHEXTEXT; // FS: For Chex Quest
 char*	e2text = E2TEXT;
 char*	e3text = E3TEXT;
 char*	e4text = E4TEXT;
@@ -85,8 +86,9 @@ char*	t6text = T6TEXT;
 char*	finaletext;
 char*	finaleflat;
 
-extern boolean plutonia; // FS: For Plutonia intermission text
-extern boolean tnt; // FS: For TNT intermission text
+extern boolean	plutonia; // FS: For Plutonia intermission text
+extern boolean	tnt; // FS: For TNT intermission text
+extern boolean	chex; // FS: For Chex Quest finale text
 
 void	F_StartCast (void);
 void	F_CastTicker (void);
@@ -120,7 +122,10 @@ void F_StartFinale (void)
 			{
 			case 1:
 				finaleflat = "FLOOR4_8";
-				finaletext = e1text;
+				if(chex) // FS: Chex Quest Finale Text
+					finaletext = e1chextext;
+				else
+					finaletext = e1text;
 				break;
 			case 2:
 				finaleflat = "SFLR6_1";
@@ -744,7 +749,7 @@ void F_Drawer (void)
 	switch (gameepisode)
 	{
 	  case 1:
-	    if ( gamemode == retail )
+	    if ( gamemode == retail || chex) // FS: Chex Quest uses CREDIT
 	      V_DrawPatch (0,0,0,
 			 W_CacheLumpName("CREDIT",PU_CACHE));
 	    else

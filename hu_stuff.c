@@ -47,6 +47,9 @@ rcsid[] = "$Id: hu_stuff.c,v 1.4 1997/02/03 16:47:52 b1 Exp $";
 // Locally used constants, shortcuts.
 //
 #define HU_TITLE	(mapnames[(gameepisode-1)*9+gamemap-1])
+#define HU_TITLECHEX	(mapnameschex[(gameepisode-1)*9+gamemap-1]) // FS: For Chex Quest
+#define HU_TITLECHEX2	(mapnameschex2[(gameepisode-1)*9+gamemap-1]) // FS: For Chex Quest 2
+
 #define HU_TITLE2	(mapnames2[gamemap-1])
 #define HU_TITLEP	(mapnamesp[gamemap-1])
 #define HU_TITLET	(mapnamest[gamemap-1])
@@ -122,6 +125,114 @@ char*	mapnames[] =	// DOOM shareware/registered/retail (Ultimate) names.
     HUSTR_E1M3,
     HUSTR_E1M4,
     HUSTR_E1M5,
+    HUSTR_E1M6,
+    HUSTR_E1M7,
+    HUSTR_E1M8,
+    HUSTR_E1M9,
+
+    HUSTR_E2M1,
+    HUSTR_E2M2,
+    HUSTR_E2M3,
+    HUSTR_E2M4,
+    HUSTR_E2M5,
+    HUSTR_E2M6,
+    HUSTR_E2M7,
+    HUSTR_E2M8,
+    HUSTR_E2M9,
+
+    HUSTR_E3M1,
+    HUSTR_E3M2,
+    HUSTR_E3M3,
+    HUSTR_E3M4,
+    HUSTR_E3M5,
+    HUSTR_E3M6,
+    HUSTR_E3M7,
+    HUSTR_E3M8,
+    HUSTR_E3M9,
+
+    HUSTR_E4M1,
+    HUSTR_E4M2,
+    HUSTR_E4M3,
+    HUSTR_E4M4,
+    HUSTR_E4M5,
+    HUSTR_E4M6,
+    HUSTR_E4M7,
+    HUSTR_E4M8,
+    HUSTR_E4M9,
+
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL"
+};
+
+char*	mapnameschex[] =	// Chex Quest 1 map names.
+{
+
+    "E1M1: Landing Zone",
+    "E1M2: Storage Facility",
+    "E1M3: Experimental Lab",
+    "E1M4: Arboretum",
+    "E1M5: Caverns of Bazoik",
+    HUSTR_E1M6,
+    HUSTR_E1M7,
+    HUSTR_E1M8,
+    HUSTR_E1M9,
+
+    HUSTR_E2M1,
+    HUSTR_E2M2,
+    HUSTR_E2M3,
+    HUSTR_E2M4,
+    HUSTR_E2M5,
+    HUSTR_E2M6,
+    HUSTR_E2M7,
+    HUSTR_E2M8,
+    HUSTR_E2M9,
+
+    HUSTR_E3M1,
+    HUSTR_E3M2,
+    HUSTR_E3M3,
+    HUSTR_E3M4,
+    HUSTR_E3M5,
+    HUSTR_E3M6,
+    HUSTR_E3M7,
+    HUSTR_E3M8,
+    HUSTR_E3M9,
+
+    HUSTR_E4M1,
+    HUSTR_E4M2,
+    HUSTR_E4M3,
+    HUSTR_E4M4,
+    HUSTR_E4M5,
+    HUSTR_E4M6,
+    HUSTR_E4M7,
+    HUSTR_E4M8,
+    HUSTR_E4M9,
+
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL",
+    "NEWLEVEL"
+};
+
+char*	mapnameschex2[] =	// Chex Quest 1 map names.
+{
+
+    "E1M1: Spaceport",
+    "E1M2: Cinema",
+    "E1M3: Chex Musuem",
+    "E1M4: City Streets",
+    "E1M5: Sewer System",
     HUSTR_E1M6,
     HUSTR_E1M7,
     HUSTR_E1M8,
@@ -372,12 +483,13 @@ void HU_Stop(void)
 
 void HU_Start(void)
 {
+	int			i;
+	char*			s;
+	extern boolean	chex; // FS: For Chex Quest Map Names
+	extern boolean	chex2; // FS: For Chex Quest 2 Map names
 
-    int		i;
-    char*	s;
-
-    if (headsupactive)
-	HU_Stop();
+	if (headsupactive)
+		HU_Stop();
 
     plr = &players[consoleplayer];
     message_on = false;
@@ -400,29 +512,37 @@ void HU_Start(void)
 	switch ( gamemode )
 	{
 		case shareware:
-	case registered:
-	case retail:
-		s = HU_TITLE;
-		break;
-	case commercial:
-	default:
-	// FS: Show proper map names for Final Doom
-		if(plutonia)
-		{
-			s = HU_TITLEP;
+		case registered:
+		case retail:
+			if(chex2) // FS: Chex Quest 2 Map names
+			{
+				s = HU_TITLECHEX2;
+				break;
+			}
+			else if(chex) // FS: Chex Quest Map names
+				s = HU_TITLECHEX;
+			else
+				s = HU_TITLE;
 			break;
-		}
-		else if(tnt)
-		{
-			s = HU_TITLET;
-			break;
-		}
-		else
-		{
-			 s = HU_TITLE2;
-			 break;
-		}
-    }
+		case commercial:
+		default:
+		// FS: Show proper map names for Final Doom
+			if(plutonia)
+			{
+				s = HU_TITLEP;
+				break;
+			}
+			else if(tnt)
+			{
+				s = HU_TITLET;
+				break;
+			}
+			else
+			{
+				 s = HU_TITLE2;
+				 break;
+			}
+	}
     
     while (*s)
 	HUlib_addCharToTextLine(&w_title, *(s++));

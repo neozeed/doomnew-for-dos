@@ -545,7 +545,7 @@ P_TouchSpecialThing
 	if (player->health < 50)
 	{
 		if(chex)
-			player->message = "Picked up some need vegetables!";
+			player->message = "Picked up some needed vegetables!";
 		else
 			player->message = GOTMEDINEED;
 	}

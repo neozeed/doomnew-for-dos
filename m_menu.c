@@ -921,7 +921,10 @@ void M_ChooseSkill(int choice)
 {
     if (choice == nightmare)
     {
-	M_StartMessage(NIGHTMARE,M_VerifyNightmare,true);
+	if(chex) // FS: Chex Quest Nightmare Text
+		M_StartMessage(CHEXNIGHTMARE,M_VerifyNightmare,true);
+	else
+		M_StartMessage(NIGHTMARE,M_VerifyNightmare,true);
 	return;
     }
 	

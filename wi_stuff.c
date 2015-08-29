@@ -468,6 +468,7 @@ WI_drawOnLnode
 
     if(chex) // FS: Chex quest doesn't use this
         return;
+
     i = 0;
     do
     {
@@ -588,7 +589,9 @@ void WI_drawAnimatedBack(void)
     int			i;
     anim_t*		a;
 
-    if (commercial)
+
+
+    if (gamemode == commercial) // FS: Was if(commercial)... breaking animated backgrounds with Chex Quest!
 	return;
 
     if (wbs->epsd > 2)
@@ -1116,6 +1119,9 @@ void WI_updateNetgameStats(void)
 
     WI_updateAnimatedBack();
 
+	if(chex && ng_state != 10) // FS: Chex Quest Hack
+		ng_state = 9;
+
     if (acceleratestage && ng_state != 10)
     {
 	acceleratestage = 0;
@@ -1275,6 +1281,8 @@ void WI_drawNetgameStats(void)
 
     WI_drawLF();
 
+if(!chex) // FS: Chex lines this up all wrong so hax
+{
     // draw stat titles (top line)
     V_DrawPatch(NG_STATSX+NG_SPACINGX-SHORT(kills->width),
 		NG_STATSY, FB, kills);
@@ -1313,7 +1321,7 @@ void WI_drawNetgameStats(void)
 
 	y += WI_SPACINGY;
     }
-
+}
 }
 
 static int	sp_state;
@@ -1516,6 +1524,7 @@ void WI_Ticker(void)
 	else
 	  S_ChangeMusic(mus_inter, true); 
     }
+
 
     WI_checkForAccelerate();
 

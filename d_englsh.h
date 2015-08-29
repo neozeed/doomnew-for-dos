@@ -54,6 +54,11 @@
 "are you sure? this skill level\n"\
 "isn't even remotely fair.\n\n"PRESSYN
 
+// FS: Chex Quest Nightmare Mode
+#define CHEXNIGHTMARE	\
+"Careful, this will be tough.\n"\
+"Do you wish to continue?\n\n"PRESSYN
+
 #define SWSTRING	\
 "this is the shareware version of doom.\n\n"\
 "you need to order the entire trilogy.\n\n"PRESSKEY
@@ -373,6 +378,19 @@
 "The Shores of Hell and its amazing\n"\
 "sequel, Inferno!\n"
 
+#define E1CHEXTEXT \
+"Mission accomplished.\n"\
+"\n"\
+"Are you prepared for the next mission?\n"\
+"\n"\
+"\n"\
+"\n"\
+"\n"\
+"\n"\
+"\n"\
+"Press the escape key to continue...\n"\
+"\n"\
+"\n"\
 
 #define E2TEXT \
 "You've done it! The hideous cyber-\n"\

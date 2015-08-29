@@ -1148,7 +1148,7 @@ typedef struct
 {
   spritenum_t	sprite;
   long			frame;
-  long			tics;
+  long			tics; // FS: Duration
   // void		(*action) ();
   actionf_t			action;
   statenum_t			nextstate;

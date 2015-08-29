@@ -127,7 +127,7 @@ boolean	advancedemo;
 boolean	plutonia; // FS
 boolean	tnt; // FS
 boolean	chex; // FS: For Chex(R) Quest
-
+boolean	chex2; // FS: For Chex Quest 2
 
 char	wadfile[1024];		// primary wad file
 char	mapdir[1024];           // directory of development maps
@@ -528,7 +528,7 @@ void D_AdvanceDemo (void)
 	{
 	    pagetic = 200;
 
-	    if ( gamemode == retail )
+	    if ( gamemode == retail || chex) // FS: Chex Quest uses CREDIT
 	      pagename = "CREDIT";
 	    else
 	      pagename = "HELP2";
@@ -735,6 +735,7 @@ void IdentifyVersion (void)
 		gamemode = registered;
 		devparm = false;
 		chex = true;
+		chex2 = true;
 		strcpy(basedefault, "default.cfg");
 
 		if ( !access (chexwad, 0) )
@@ -865,20 +866,9 @@ void IdentifyVersion (void)
 	if ( !access (chexwad, 0) )
 	{
 		gamemode = registered;
+		chex = true;
+		chex2 = false;
 		D_AddFile (chexwad);
-		return;
-	}
-
-	if ( !access (chex2wad, 0) )
-	{
-		gamemode = registered;
-
-		if ( !access (chexwad, 0) )
-			D_AddFile (chexwad);
-		else
-			I_Error("You need CHEX.WAD to play Chex Quest 2!");
-
-		D_AddFile (chex2wad);
 		return;
 	}
 
@@ -1013,11 +1003,30 @@ void D_DoomMain (void)
 		VERSION/100,VERSION%100);
 		break;
       case registered:
-		sprintf (title,
-		"                            "
-		"DOOM Registered Startup v%i.%i"
-		"                           ",
-		VERSION/100,VERSION%100);
+		if(chex2)
+		{
+			sprintf (title,
+			"                            "
+			"Chex(R) Quest 2 Startup      "
+			"                           ");
+			break;
+		}
+		else if(chex)
+		{
+			sprintf (title,
+			"                            "
+			"Chex(R) Quest Startup        "
+			"                           ");
+			break;
+		}
+		else
+		{
+			sprintf (title,
+			"                            "
+			"DOOM Registered Startup v%i.%i"
+			"                           ",
+			VERSION/100,VERSION%100);
+		}
 		break;
       case commercial:
 		if(plutonia)
@@ -1185,6 +1194,10 @@ void D_DoomMain (void)
 	printf ("V_Init: allocate screens.\n");
 	V_Init ();
 	CheckAbortStartup(); // FS: Check if ESC key is held during startup
+
+#if TITLEBARTEST // FS: Test the alignment of the title bar banner
+	getchar();
+#endif
 
 	printf ("M_LoadDefaults: Load system defaults.\n");
 	M_LoadDefaults ();              // load before initing other systems
