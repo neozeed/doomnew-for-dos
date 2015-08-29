@@ -1,8 +1,7 @@
-- Fix snd_SfxVolume multiplier. **HACKED AROUND**
-  This will also fix the Sound Volume slider in the Menu.
 - Automap to show "secrets found: x\y".
 - PC Speaker not working.  Not sure if it requires the snd_Prefixen
   or some other special I_Sound.C missing things.
 - Headbob and Palette Flash on Options Menu.
 - Fix chainsaw pitch.
 - I_NET.C with WATT32
+- Fix Low Detail mode.

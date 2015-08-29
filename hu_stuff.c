@@ -106,6 +106,8 @@ extern int		showMessages;
 extern boolean		automapactive;
 
 static boolean		headsupactive = false;
+extern boolean		plutonia; // FS: For Plutonia Map Names in Automap
+extern boolean		tnt; // FS: For TNT Map Names in Automap
 
 //
 // Builtin map names.
@@ -459,27 +461,31 @@ void HU_Start(void)
 		       hu_font,
 		       HU_FONTSTART);
     
-    switch ( gamemode )
-    {
-      case shareware:
-      case registered:
-      case retail:
-	s = HU_TITLE;
-	break;
-
-/* FIXME
-      case pack_plut:
-	s = HU_TITLEP;
-	break;
-      case pack_tnt:
-	s = HU_TITLET;
-	break;
-*/
-	
-      case commercial:
-      default:
-	 s = HU_TITLE2;
-	 break;
+	switch ( gamemode )
+	{
+		case shareware:
+	case registered:
+	case retail:
+		s = HU_TITLE;
+		break;
+	case commercial:
+	default:
+	// FS: Show proper map names for Final Doom
+		if(plutonia)
+		{
+			s = HU_TITLEP;
+			break;
+		}
+		else if(tnt)
+		{
+			s = HU_TITLET;
+			break;
+		}
+		else
+		{
+			 s = HU_TITLE2;
+			 break;
+		}
     }
     
     while (*s)

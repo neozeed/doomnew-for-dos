@@ -968,65 +968,11 @@ byte *pcscreen, *destscreen, *destview;
 ==============
 */
 
-int UpdateState;
-extern int screenblocks;
-
 void I_Update (void)
 {
-
-// FS: FIX THIS
-	int i;
-	byte *dest;
-	int tics;
-	static int lasttic;
-
-
 //
 // blit screen to video
 //
-/*        if(UpdateState == I_NOUPDATE)
-	{
-		return;
-	}
-	if(UpdateState&I_FULLSCRN)
-	{
-                memcpy(pcscreen, screens[0], SCREENWIDTH*SCREENHEIGHT);
-		UpdateState = I_NOUPDATE; // clear out all draw types
-	}
-	if(UpdateState&I_FULLVIEW)
-	{
-		if(UpdateState&I_MESSAGES && screenblocks > 7)
-		{
-			for(i = 0; i <
-				(viewwindowy+viewheight)*SCREENWIDTH; i += SCREENWIDTH)
-			{
-                                memcpy(pcscreen+i, screens[0]+i, SCREENWIDTH);
-			}
-			UpdateState &= ~(I_FULLVIEW|I_MESSAGES);
-		}
-		else
-		{
-			for(i = viewwindowy*SCREENWIDTH+viewwindowx; i <
-				(viewwindowy+viewheight)*SCREENWIDTH; i += SCREENWIDTH)
-			{
-                                memcpy(pcscreen+i, screens[0]+i, viewwidth);
-			}
-			UpdateState &= ~I_FULLVIEW;
-		}
-	}
-	if(UpdateState&I_STATBAR)
-	{
-		memcpy(pcscreen+SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
-                        screens[1]+SCREENWIDTH*(SCREENHEIGHT-SBARHEIGHT),
-			SCREENWIDTH*SBARHEIGHT);
-		UpdateState &= ~I_STATBAR;
-	}
-	if(UpdateState&I_MESSAGES)
-	{
-                memcpy(pcscreen, screens[0], SCREENWIDTH*28);
-		UpdateState &= ~I_MESSAGES;
-	}
-*/
   memcpy(pcscreen, screens[0], SCREENHEIGHT*SCREENWIDTH);
 }
 

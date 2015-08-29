@@ -87,7 +87,7 @@ extern int snd_SfxDevice;
 extern int snd_DesiredMusicDevice;
 extern int snd_DesiredSfxDevice;
 extern sfxinfo_t S_sfx[]; // FS
-
+extern int snd_MaxVolume; // FS: Real volume
 
 /*
 typedef struct
@@ -160,15 +160,28 @@ void S_Init
 ( int		sfxVolume,
   int		musicVolume )
 {  
-  int		i;
+	int	i;
+	char	buffer[34];
 
-  fprintf( stderr, "S_Init: default sfx volume %d\n", sfxVolume);
+	if (sfxVolume > 15)
+	{
+		mprintf("WARNING: Sound volume is invalid; defaulting to 8.\n");
+		sfxVolume = snd_SfxVolume = 8;
+	}
+	if (musicVolume > 15)
+	{
+		mprintf("WARNING: Music volume is invalid; defaulting to 8.\n");
+		musicVolume = snd_MusicVolume = 8;
+	}
+
+	sprintf(buffer, "S_Init: default sfx volume %d\n", sfxVolume);
+	mprintf(buffer);
 
 	I_StartupSound();
-  I_SetChannels(snd_Channels);
+	I_SetChannels(snd_Channels);
   
-  S_SetSfxVolume(127); // FS: FIXME
-  I_SetMusicVolume(musicVolume);
+	S_SetSfxVolume(sfxVolume);
+	I_SetMusicVolume(musicVolume);
 
   // Allocating the internal channels for mixing
   // (the maximum numer of sounds rendered
@@ -235,14 +248,6 @@ void S_Start(void)
       mnum = spmus[gamemap-1];
     }	
 
-//  if (gamemode == commercial && mnum == mus_introa)
-//        mnum = mus_dm2ttl; // FS: Hack
-
-
-  // HACK FOR COMMERCIAL
-    //if (commercial && mnum > mus_e3m9) 
-        //mnum -= mus_e3m9;
-
   S_ChangeMusic(mnum, true);
   
   nextcleanup = 15;
@@ -286,8 +291,8 @@ S_StartSoundAtVolume
     if (volume < 1)
       return;
     
-//    if (volume > snd_SfxVolume)
-      volume = snd_SfxVolume;
+    if (volume > snd_MaxVolume)
+      volume = snd_MaxVolume;
   }	
   else
   {
@@ -406,7 +411,7 @@ S_StartSound
     // sfx_id = sfx_itemup;
 #endif
   
-    S_StartSoundAtVolume(origin, sfx_id, snd_SfxVolume);
+    S_StartSoundAtVolume(origin, sfx_id, snd_MaxVolume);
 
 
 }
@@ -509,7 +514,7 @@ void S_UpdateSounds(void* listener_p)
 	    if (I_SoundIsPlaying(c->handle))
 	    {
 		// initialize parameters
-		volume = snd_SfxVolume;
+		volume = snd_MaxVolume;
 		pitch = NORM_PITCH;
 		sep = NORM_SEP;
 
@@ -522,9 +527,9 @@ void S_UpdateSounds(void* listener_p)
 			S_StopChannel(cnum);
 			continue;
 		    }
-		    else if (volume > snd_SfxVolume)
+		    else if (volume > snd_MaxVolume)
 		    {
-			volume = snd_SfxVolume;
+			volume = snd_MaxVolume;
 		    }
 		}
 
@@ -561,14 +566,13 @@ void S_UpdateSounds(void* listener_p)
     // S_StopMusic();
 }
 
-
 void S_SetMusicVolume(int volume)
 {
-    if (volume < 0 || volume > 127)
-    {
-	I_Error("Attempt to set music volume at %d",
-		volume);
-    }    
+	if (volume < 0 || volume > 127)
+	{
+		snd_MusicVolume = 12; // FS: Cap it before bomb
+		I_Error("Attempt to set music volume at %d", volume);
+	}    
 
     I_SetMusicVolume(127);
     I_SetMusicVolume(volume);
@@ -579,11 +583,13 @@ void S_SetMusicVolume(int volume)
 
 void S_SetSfxVolume(int volume)
 {
+	if (volume < 0 || volume > 127)
+	{
+		snd_SfxVolume = 12; // FS: Cap it before bomb
+		I_Error("Attempt to set sfx volume at %d", volume);
+	}
 
-    if (volume < 0 || volume > 127)
-	I_Error("Attempt to set sfx volume at %d", volume);
-    snd_SfxVolume = volume;
-
+	snd_MaxVolume = volume*8;
 }
 
 //
@@ -751,21 +757,21 @@ S_AdjustSoundParams
     // volume calculation
     if (approx_dist < S_CLOSE_DIST)
     {
-	*vol = snd_SfxVolume;
+	*vol = snd_MaxVolume;
     }
     else if (gamemap == 8)
     {
 	if (approx_dist > S_CLIPPING_DIST)
 	    approx_dist = S_CLIPPING_DIST;
 
-	*vol = 15+ ((snd_SfxVolume-15)
+	*vol = 15+ ((snd_MaxVolume-15)
 		    *((S_CLIPPING_DIST - approx_dist)>>FRACBITS))
 	    / S_ATTENUATOR;
     }
     else
     {
 	// distance effect
-	*vol = (snd_SfxVolume
+	*vol = (snd_MaxVolume
 		* ((S_CLIPPING_DIST - approx_dist)>>FRACBITS))
 	    / S_ATTENUATOR; 
     }

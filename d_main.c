@@ -141,6 +141,31 @@ void G_BuildTiccmd (ticcmd_t* cmd);
 void D_DoAdvanceDemo (void);
 void mprintf(char *string); // FS: From OG Doom
 
+#ifdef __WATCOMC__
+void CleanExit(void) // FS: From Heretic
+{
+	union REGS regs;
+
+	I_ShutdownKeyboard();
+	regs.x.eax = 0x3;
+	int386(0x10, &regs, &regs);
+	printf("DOOM Startup Aborted!\n");
+	exit(1);
+}
+#endif
+
+void CheckAbortStartup(void) // FS: From Heretic
+{
+#ifdef __WATCOMC__
+	extern int lastpress;
+
+	if(lastpress == 1)
+	{ // Abort if escape pressed
+		CleanExit();
+	}
+#endif
+}
+
 //
 // EVENT HANDLING
 //
@@ -434,7 +459,6 @@ void D_PageTicker (void)
 void D_PageDrawer (void)
 {
     V_DrawPatch (0,0, 0, W_CacheLumpName(pagename, PU_CACHE));
-        UpdateState |= I_FULLSCRN; // FS
 }
 
 
@@ -480,7 +504,6 @@ void D_AdvanceDemo (void)
 		S_StartMusic (mus_intro);
 	break;
       case 1:
-        UpdateState |= I_FULLSCRN; // FS
 	G_DeferedPlayDemo ("demo1");
 	break;
       case 2:
@@ -489,7 +512,6 @@ void D_AdvanceDemo (void)
 	pagename = "CREDIT";
 	break;
       case 3:
-        UpdateState |= I_FULLSCRN; // FS
 	G_DeferedPlayDemo ("demo2");
 	break;
       case 4:
@@ -511,12 +533,10 @@ void D_AdvanceDemo (void)
 	}
 	break;
       case 5:
-        UpdateState |= I_FULLSCRN; // FS
 	G_DeferedPlayDemo ("demo3");
 	break;
         // THE DEFINITIVE DOOM Special Edition demo
       case 6:
-        UpdateState |= I_FULLSCRN; // FS
 	G_DeferedPlayDemo ("demo4");
 	break;
     }
@@ -1119,19 +1139,22 @@ void D_DoomMain (void)
 	autostart = true;
     }
     
-    // init subsystems
-    printf ("V_Init: allocate screens.\n");
-    V_Init ();
+	// init subsystems
+	printf ("V_Init: allocate screens.\n");
+	V_Init ();
+	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
-    printf ("M_LoadDefaults: Load system defaults.\n");
-    M_LoadDefaults ();              // load before initing other systems
+	printf ("M_LoadDefaults: Load system defaults.\n");
+	M_LoadDefaults ();              // load before initing other systems
+	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
-    printf ("Z_Init: Init zone memory allocation daemon. \n");
-    Z_Init ();
+	printf ("Z_Init: Init zone memory allocation daemon. \n");
+	Z_Init ();
+	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
-    printf ("W_Init: Init WADfiles.\n");
-    W_InitMultipleFiles (wadfiles);
-    
+	printf ("W_Init: Init WADfiles.\n");
+	W_InitMultipleFiles (wadfiles);
+	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
     // Check for -file in shareware
     if (modifiedgame)
@@ -1236,18 +1259,31 @@ void D_DoomMain (void)
 
 mprintf ("M_Init: Init miscellaneous info.\n");
 	M_Init ();
+	CheckAbortStartup(); // FS: Check if ESC key is held during startup
+
 mprintf ("R_Init: Init DOOM refresh daemon - ");
 	R_Init ();
+	CheckAbortStartup(); // FS: Check if ESC key is held during startup
+
 mprintf ("\nP_Init: Init Playloop state.\n");
 	P_Init ();
+	CheckAbortStartup(); // FS: Check if ESC key is held during startup
+
 mprintf ("I_Init: Setting up machine state.\n");
 	I_Init ();
+	CheckAbortStartup(); // FS: Check if ESC key is held during startup
+
 mprintf ("D_CheckNetGame: Checking network game status.\n");
 	D_CheckNetGame ();
+	CheckAbortStartup(); // FS: Check if ESC key is held during startup
+
 mprintf ("HU_Init: Setting up heads up display.\n");
 	HU_Init ();
+	CheckAbortStartup(); // FS: Check if ESC key is held during startup
+
 mprintf ("ST_Init: Init status bar.\n");
 	ST_Init ();
+	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
     // check for a driver that wants intermission stats
     p = M_CheckParm ("-statcopy");

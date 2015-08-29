@@ -802,7 +802,7 @@ void M_DrawSound(void)
     V_DrawPatchDirect (60,38,0,W_CacheLumpName("M_SVOL",PU_CACHE));
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),
-                 16,snd_SfxVolume/8);
+                 16,snd_SfxVolume);
 
     M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(music_vol+1),
 		 16,snd_MusicVolume);
@@ -822,7 +822,7 @@ void M_SfxVol(int choice)
 	    snd_SfxVolume--;
 	break;
       case 1:
-        if (snd_SfxVolume < 15*8)
+        if (snd_SfxVolume < 15)
 	    snd_SfxVolume++;
 	break;
     }

@@ -12,6 +12,11 @@
    Can be overridden with -doom parameter.
  - Fixed endstring/quit messages to work for proper gamemodes.
  - Palette Flashing toggle is now read from config.
+ - Fixed Final Doom map names in Automap.
+ - Fixed snd_SfxVolume multiplier shit. (it was shitty!)
+ - From Heretic:
+   * Hold down ESC during startup to abort execution of the game.
+ - Checks for unnaturally high volume levels.
 
 09-13-13
  - Fixed out of control input.
