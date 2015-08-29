@@ -1,3 +1,8 @@
+10-02-13
+ - Draw Time clock on Automap with drawTime in config file.
+   * Set to 1 for Military Time.
+   * Set to 2 for Standard Time.
+
 10-01-13
  - Automap code for keys (in easy skill) and secret doors from Heretic.
 

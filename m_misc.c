@@ -174,6 +174,7 @@ extern int	viewheight;
 extern int	mouseSensitivity;
 extern int	showMessages;
 int headBob; // FS: Head bob toggle
+extern int	drawTime; // FS: Draw Time on Automap
 
 extern int	use_wpnbinds; // FS: Custom weapon keys
 extern int	wpn_shotgun; // FS: Custom weapon keys
@@ -275,7 +276,8 @@ default_t defaults[] =
 	{ "usegamma", &usegamma, 0 },
 	{ "usePalFlash", &usePalFlash, 1 }, // FS: Palette Flashing
 	{ "headBob", &headBob, 1 }, // FS: Head bob
-
+	{ "drawTime", &drawTime, 0}, // FS: Draw time on Automap
+	
 	// FS: Use custom weapon binds
 	{ "use_wpnbinds", &use_wpnbinds, 0},
 	{ "wpn_shotgun", &wpn_shotgun, 44, 1 }, // FS: Z

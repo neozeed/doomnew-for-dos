@@ -1,27 +1,5 @@
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:  Heads-up displays
-//
-//-----------------------------------------------------------------------------
+// Hu_stuff.c:	Heads-up displays
 
-static const char
-rcsid[] = "$Id: hu_stuff.c,v 1.4 1997/02/03 16:47:52 b1 Exp $";
 
 #include <ctype.h>
 
@@ -44,6 +22,7 @@ rcsid[] = "$Id: hu_stuff.c,v 1.4 1997/02/03 16:47:52 b1 Exp $";
 #include "sounds.h"
 
 #include "deh_main.h" // FS: For DEH
+#include <time.h> // FS: For time clock
 
 //
 // Locally used constants, shortcuts.
@@ -68,6 +47,10 @@ rcsid[] = "$Id: hu_stuff.c,v 1.4 1997/02/03 16:47:52 b1 Exp $";
  // FS: SECRETS FOUND automap text
 #define HU_SECRETX 0
 #define HU_SECRETY (167 - SHORT(hu_font[0]->height))
+
+// FS: Time clock automap text
+#define HU_TIMEX 0
+#define HU_TIMEY (15 - SHORT(hu_font[0]->height))
 
 
 char*	chat_macros[] =
@@ -98,6 +81,8 @@ static player_t*	plr;
 patch_t*		hu_font[HU_FONTSIZE];
 static hu_textline_t	w_title;
 static hu_textline_t	w_secret; // FS: SECRETS FOUND automap text
+static hu_textline_t	w_time; // FS: Draw Time clock on the Automap
+
 boolean			chat_on;
 static hu_itext_t	w_chat;
 static boolean		always_off = false;
@@ -117,6 +102,8 @@ extern boolean		automapactive;
 static boolean		headsupactive = false;
 extern boolean		plutonia; // FS: For Plutonia Map Names in Automap
 extern boolean		tnt; // FS: For TNT Map Names in Automap
+
+int	drawTime; // FS: Time clock on automap
 
 //
 // Builtin map names.
@@ -520,6 +507,12 @@ void HU_Start(void)
 		       HU_SECRETX, HU_SECRETY,
 		       hu_font,
 		       HU_FONTSTART);
+
+    // FS: Time clock automap text
+    HUlib_initTextLine(&w_time,
+		       HU_TIMEX, HU_TIMEY,
+		       hu_font,
+		       HU_FONTSTART);
     
     
 	switch ( gamemode )
@@ -590,6 +583,32 @@ void HU_SetupSecretsText(void)
 	HUlib_drawTextLine(&w_secret, false); // FS: Now draw it!
 }
 
+// FS: Draw the Time clock on the Automap
+void HU_SetupTimeText(void)
+{
+	struct tm	*local = NULL;
+	time_t		utc = 0;
+	const char *timefmt = NULL;
+	char		st[80];
+	char		*sttime;
+	utc = time (NULL);
+	local = localtime (&utc);
+
+	if (drawTime == 1)
+		timefmt = "%H:%M:%S %p"; // FS: Military
+	else if (drawTime > 1)
+		timefmt = "%I:%M:%S %p"; // FS: Regular
+	strftime (st, sizeof (st), timefmt, local);
+	
+	HUlib_clearTextLine(&w_time); // FS: Clear the old string
+	
+	sprintf(sttime, "%s", st);
+	while (*sttime)
+
+	HUlib_addCharToTextLine(&w_time, *(sttime++)); // FS: Add it all in...
+	HUlib_drawTextLine(&w_time, false); // FS: Now draw it!
+}
+
 void HU_Drawer(void)
 {
 
@@ -599,6 +618,8 @@ void HU_Drawer(void)
     {
 		HUlib_drawTextLine(&w_title, false);
 		HU_SetupSecretsText(); // FS: SECRETS FOUND automap text
+		if(drawTime)
+			HU_SetupTimeText(); // FS: Time clock on automap text
 	}
 }
 
@@ -609,6 +630,7 @@ void HU_Erase(void)
     HUlib_eraseIText(&w_chat);
     HUlib_eraseTextLine(&w_title);
 	HUlib_eraseTextLine(&w_secret); // FS: SECRETS FOUND automap text
+	HUlib_eraseTextLine(&w_time); // FS: Time clock on automap text
 }
 
 void HU_Ticker(void)
