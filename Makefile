@@ -23,7 +23,7 @@
 #
 # --------------------------------------------------------------------------
 
-CCOPTS = /d2 /omaxet /zp1 /4r /ei /j /zq /i=dmx
+CCOPTS = $(EXTERNOPT) /omaxet /zp1 /4r /ei /j /zq /i=dmx
 #CCOPTS = /d2 /odam /zp1 /4r /ei /j /zq /i=dmx
 
 LOCOBJS = &
@@ -97,6 +97,8 @@ d.exe : $(LOCOBJS) i_ibm.obj
  wstrip stripd.exe
  4gwbind 4gwpro.exe stripd.exe doomnew.exe -V 
  copy /y doomnew.exe D:\PROJ\doom\doom
+ copy /y CHANGES.TXT D:\proj\doom\doom
+ copy /y TODO.TXT D:\proj\doom\doom
 # sb /R /O doomnew.exe #Uncomment this to use DOS32/a
 
 i_ibm.obj:
@@ -116,6 +118,7 @@ clean : .SYMBOLIC
  del stripd.exe
  del doom.exe
  del doomnew.exe
+ del doomwatt.exe
  
 final : .SYMBOLIC
  wlink @doomnew.lnk
@@ -123,4 +126,6 @@ final : .SYMBOLIC
  wstrip stripd.exe
  4gwbind 4gwpro.exe stripd.exe doomnew.exe -V 
  copy /y doomnew.exe D:\PROJ\doom\doom
+ copy /y CHANGES.TXT D:\proj\doom\doom
+ copy /y TODO.TXT D:\proj\doom\doom
  sb /R /O doomnew.exe

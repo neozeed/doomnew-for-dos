@@ -1,30 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:
-//	Handling interactions (i.e., collisions).
-//
-//-----------------------------------------------------------------------------
-
-
-static const char
-rcsid[] = "$Id: p_inter.c,v 1.4 1997/02/03 22:45:11 b1 Exp $";
-
+// P_inter.c
 
 // Data.
 #include "doomdef.h"
@@ -58,8 +32,8 @@ rcsid[] = "$Id: p_inter.c,v 1.4 1997/02/03 22:45:11 b1 Exp $";
 int	maxammo[NUMAMMO] = {200, 50, 300, 50};
 int	clipammo[NUMAMMO] = {10, 4, 20, 1};
 
-extern boolean chex; // FS: For Chex(R) Quest.  Hacky, needs to be redone.
-
+extern boolean	chex; // FS: For Chex(R) Quest.  Hacky, needs to be redone.
+extern boolean	coop;
 //
 // GET STUFF
 //
@@ -88,7 +62,7 @@ boolean P_GiveAmmo (player_t* player,ammotype_t	ammo,int num)
 		num *= clipammo[ammo];
 	else
 		num = clipammo[ammo]/2;
-    
+	
 	if (gameskill == sk_baby || gameskill == sk_nightmare)
 	{
 		// give double ammo in trainer mode,
@@ -141,11 +115,11 @@ boolean P_GiveAmmo (player_t* player,ammotype_t	ammo,int num)
 			break;
 
 		case am_misl:
-		if (player->readyweapon == wp_fist)
-		{
-			if (player->weaponowned[wp_missile])
-				player->pendingweapon = wp_missile;
-		}
+			if (player->readyweapon == wp_fist)
+			{
+				if (player->weaponowned[wp_missile])
+					player->pendingweapon = wp_missile;
+			}
 
 		default:
 			break;
@@ -154,60 +128,85 @@ boolean P_GiveAmmo (player_t* player,ammotype_t	ammo,int num)
 	return true;
 }
 
-
 //
 // P_GiveWeapon
 // The weapon name may have a MF_DROPPED flag ored in.
 //
-boolean P_GiveWeapon( player_t* player, weapontype_t weapon, boolean dropped )
+boolean P_GiveWeapon(player_t* player, weapontype_t weapon, boolean dropped)
 {
-    boolean	gaveammo;
-    boolean	gaveweapon;
+	boolean	gaveammo;
+	boolean	gaveweapon;
 	
-    if (netgame
-	&& (deathmatch!=2)
-	 && !dropped )
-    {
-	// leave placed weapons forever on net games
+	if (netgame && (deathmatch!=2) && !dropped )
+	{
+		// leave placed weapons forever on net games
+		if (player->weaponowned[weapon])
+			return false;
+
+		player->bonuscount += BONUSADD;
+		player->weaponowned[weapon] = true;
+
+		if (deathmatch)
+			P_GiveAmmo (player, weaponinfo[weapon].ammo, 5);
+		else
+			P_GiveAmmo (player, weaponinfo[weapon].ammo, 2);
+		player->pendingweapon = weapon;
+
+		if(!M_CheckParm("-oldrules")) // FS: Some hacky shit to show the pickup messages in netgames for always stay
+		{
+			switch (weapon)
+			{
+				case wp_shotgun:
+					player->message = GOTSHOTGUN;
+					break;
+				case wp_chaingun:
+					player->message = GOTCHAINGUN;
+					break;
+				case wp_missile:
+					player->message = GOTLAUNCHER;
+					break;
+				case wp_plasma:
+					player->message = GOTPLASMA;
+					break;
+				case wp_bfg:
+					player->message = GOTBFG9000;
+					break;
+				case wp_chainsaw:
+					player->message = GOTCHAINSAW;
+					break;
+				case wp_supershotgun:
+					player->message = GOTSHOTGUN2;
+					break;
+			}
+		}
+
+		if (player == &players[consoleplayer])
+			S_StartSound (NULL, sfx_wpnup);
+		return false;
+	}
+	
+	if (weaponinfo[weapon].ammo != am_noammo)
+	{
+		// give one clip with a dropped weapon,
+		// two clips with a found weapon
+		if (dropped)
+			gaveammo = P_GiveAmmo (player, weaponinfo[weapon].ammo, 1);
+		else
+			gaveammo = P_GiveAmmo (player, weaponinfo[weapon].ammo, 2);
+	}
+	else
+		gaveammo = false;
+
 	if (player->weaponowned[weapon])
-	    return false;
-
-	player->bonuscount += BONUSADD;
-	player->weaponowned[weapon] = true;
-
-	if (deathmatch)
-	    P_GiveAmmo (player, weaponinfo[weapon].ammo, 5);
+		gaveweapon = false;
 	else
-	    P_GiveAmmo (player, weaponinfo[weapon].ammo, 2);
-	player->pendingweapon = weapon;
-
-	if (player == &players[consoleplayer])
-	    S_StartSound (NULL, sfx_wpnup);
-	return false;
-    }
+	{
+		gaveweapon = true;
+		player->weaponowned[weapon] = true;
+		player->pendingweapon = weapon;
+	}
 	
-    if (weaponinfo[weapon].ammo != am_noammo)
-    {
-	// give one clip with a dropped weapon,
-	// two clips with a found weapon
-	if (dropped)
-	    gaveammo = P_GiveAmmo (player, weaponinfo[weapon].ammo, 1);
-	else
-	    gaveammo = P_GiveAmmo (player, weaponinfo[weapon].ammo, 2);
-    }
-    else
-	gaveammo = false;
-	
-    if (player->weaponowned[weapon])
-	gaveweapon = false;
-    else
-    {
-	gaveweapon = true;
-	player->weaponowned[weapon] = true;
-	player->pendingweapon = weapon;
-    }
-	
-    return (gaveweapon || gaveammo);
+	return (gaveweapon || gaveammo);
 }
 
  
@@ -216,20 +215,17 @@ boolean P_GiveWeapon( player_t* player, weapontype_t weapon, boolean dropped )
 // P_GiveBody
 // Returns false if the body isn't needed at all
 //
-boolean
-P_GiveBody
-( player_t*	player,
-  int		num )
+boolean P_GiveBody (player_t* player, int num)
 {
-    if (player->health >= MAXHEALTH)
-	return false;
-		
-    player->health += num;
-    if (player->health > MAXHEALTH)
-	player->health = MAXHEALTH;
-    player->mo->health = player->health;
-	
-    return true;
+	if (player->health >= MAXHEALTH)
+		return false;
+
+	player->health += num;
+	if (player->health > MAXHEALTH)
+		player->health = MAXHEALTH;
+	player->mo->health = player->health;
+
+	return true;
 }
 
 
@@ -239,21 +235,18 @@ P_GiveBody
 // Returns false if the armor is worse
 // than the current armor.
 //
-boolean
-P_GiveArmor
-( player_t*	player,
-  int		armortype )
+boolean P_GiveArmor (player_t* player, int armortype)
 {
-    int		hits;
+	int		hits;
 	
-    hits = armortype*100;
-    if (player->armorpoints >= hits)
-	return false;	// don't pick up
+	hits = armortype*100;
+	if (player->armorpoints >= hits)
+		return false;	// don't pick up
 		
-    player->armortype = armortype;
-    player->armorpoints = hits;
+	player->armortype = armortype;
+	player->armorpoints = hits;
 	
-    return true;
+	return true;
 }
 
 
@@ -261,19 +254,16 @@ P_GiveArmor
 //
 // P_GiveCard
 //
-void
-P_GiveCard
-( player_t*	player,
-  card_t	card )
+void P_GiveCard (player_t* player, card_t card)
 {
 	int i; // FS: Give keys to all players in Coop   
 
-    if (player->cards[card])
-	return;
-    player->bonuscount = BONUSADD;
-    player->cards[card] = 1;
+	if (player->cards[card])
+		return;
+	player->bonuscount = BONUSADD;
+	player->cards[card] = 1;
 
-	if (netgame && !deathmatch && !M_CheckParm("-oldrules")) // FS: Give it to all in coop
+	if (coop) // FS: Give it to all in coop
 	{
 		for (i = 0; i < MAXPLAYERS; i++)
 		{
@@ -311,55 +301,52 @@ P_GiveCard
 					break;
 			}
 		}
-	}      
+	}	  
 }
 
 
 //
 // P_GivePower
 //
-boolean
-P_GivePower
-( player_t*	player,
-  int /*powertype_t*/	power )
+boolean P_GivePower (player_t* player, int power)
 {
-    if (power == pw_invulnerability)
-    {
-	player->powers[power] = INVULNTICS;
-	return true;
-    }
-    
-    if (power == pw_invisibility)
-    {
-	player->powers[power] = INVISTICS;
-	player->mo->flags |= MF_SHADOW;
-	return true;
-    }
-    
-    if (power == pw_infrared)
-    {
-	player->powers[power] = INFRATICS;
-	return true;
-    }
-    
-    if (power == pw_ironfeet)
-    {
-	player->powers[power] = IRONTICS;
-	return true;
-    }
-    
-    if (power == pw_strength)
-    {
-	P_GiveBody (player, 100);
+	if (power == pw_invulnerability)
+	{
+		player->powers[power] = INVULNTICS;
+		return true;
+	}
+	
+	if (power == pw_invisibility)
+	{
+		player->powers[power] = INVISTICS;
+		player->mo->flags |= MF_SHADOW;
+		return true;
+	}
+	
+	if (power == pw_infrared)
+	{
+		player->powers[power] = INFRATICS;
+		return true;
+	}
+	
+	if (power == pw_ironfeet)
+	{
+		player->powers[power] = IRONTICS;
+		return true;
+	}
+	
+	if (power == pw_strength)
+	{
+		P_GiveBody (player, 100);
+		player->powers[power] = 1;
+		return true;
+	}
+	
+	if (player->powers[power])
+		return false;	// already got it
+		
 	player->powers[power] = 1;
 	return true;
-    }
-	
-    if (player->powers[power])
-	return false;	// already got it
-		
-    player->powers[power] = 1;
-    return true;
 }
 
 
@@ -367,423 +354,418 @@ P_GivePower
 //
 // P_TouchSpecialThing
 //
-void
-P_TouchSpecialThing
-( mobj_t*	special,
-  mobj_t*	toucher )
+void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 {
-    player_t*	player;
-    int		i;
-    fixed_t	delta;
-    int		sound;
-		
-    delta = special->z - toucher->z;
+	player_t*		player;
+	int				i;
+	fixed_t			delta;
+	int				sound;
 
-    if (delta > toucher->height
-	|| delta < -8*FRACUNIT)
-    {
-	// out of reach
-	return;
-    }
-    
-	
-    sound = sfx_itemup;	
-    player = toucher->player;
+	delta = special->z - toucher->z;
 
-    // Dead thing touching.
-    // Can happen with a sliding player corpse.
-    if (toucher->health <= 0)
-	return;
-
-    // Identify by sprite.
-    switch (special->sprite)
-    {
-	// armor
-      case SPR_ARM1:
-	if (!P_GiveArmor (player, 1))
-	    return;
-	if(chex)
-		player->message = "Picked up the Chex(R) Armor.";
-	else
-		player->message = GOTARMOR;
-	break;
-		
-      case SPR_ARM2:
-	if (!P_GiveArmor (player, 2))
-	    return;
-	if(chex)
-		player->message = "Picked up the Super Chex(R) Armor!";
-	else
-		player->message = GOTMEGA;
-	break;
-	
-	// bonus items
-      case SPR_BON1:
-	player->health++;		// can go over 100%
-	if (player->health > 200)
-	    player->health = 200;
-	player->mo->health = player->health;
-	if(chex)
-		player->message = "Picked up a glass of water.";
-	else
-		player->message = GOTHTHBONUS;
-	break;
-	
-      case SPR_BON2:
-	player->armorpoints++;		// can go over 100%
-	if (player->armorpoints > 200)
-	    player->armorpoints = 200;
-	if (!player->armortype)
-	    player->armortype = 1;
-	if(chex)
-		player->message = "Picked up slime repellent.";
-	else
-		player->message = GOTARMBONUS;
-	break;
-	
-      case SPR_SOUL:
-	player->health += 100;
-	if (player->health > 200)
-	    player->health = 200;
-	player->mo->health = player->health;
-	if(chex)
-		player->message = "Supercharged Breakfast!";
-	else
-		player->message = GOTSUPER;
-	sound = sfx_getpow;
-	break;
-	
-      case SPR_MEGA:
-	if (gamemode != commercial)
-	    return;
-	player->health = 200;
-	player->mo->health = player->health;
-	P_GiveArmor (player,2);
-	player->message = GOTMSPHERE;
-	sound = sfx_getpow;
-	break;
-	
-	// cards
-	// leave cards for everyone
-      case SPR_BKEY:
-	if (!player->cards[it_bluecard])
+	if (delta > toucher->height || delta < -8*FRACUNIT)
 	{
-		if(chex)
-			player->message = "Picked up a blue key.";
-		else
-			player->message = GOTBLUECARD;
-	}
-	P_GiveCard (player, it_bluecard);
-	if (!netgame)
-	    break;
-	return;
-	
-      case SPR_YKEY:
-	if (!player->cards[it_yellowcard])
-	{
-		if(chex)
-			player->message = "Picked up a yellow key.";
-		else
-			player->message = GOTYELWCARD;
-	}
-	P_GiveCard (player, it_yellowcard);
-	if (!netgame)
-	    break;
-	return;
-	
-      case SPR_RKEY:
-	if (!player->cards[it_redcard])
-	{
-		if(chex)
-			player->message = "Picked up a red key.";
-		else
-			player->message = GOTREDCARD;
-	}
-	P_GiveCard (player, it_redcard);
-	if (!netgame)
-	    break;
-	return;
-	
-      case SPR_BSKU:
-	if (!player->cards[it_blueskull])
-	    player->message = GOTBLUESKUL;
-	P_GiveCard (player, it_blueskull);
-	if (!netgame)
-	    break;
-	return;
-	
-      case SPR_YSKU:
-	if (!player->cards[it_yellowskull])
-	    player->message = GOTYELWSKUL;
-	P_GiveCard (player, it_yellowskull);
-	if (!netgame)
-	    break;
-	return;
-	
-      case SPR_RSKU:
-	if (!player->cards[it_redskull])
-	    player->message = GOTREDSKULL;
-	P_GiveCard (player, it_redskull);
-	if (!netgame)
-	    break;
-	return;
-	
-	// medikits, heals
-      case SPR_STIM:
-	if (!P_GiveBody (player, 10))
-	    return;
-	if(chex)
-		player->message = "Picked up a bowl of fruit.";
-	else
-		player->message = GOTSTIM;
-	break;
-	
-      case SPR_MEDI:
-	if (!P_GiveBody (player, 25))
-	    return;
-
-	if (player->health < 50)
-	{
-		if(chex)
-			player->message = "Picked up some needed vegetables!";
-		else
-			player->message = GOTMEDINEED;
-	}
-	else
-	{
-		if(chex)
-			player->message = "Picked up a bowl of vegetables.";
-		else
-			player->message = GOTMEDIKIT;
-	}
-	break;
-
-	
-	// power ups
-      case SPR_PINV:
-	if (!P_GivePower (player, pw_invulnerability))
-	    return;
-	player->message = GOTINVUL;
-	sound = sfx_getpow;
-	break;
-	
-      case SPR_PSTR:
-	if (!P_GivePower (player, pw_strength))
-	    return;
-	player->message = GOTBERSERK;
-	if (player->readyweapon != wp_fist)
-	    player->pendingweapon = wp_fist;
-	sound = sfx_getpow;
-	break;
-	
-      case SPR_PINS:
-	if (!P_GivePower (player, pw_invisibility))
-	    return;
-	player->message = GOTINVIS;
-	sound = sfx_getpow;
-	break;
-	
-      case SPR_SUIT:
-	if (!P_GivePower (player, pw_ironfeet))
-	    return;
-	if(chex)
-		player->message = "Slimeproof Suit";
-	else
-		player->message = GOTSUIT;
-	sound = sfx_getpow;
-	break;
-	
-      case SPR_PMAP:
-	if (!P_GivePower (player, pw_allmap))
-	    return;
-	player->message = GOTMAP;
-	sound = sfx_getpow;
-	break;
-	
-      case SPR_PVIS:
-	if (!P_GivePower (player, pw_infrared))
-	    return;
-	player->message = GOTVISOR;
-	sound = sfx_getpow;
-	break;
-	
-	// ammo
-      case SPR_CLIP:
-	if (special->flags & MF_DROPPED)
-	{
-	    if (!P_GiveAmmo (player,am_clip,0))
+		// out of reach
 		return;
 	}
-	else
-	{
-	    if (!P_GiveAmmo (player,am_clip,1))
+
+	sound = sfx_itemup;
+	player = toucher->player;
+
+	// Dead thing touching.
+	// Can happen with a sliding player corpse.
+	if (toucher->health <= 0)
 		return;
-	}
-	if (chex)
-		player->message = "Picked up a mini zorch recharge.";
-	else
-		player->message = GOTCLIP;
-	break;
-	
-      case SPR_AMMO:
-	if (!P_GiveAmmo (player, am_clip,5))
-	    return;
-	if (chex)
-		player->message = "Picked up a mini zorch pack.";
-	else
-		player->message = GOTCLIPBOX;
-	break;
-	
-      case SPR_ROCK:
-	if (!P_GiveAmmo (player, am_misl,1))
-	    return;
-	if(chex)
-		player->message = "Picked up a zorch propulsor recharge";
-	else
-		player->message = GOTROCKET;
-	break;
-	
-      case SPR_BROK:
-	if (!P_GiveAmmo (player, am_misl,5))
-	    return;
-	if(chex)
-                player->message = "Picked up a zorch propulsor pack.";
-	else
-		player->message = GOTROCKBOX;
-	break;
-	
-      case SPR_CELL:
-	if (!P_GiveAmmo (player, am_cell,1))
-	    return;
-	if(chex)
-		player->message = "Picked up a phasing zorcher recharge.";
-	else
-		player->message = GOTCELL;
-	break;
-	
-      case SPR_CELP:
-	if (!P_GiveAmmo (player, am_cell,5))
-	    return;
-	if(chex)
-		player->message = "Picked up a phasing zorcher pack.";
-	else
-		player->message = GOTCELLBOX;
-	break;
-	
-      case SPR_SHEL:
-	if (!P_GiveAmmo (player, am_shell,1))
-	    return;
-	if(chex)
-		player->message = "Picked up a large zorcher recharge.";
-	else
-		player->message = GOTSHELLS;
-	break;
-	
-      case SPR_SBOX:
-	if (!P_GiveAmmo (player, am_shell,5))
-	    return;
-	if(chex)
-		player->message = "Picked up a large zorcher pack.";
-	else
-		player->message = GOTSHELLBOX;
-	break;
-	
-      case SPR_BPAK:
-	if (!player->backpack)
+
+	// Identify by sprite.
+	switch (special->sprite)
 	{
-	    for (i=0 ; i<NUMAMMO ; i++)
-		player->maxammo[i] *= 2;
-	    player->backpack = true;
+		// armor
+		case SPR_ARM1:
+			if (!P_GiveArmor (player, 1))
+				return;
+			if(chex)
+				player->message = "Picked up the Chex(R) Armor.";
+			else
+				player->message = GOTARMOR;
+			break;
+
+		case SPR_ARM2:
+			if (!P_GiveArmor (player, 2))
+				return;
+			if(chex)
+				player->message = "Picked up the Super Chex(R) Armor!";
+			else
+				player->message = GOTMEGA;
+			break;
+
+		// bonus items
+		case SPR_BON1:
+			player->health++;		// can go over 100%
+			if (player->health > 200)
+				player->health = 200;
+			player->mo->health = player->health;
+			if(chex)
+				player->message = "Picked up a glass of water.";
+			else
+				player->message = GOTHTHBONUS;
+			break;
+
+		case SPR_BON2:
+			player->armorpoints++;		// can go over 100%
+			if (player->armorpoints > 200)
+				player->armorpoints = 200;
+			if (!player->armortype)
+				player->armortype = 1;
+			if(chex)
+				player->message = "Picked up slime repellent.";
+			else
+				player->message = GOTARMBONUS;
+			break;
+
+		case SPR_SOUL:
+			player->health += 100;
+			if (player->health > 200)
+				player->health = 200;
+			player->mo->health = player->health;
+			if(chex)
+				player->message = "Supercharged Breakfast!";
+			else
+				player->message = GOTSUPER;
+			sound = sfx_getpow;
+			break;
+
+		case SPR_MEGA:
+			if (gamemode != commercial)
+				return;
+			player->health = 200;
+			player->mo->health = player->health;
+			P_GiveArmor (player,2);
+			player->message = GOTMSPHERE;
+			sound = sfx_getpow;
+			break;
+	
+		// cards
+		// leave cards for everyone
+		case SPR_BKEY:
+			if (!player->cards[it_bluecard])
+			{
+				if(chex)
+					player->message = "Picked up a blue key.";
+				else
+					player->message = GOTBLUECARD;
+			}
+			P_GiveCard (player, it_bluecard);
+			if (!netgame)
+				break;
+			return;
+	
+		case SPR_YKEY:
+			if (!player->cards[it_yellowcard])
+			{
+				if(chex)
+					player->message = "Picked up a yellow key.";
+				else
+					player->message = GOTYELWCARD;
+			}
+			P_GiveCard (player, it_yellowcard);
+			if (!netgame)
+				break;
+			return;
+	
+		case SPR_RKEY:
+			if (!player->cards[it_redcard])
+			{
+				if(chex)
+					player->message = "Picked up a red key.";
+				else
+					player->message = GOTREDCARD;
+			}
+			P_GiveCard (player, it_redcard);
+			if (!netgame)
+				break;
+			return;
+	
+		case SPR_BSKU:
+			if (!player->cards[it_blueskull])
+				player->message = GOTBLUESKUL;
+			P_GiveCard (player, it_blueskull);
+			if (!netgame)
+				break;
+			return;
+	
+		case SPR_YSKU:
+			if (!player->cards[it_yellowskull])
+				player->message = GOTYELWSKUL;
+			P_GiveCard (player, it_yellowskull);
+			if (!netgame)
+				break;
+			return;
+	
+		case SPR_RSKU:
+			if (!player->cards[it_redskull])
+				player->message = GOTREDSKULL;
+			P_GiveCard (player, it_redskull);
+			if (!netgame)
+				break;
+			return;
+	
+		// medikits, heals
+		case SPR_STIM:
+			if (!P_GiveBody (player, 10))
+				return;
+			if(chex)
+				player->message = "Picked up a bowl of fruit.";
+			else
+				player->message = GOTSTIM;
+			break;
+	
+		case SPR_MEDI:
+			if (!P_GiveBody (player, 25))
+				return;
+
+			if (player->health < 50)
+			{
+				if(chex)
+					player->message = "Picked up some needed vegetables!";
+				else
+					player->message = GOTMEDINEED;
+			}
+			else
+			{
+				if(chex)
+					player->message = "Picked up a bowl of vegetables.";
+				else
+					player->message = GOTMEDIKIT;
+			}
+			break;
+
+	
+		// power ups
+		case SPR_PINV:
+			if (!P_GivePower (player, pw_invulnerability))
+				return;
+			player->message = GOTINVUL;
+			sound = sfx_getpow;
+			break;
+	
+		case SPR_PSTR:
+			if (!P_GivePower (player, pw_strength))
+				return;
+			player->message = GOTBERSERK;
+			if (player->readyweapon != wp_fist)
+				player->pendingweapon = wp_fist;
+			sound = sfx_getpow;
+			break;
+	
+		case SPR_PINS:
+			if (!P_GivePower (player, pw_invisibility))
+				return;
+			player->message = GOTINVIS;
+			sound = sfx_getpow;
+			break;
+	
+		case SPR_SUIT:
+			if (!P_GivePower (player, pw_ironfeet))
+				return;
+			if(chex)
+				player->message = "Slimeproof Suit";
+			else
+				player->message = GOTSUIT;
+			sound = sfx_getpow;
+			break;
+	
+		case SPR_PMAP:
+			if (!P_GivePower (player, pw_allmap))
+				return;
+			player->message = GOTMAP;
+			sound = sfx_getpow;
+			break;
+	
+		case SPR_PVIS:
+			if (!P_GivePower (player, pw_infrared))
+				return;
+			player->message = GOTVISOR;
+			sound = sfx_getpow;
+			break;
+	
+		// ammo
+		case SPR_CLIP:
+			if (special->flags & MF_DROPPED)
+			{
+				if (!P_GiveAmmo (player,am_clip,0))
+				return;
+			}
+			else
+			{
+				if (!P_GiveAmmo (player,am_clip,1))
+				return;
+			}
+			if (chex)
+				player->message = "Picked up a mini zorch recharge.";
+			else
+				player->message = GOTCLIP;
+			break;
+	
+		case SPR_AMMO:
+			if (!P_GiveAmmo (player, am_clip,5))
+				return;
+			if (chex)
+				player->message = "Picked up a mini zorch pack.";
+			else
+				player->message = GOTCLIPBOX;
+			break;
+	
+		case SPR_ROCK:
+			if (!P_GiveAmmo (player, am_misl,1))
+				return;
+			if(chex)
+				player->message = "Picked up a zorch propulsor recharge";
+			else
+				player->message = GOTROCKET;
+			break;
+	
+		case SPR_BROK:
+			if (!P_GiveAmmo (player, am_misl,5))
+				return;
+			if(chex)
+				player->message = "Picked up a zorch propulsor pack.";
+			else
+				player->message = GOTROCKBOX;
+			break;
+	
+		case SPR_CELL:
+			if (!P_GiveAmmo (player, am_cell,1))
+				return;
+			if(chex)
+				player->message = "Picked up a phasing zorcher recharge.";
+			else
+				player->message = GOTCELL;
+			break;
+	
+		case SPR_CELP:
+			if (!P_GiveAmmo (player, am_cell,5))
+				return;
+			if(chex)
+				player->message = "Picked up a phasing zorcher pack.";
+			else
+				player->message = GOTCELLBOX;
+			break;
+	
+		case SPR_SHEL:
+			if (!P_GiveAmmo (player, am_shell,1))
+				return;
+			if(chex)
+				player->message = "Picked up a large zorcher recharge.";
+			else
+				player->message = GOTSHELLS;
+			break;
+	
+		case SPR_SBOX:
+			if (!P_GiveAmmo (player, am_shell,5))
+				return;
+			if(chex)
+				player->message = "Picked up a large zorcher pack.";
+			else
+				player->message = GOTSHELLBOX;
+			break;
+	
+		case SPR_BPAK:
+			if (!player->backpack)
+			{
+				for (i=0 ; i<NUMAMMO ; i++)
+				player->maxammo[i] *= 2;
+				player->backpack = true;
+			}
+			for (i=0 ; i<NUMAMMO ; i++)
+				P_GiveAmmo (player, i, 1);
+			if(chex)
+				player->message = "Picked up a zorchpak!";
+			else
+				player->message = GOTBACKPACK;
+			break;
+	
+		// weapons
+		case SPR_BFUG:
+			if (!P_GiveWeapon(player,wp_bfg, false))
+				return;
+ 			if(chex)
+				player->message = "You got the LAZ Device!";
+			else
+				player->message = GOTBFG9000;
+			sound = sfx_wpnup;	
+			break;
+	
+		case SPR_MGUN:
+			if (!P_GiveWeapon (player, wp_chaingun, special->flags&MF_DROPPED))
+				return;
+			if(chex)
+				player->message = "You got the Rapid Zorcher!";
+			else
+				player->message = GOTCHAINGUN;
+			sound = sfx_wpnup;	
+			break;
+	
+		case SPR_CSAW:
+			if (!P_GiveWeapon (player, wp_chainsaw, false))
+				return;
+			if(chex)
+				player->message = "You got the Super Bootspork!";
+			else
+				player->message = GOTCHAINSAW;
+			sound = sfx_wpnup;	
+			break;
+	
+		case SPR_LAUN:
+			if (!P_GiveWeapon (player, wp_missile, false))
+				return;
+			if(chex)
+				player->message = "You got the Zorch Propulsor!";
+			else
+				player->message = GOTLAUNCHER;
+			sound = sfx_wpnup;	
+			break;
+
+		case SPR_PLAS:
+			if (!P_GiveWeapon (player, wp_plasma, false))
+				return;
+			if(chex)
+				player->message = "You got the Phasing Zorcher!";
+			else
+				player->message = GOTPLASMA;
+			sound = sfx_wpnup;	
+			break;
+
+		case SPR_SHOT:
+			if (!P_GiveWeapon (player, wp_shotgun, special->flags&MF_DROPPED ))
+				return;
+			if(chex)
+				player->message = "You got the Large Zorcher!";
+			else
+				player->message = GOTSHOTGUN;
+			sound = sfx_wpnup;	
+			break;
+	
+		case SPR_SGN2:
+			if (!P_GiveWeapon (player, wp_supershotgun, special->flags&MF_DROPPED ))
+				return;
+			if(chex)
+				player->message = "You got the Super Large Zorcher!";
+			else
+				player->message = GOTSHOTGUN2;
+			sound = sfx_wpnup;	
+			break;
+	
+		default:
+			I_Error ("P_SpecialThing: Unknown gettable thing");
 	}
-	for (i=0 ; i<NUMAMMO ; i++)
-	    P_GiveAmmo (player, i, 1);
-	if(chex)
-		player->message = "Picked up a zorchpak!";
-	else
-		player->message = GOTBACKPACK;
-	break;
 	
-	// weapons
-      case SPR_BFUG:
-	if (!P_GiveWeapon (player, wp_bfg, false) )
-	    return;
-	if(chex)
-		player->message = "You got the LAZ Device!";
-	else
-		player->message = GOTBFG9000;
-	sound = sfx_wpnup;	
-	break;
-	
-      case SPR_MGUN:
-	if (!P_GiveWeapon (player, wp_chaingun, special->flags&MF_DROPPED) )
-	    return;
-	if(chex)
-		player->message = "You got the Rapid Zorcher!";
-	else
-		player->message = GOTCHAINGUN;
-	sound = sfx_wpnup;	
-	break;
-	
-      case SPR_CSAW:
-	if (!P_GiveWeapon (player, wp_chainsaw, false) )
-	    return;
-	if(chex)
-		player->message = "You got the Super Bootspork!";
-	else
-		player->message = GOTCHAINSAW;
-	sound = sfx_wpnup;	
-	break;
-	
-      case SPR_LAUN:
-	if (!P_GiveWeapon (player, wp_missile, false) )
-	    return;
-	if(chex)
-		player->message = "You got the Zorch Propulsor!";
-	else
-		player->message = GOTLAUNCHER;
-	sound = sfx_wpnup;	
-	break;
-	
-      case SPR_PLAS:
-	if (!P_GiveWeapon (player, wp_plasma, false) )
-	    return;
-	if(chex)
-		player->message = "You got the Phasing Zorcher!";
-	else
-		player->message = GOTPLASMA;
-	sound = sfx_wpnup;	
-	break;
-	
-      case SPR_SHOT:
-	if (!P_GiveWeapon (player, wp_shotgun, special->flags&MF_DROPPED ) )
-	    return;
-	if(chex)
-		player->message = "You got the Large Zorcher!";
-	else
-		player->message = GOTSHOTGUN;
-	sound = sfx_wpnup;	
-	break;
-		
-      case SPR_SGN2:
-	if (!P_GiveWeapon (player, wp_supershotgun, special->flags&MF_DROPPED ) )
-	    return;
-	if(chex)
-		player->message = "You got the Super Large Zorcher!";
-	else
-		player->message = GOTSHOTGUN2;
-	sound = sfx_wpnup;	
-	break;
-		
-      default:
-	I_Error ("P_SpecialThing: Unknown gettable thing");
-    }
-	
-    if (special->flags & MF_COUNTITEM)
-	player->itemcount++;
-    P_RemoveMobj (special);
-    player->bonuscount += BONUSADD;
-    if (player == &players[consoleplayer])
-	S_StartSound (NULL, sound);
+	if (special->flags & MF_COUNTITEM)
+		player->itemcount++;
+	P_RemoveMobj (special);
+	player->bonuscount += BONUSADD;
+	if (player == &players[consoleplayer])
+		S_StartSound (NULL, sound);
 }
 
 
@@ -824,7 +806,7 @@ void P_KillMobj( mobj_t* source, mobj_t* target )
 		// even those caused by other monsters
 		players[0].killcount++;
 	}
-    
+	
 	if (target->player)
 	{
 		// count environment kills against you
@@ -1002,7 +984,7 @@ void P_DamageMobj ( mobj_t* target, mobj_t* inflictor, mobj_t* source, int damag
 				saved = damage/3;
 			else
 				saved = damage/2;
-	    
+		
 			if (player->armorpoints <= saved)
 			{
 				// armor is used up
@@ -1030,7 +1012,7 @@ void P_DamageMobj ( mobj_t* target, mobj_t* inflictor, mobj_t* source, int damag
 		}
 	}
 
-	    
+		
 	// do the damage	
 	target->health -= damage;
 	if (target->health <= 0)

@@ -1,33 +1,7 @@
+// S_sound.c
+
 //#define OLDSOUND
 #ifndef OLDSOUND
-
-// Emacs style mode select   -*- C++ -*-
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// DESCRIPTION:  none
-//
-//-----------------------------------------------------------------------------
-
-
-static const char
-rcsid[] = "$Id: s_sound.c,v 1.6 1997/02/03 22:45:12 b1 Exp $";
-
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -161,7 +135,6 @@ void S_Init
   int		musicVolume )
 {  
 	int	i;
-	char	buffer[34];
 
 	if (sfxVolume > 15)
 	{
@@ -173,9 +146,6 @@ void S_Init
 		mprintf("WARNING: Music volume is invalid; defaulting to 8.\n");
 		musicVolume = snd_MusicVolume = 8;
 	}
-
-	sprintf(buffer, "S_Init: default sfx volume %d\n", sfxVolume);
-	mprintf(buffer);
 
 	I_StartupSound();
 	I_SetChannels(snd_Channels);

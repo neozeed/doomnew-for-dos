@@ -69,7 +69,7 @@ extern patch_t*		hu_font[HU_FONTSIZE];
 extern boolean		message_dontfuckwithme;
 
 extern boolean		chat_on;		// in heads-up code
-extern boolean 	chex; // FS: For Chex Quest
+extern boolean		chex; // FS: For Chex Quest
 
 //
 // defaulted values
@@ -101,8 +101,8 @@ int			messy;
 int			messageLastMenuActive;
 
 // timed message = no input from user
-boolean			messageNeedsInput;     
-boolean 	readthisfullscreenhack; // FS 
+boolean		messageNeedsInput;     
+boolean		readthisfullscreenhack; // FS 
 void    (*messageRoutine)(int response);
 
 #define SAVESTRINGSIZE 	24
@@ -239,34 +239,34 @@ void M_DeleteSaveResponse(int ch); // FS: Delete Save Games
 //
 enum
 {
-    newgame = 0,
-    options,
-    loadgame,
-    savegame,
-    readthis,
-    quitdoom,
-    main_end
+	newgame = 0,
+	options,
+	loadgame,
+	savegame,
+	readthis,
+	quitdoom,
+	main_end
 } main_e;
 
 menuitem_t MainMenu[]=
 {
-    {1,"M_NGAME",M_NewGame,'n'},
-    {1,"M_OPTION",M_Options,'o'},
-    {1,"M_LOADG",M_LoadGame,'l'},
-    {1,"M_SAVEG",M_SaveGame,'s'},
-    // Another hickup with Special edition.
-    {1,"M_RDTHIS",M_ReadThis,'r'},
-    {1,"M_QUITG",M_QuitDOOM,'q'}
+	{1,"M_NGAME",M_NewGame,'n'},
+	{1,"M_OPTION",M_Options,'o'},
+	{1,"M_LOADG",M_LoadGame,'l'},
+	{1,"M_SAVEG",M_SaveGame,'s'},
+	// Another hickup with Special edition.
+	{1,"M_RDTHIS",M_ReadThis,'r'},
+	{1,"M_QUITG",M_QuitDOOM,'q'}
 };
 
 menu_t  MainDef =
 {
-    main_end,
-    NULL,
-    MainMenu,
-    M_DrawMainMenu,
-    97,64,
-    0
+	main_end,
+	NULL,
+	MainMenu,
+	M_DrawMainMenu,
+	97,64,
+	0
 };
 
 
@@ -275,29 +275,29 @@ menu_t  MainDef =
 //
 enum
 {
-    ep1,
-    ep2,
-    ep3,
-    ep4,
-    ep_end
+	ep1,
+	ep2,
+	ep3,
+	ep4,
+	ep_end
 } episodes_e;
 
 menuitem_t EpisodeMenu[]=
 {
-    {1,"M_EPI1", M_Episode,'k'},
-    {1,"M_EPI2", M_Episode,'t'},
-    {1,"M_EPI3", M_Episode,'i'},
-    {1,"M_EPI4", M_Episode,'t'}
+	{1,"M_EPI1", M_Episode,'k'},
+	{1,"M_EPI2", M_Episode,'t'},
+	{1,"M_EPI3", M_Episode,'i'},
+	{1,"M_EPI4", M_Episode,'t'}
 };
 
 menu_t  EpiDef =
 {
-    ep_end,		// # of menu items
-    &MainDef,		// previous menu
-    EpisodeMenu,	// menuitem_t ->
-    M_DrawEpisode,	// drawing routine ->
-    48,63,              // x,y
-    ep1			// lastOn
+	ep_end,		// # of menu items
+	&MainDef,		// previous menu
+	EpisodeMenu,	// menuitem_t ->
+	M_DrawEpisode,	// drawing routine ->
+	48,63,		// x,y
+	ep1			// lastOn
 };
 
 //
@@ -1097,17 +1097,17 @@ int     quitsounds2[8] =
 
 void M_QuitResponse(int ch)
 {
-    if (ch != 'y')
-	return;
-    if (!netgame)
-    {
-	if (gamemode == commercial)
-	    S_StartSound(NULL,quitsounds2[(gametic>>2)&7]);
-	else
-	    S_StartSound(NULL,quitsounds[(gametic>>2)&7]);
-	I_WaitVBL(105);
-    }
-    I_Quit ();
+	if (ch != 'y')
+		return;
+	if (!netgame)
+	{
+		if (gamemode == commercial)
+			S_StartSound(NULL,quitsounds2[(gametic>>2)&7]);
+		else
+			S_StartSound(NULL,quitsounds[(gametic>>2)&7]);
+		I_WaitVBL(105);
+	}
+	I_Quit ();
 }
 
 
@@ -1130,17 +1130,17 @@ void M_QuitDOOM(int choice)
 
 void M_ChangeSensitivity(int choice)
 {
-    switch(choice)
-    {
-      case 0:
-	if (mouseSensitivity)
-	    mouseSensitivity--;
-	break;
-      case 1:
-	if (mouseSensitivity < 50) // FS: Go up to 50 now (from 9)
-	    mouseSensitivity++;
-	break;
-    }
+	switch(choice)
+	{
+		case 0:
+			if (mouseSensitivity)
+				mouseSensitivity--;
+			break;
+		case 1:
+			if (mouseSensitivity < 50) // FS: Go up to 50 now (from 9)
+				mouseSensitivity++;
+			break;
+	}
 }
 
 
@@ -1151,17 +1151,17 @@ void M_ChangeDetail(int choice)
 //    choice = 0;
 //    detailLevel = 1 - detailLevel;
 	detailLevel = 0;
-    // FS: FIXME - moron fucked this up too...
-    P_SetMessage(&players[consoleplayer], "low detail mode disabled in this build!",true);
+	// FS: FIXME - moron fucked this up too...
+	P_SetMessage(&players[consoleplayer], "low detail mode disabled in this build!",true);
 
-    return;
-    
-    /*R_SetViewSize (screenblocks, detailLevel);
+	return;
 
-    if (!detailLevel)
-	players[consoleplayer].message = DETAILHI;
-    else
-	players[consoleplayer].message = DETAILLO;*/
+	/*R_SetViewSize (screenblocks, detailLevel);
+
+	if (!detailLevel)
+		players[consoleplayer].message = DETAILHI;
+	else
+		players[consoleplayer].message = DETAILLO;*/
 }
 
 void M_ChangePalFlashes(int choice) // FS: Palette Flashes Toggle
@@ -1178,30 +1178,27 @@ void M_ChangePalFlashes(int choice) // FS: Palette Flashes Toggle
 	}
 }
 
-
-
 void M_SizeDisplay(int choice)
 {
-    switch(choice)
-    {
-      case 0:
-	if (screenSize > 0)
+	switch(choice)
 	{
-	    screenblocks--;
-	    screenSize--;
+		case 0:
+			if (screenSize > 0)
+			{
+				screenblocks--;
+				screenSize--;
+			}
+			break;
+		case 1:
+			if (screenSize < 8)
+			{
+				screenblocks++;
+				screenSize++;
+			}
+			break;
 	}
-	break;
-      case 1:
-	if (screenSize < 8)
-	{
-	    screenblocks++;
-	    screenSize++;
-	}
-	break;
-    }
-	
 
-    R_SetViewSize (screenblocks, detailLevel);
+	R_SetViewSize (screenblocks, detailLevel);
 }
 
 
@@ -1210,28 +1207,22 @@ void M_SizeDisplay(int choice)
 //
 //      Menu Functions
 //
-void
-M_DrawThermo
-( int	x,
-  int	y,
-  int	thermWidth,
-  int	thermDot )
+void M_DrawThermo (int x, int y, int thermWidth, int thermDot)
 {
-    int		xx;
-    int		i;
+	int	xx;
+	int	i;
 
-    xx = x;
-    V_DrawPatchDirect (xx,y,0,W_CacheLumpName("M_THERML",PU_CACHE));
-    xx += 8;
-    for (i=0;i<thermWidth;i++)
-    {
-	V_DrawPatchDirect (xx,y,0,W_CacheLumpName("M_THERMM",PU_CACHE));
+	xx = x;
+	V_DrawPatchDirect (xx,y,0,W_CacheLumpName("M_THERML",PU_CACHE));
 	xx += 8;
-    }
-    V_DrawPatchDirect (xx,y,0,W_CacheLumpName("M_THERMR",PU_CACHE));
+	for (i=0;i<thermWidth;i++)
+	{
+		V_DrawPatchDirect (xx,y,0,W_CacheLumpName("M_THERMM",PU_CACHE));
+		xx += 8;
+	}
+	V_DrawPatchDirect (xx,y,0,W_CacheLumpName("M_THERMR",PU_CACHE));
 
-    V_DrawPatchDirect ((x+8) + thermDot*8,y,
-		       0,W_CacheLumpName("M_THERMO",PU_CACHE));
+	V_DrawPatchDirect ((x+8) + thermDot*8,y, 0,W_CacheLumpName("M_THERMO",PU_CACHE));
 }
 
 
@@ -1379,106 +1370,106 @@ M_WriteText
 //
 boolean M_Responder (event_t* ev)
 {
-    int             ch;
-    int             i;
-    static  int     joywait = 0;
-    static  int     mousewait = 0;
-    static  int     mousey = 0;
-    static  int     lasty = 0;
-    static  int     mousex = 0;
-    static  int     lastx = 0;
-	char savename[32]; // FS
+	int		ch;
+	int		i;
+	static int	joywait = 0;
+	static int	mousewait = 0;
+	static int	mousey = 0;
+	static int	lasty = 0;
+	static int	mousex = 0;
+	static int	lastx = 0;
+	char		savename[32]; // FS
 
-    ch = -1;
+	ch = -1;
+
+	if (ev->type == ev_joystick && joywait < I_GetTime())
+	{
+		if (ev->data3 == -1)
+		{
+			ch = KEY_UPARROW;
+			joywait = I_GetTime() + 5;
+		}
+		else if (ev->data3 == 1)
+		{
+			ch = KEY_DOWNARROW;
+			joywait = I_GetTime() + 5;
+		}
+		
+		if (ev->data2 == -1)
+		{
+			ch = KEY_LEFTARROW;
+			joywait = I_GetTime() + 2;
+		}
+		else if (ev->data2 == 1)
+		{
+			ch = KEY_RIGHTARROW;
+			joywait = I_GetTime() + 2;
+		}
+		
+		if (ev->data1&1)
+		{
+			ch = KEY_ENTER;
+			joywait = I_GetTime() + 5;
+		}
+		if (ev->data1&2)
+		{
+			ch = KEY_BACKSPACE;
+			joywait = I_GetTime() + 5;
+		}
+	}
+	else	
+	{
+		if (ev->type == ev_mouse && mousewait < I_GetTime())
+		{
+			mousey += ev->data3;
+			if (mousey < lasty-30)
+			{
+				ch = KEY_DOWNARROW;
+				mousewait = I_GetTime() + 5;
+				mousey = lasty -= 30;
+			}
+			else if (mousey > lasty+30)
+			{
+				ch = KEY_UPARROW;
+				mousewait = I_GetTime() + 5;
+				mousey = lasty += 30;
+			}
+		
+			mousex += ev->data2;
+			if (mousex < lastx-30)
+			{
+				ch = KEY_LEFTARROW;
+				mousewait = I_GetTime() + 5;
+				mousex = lastx -= 30;
+			}
+			else if (mousex > lastx+30)
+			{
+				ch = KEY_RIGHTARROW;
+				mousewait = I_GetTime() + 5;
+				mousex = lastx += 30;
+			}
+		
+			if (ev->data1&1)
+			{
+				ch = KEY_ENTER;
+				mousewait = I_GetTime() + 15;
+			}
 	
-    if (ev->type == ev_joystick && joywait < I_GetTime())
-    {
-	if (ev->data3 == -1)
-	{
-	    ch = KEY_UPARROW;
-	    joywait = I_GetTime() + 5;
+			if (ev->data1&2)
+			{
+				ch = KEY_BACKSPACE;
+				mousewait = I_GetTime() + 15;
+			}
+		}
+		else
+		if (ev->type == ev_keydown)
+		{
+			ch = ev->data1;
+		}
 	}
-	else if (ev->data3 == 1)
-	{
-	    ch = KEY_DOWNARROW;
-	    joywait = I_GetTime() + 5;
-	}
-		
-	if (ev->data2 == -1)
-	{
-	    ch = KEY_LEFTARROW;
-	    joywait = I_GetTime() + 2;
-	}
-	else if (ev->data2 == 1)
-	{
-	    ch = KEY_RIGHTARROW;
-	    joywait = I_GetTime() + 2;
-	}
-		
-	if (ev->data1&1)
-	{
-	    ch = KEY_ENTER;
-	    joywait = I_GetTime() + 5;
-	}
-	if (ev->data1&2)
-	{
-	    ch = KEY_BACKSPACE;
-	    joywait = I_GetTime() + 5;
-	}
-    }
-    else
-    {
-	if (ev->type == ev_mouse && mousewait < I_GetTime())
-	{
-	    mousey += ev->data3;
-	    if (mousey < lasty-30)
-	    {
-		ch = KEY_DOWNARROW;
-		mousewait = I_GetTime() + 5;
-		mousey = lasty -= 30;
-	    }
-	    else if (mousey > lasty+30)
-	    {
-		ch = KEY_UPARROW;
-		mousewait = I_GetTime() + 5;
-		mousey = lasty += 30;
-	    }
-		
-	    mousex += ev->data2;
-	    if (mousex < lastx-30)
-	    {
-		ch = KEY_LEFTARROW;
-		mousewait = I_GetTime() + 5;
-		mousex = lastx -= 30;
-	    }
-	    else if (mousex > lastx+30)
-	    {
-		ch = KEY_RIGHTARROW;
-		mousewait = I_GetTime() + 5;
-		mousex = lastx += 30;
-	    }
-		
-	    if (ev->data1&1)
-	    {
-		ch = KEY_ENTER;
-		mousewait = I_GetTime() + 15;
-	    }
-			
-	    if (ev->data1&2)
-	    {
-		ch = KEY_BACKSPACE;
-		mousewait = I_GetTime() + 15;
-	    }
-	}
-	else
-	    if (ev->type == ev_keydown)
-	    {
-		ch = ev->data1;
-	    }
-    }
-    
-    if (ch == -1)
-	return false;
+
+	if (ch == -1)
+		return false;
 
     
     // Save Game string input
@@ -1771,13 +1762,13 @@ boolean M_Responder (event_t* ev)
 //
 void M_StartControlPanel (void)
 {
-    // intro might call this repeatedly
-    if (menuactive)
-	return;
-    
-    menuactive = 1;
-    currentMenu = &MainDef;         // JDC
-    itemOn = currentMenu->lastOn;   // JDC
+	// intro might call this repeatedly
+	if (menuactive)
+		return;
+
+	menuactive = 1;
+	currentMenu = &MainDef;         // JDC
+	itemOn = currentMenu->lastOn;   // JDC
 }
 
 
@@ -1788,69 +1779,66 @@ void M_StartControlPanel (void)
 //
 void M_Drawer (void)
 {
-    static short	x;
-    static short	y;
-    short		i;
-    short		max;
-    char                string[80]; // FS: Was 40
-    int			start;
+	static short	x;
+	static short	y;
+	short			i;
+	short			max;
+	char			string[80]; // FS: Was 40
+	int			start;
 
-    inhelpscreens = false;
+	inhelpscreens = false;
 
-    
-    // Horiz. & Vertically center string and print it.
-    if (messageToPrint)
-    {
-	start = 0;
-	y = 100 - M_StringHeight(messageString)/2;
-	while(*(messageString+start))
+
+	// Horiz. & Vertically center string and print it.
+	if (messageToPrint)
 	{
-	    for (i = 0;i < strlen(messageString+start);i++)
-		if (*(messageString+start+i) == '\n')
+		start = 0;
+		y = 100 - M_StringHeight(messageString)/2;
+		while(*(messageString+start))
 		{
-			memset(string,0,sizeof(string)); // FS: Fickst'd
-		    strncpy(string,messageString+start,i);
-		    start += i+1;
-		    break;
+			for (i = 0;i < strlen(messageString+start);i++)
+			if (*(messageString+start+i) == '\n')
+			{
+				memset(string,0,sizeof(string)); // FS: Fickst'd
+				strncpy(string,messageString+start,i);
+				start += i+1;
+				break;
+			}
+				
+			if (i == strlen(messageString+start))
+			{
+				strcpy(string,messageString+start);
+				start += i;
+			}
+				
+			x = 160 - M_StringWidth(string)/2;
+			M_WriteText(x,y,string);
+			y += SHORT(hu_font[0]->height);
 		}
-				
-	    if (i == strlen(messageString+start))
-	    {
-		strcpy(string,messageString+start);
-		start += i;
-	    }
-				
-	    x = 160 - M_StringWidth(string)/2;
-	    M_WriteText(x,y,string);
-	    y += SHORT(hu_font[0]->height);
+		return;
 	}
-	return;
-    }
 
-    if (!menuactive)
-	return;
+	if (!menuactive)
+		return;
 
-    if (currentMenu->routine)
-	currentMenu->routine();         // call Draw routine
-    
-    // DRAW MENU
-    x = currentMenu->x;
-    y = currentMenu->y;
-    max = currentMenu->numitems;
+	if (currentMenu->routine)
+		currentMenu->routine();         // call Draw routine
 
-    for (i=0;i<max;i++)
-    {
-	if (currentMenu->menuitems[i].name[0])
-	    V_DrawPatchDirect (x,y,0,
-			       W_CacheLumpName(currentMenu->menuitems[i].name ,PU_CACHE));
-	y += LINEHEIGHT;
-    }
+	// DRAW MENU
+	x = currentMenu->x;
+	y = currentMenu->y;
+	max = currentMenu->numitems;
 
-    
-    // DRAW SKULL
-    V_DrawPatchDirect(x + SKULLXOFF,currentMenu->y - 5 + itemOn*LINEHEIGHT, 0,
-		      W_CacheLumpName(skullName[whichSkull],PU_CACHE));
+	for (i=0;i<max;i++)
+	{
+		if (currentMenu->menuitems[i].name[0])
+			V_DrawPatchDirect (x,y,0, W_CacheLumpName(currentMenu->menuitems[i].name ,PU_CACHE));
+		y += LINEHEIGHT;
+	}
 
+
+	// DRAW SKULL
+	V_DrawPatchDirect(x + SKULLXOFF,currentMenu->y - 5 + itemOn*LINEHEIGHT, 0, W_CacheLumpName(skullName[whichSkull],PU_CACHE));
 }
 
 
@@ -1859,9 +1847,9 @@ void M_Drawer (void)
 //
 void M_ClearMenus (void)
 {
-    menuactive = 0;
-    // if (!netgame && usergame && paused)
-    //       sendpause = true;
+	menuactive = 0;
+	// if (!netgame && usergame && paused)
+	//       sendpause = true;
 }
 
 
@@ -1872,8 +1860,8 @@ void M_ClearMenus (void)
 //
 void M_SetupNextMenu(menu_t *menudef)
 {
-    currentMenu = menudef;
-    itemOn = currentMenu->lastOn;
+	currentMenu = menudef;
+	itemOn = currentMenu->lastOn;
 }
 
 
@@ -1882,11 +1870,11 @@ void M_SetupNextMenu(menu_t *menudef)
 //
 void M_Ticker (void)
 {
-    if (--skullAnimCounter <= 0)
-    {
-	whichSkull ^= 1;
-	skullAnimCounter = 8;
-    }
+	if (--skullAnimCounter <= 0)
+	{
+		whichSkull ^= 1;
+		skullAnimCounter = 8;
+	}
 }
 
 
@@ -1932,9 +1920,9 @@ void M_Init (void)
 			ReadDef1.y = 165;
 			ReadMenu1[0].routine = M_FinishReadThis;
 			break;
- 	     case shareware:
+ 		case shareware:
 			// Episode 2 and 3 are handled,
-			//  branching to an ad screen.
+		//  branching to an ad screen.
 	      case registered:
 			// We need to remove the fourth episode.
 			EpiDef.numitems--;

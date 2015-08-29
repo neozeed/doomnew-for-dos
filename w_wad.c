@@ -113,6 +113,8 @@ void W_AddFile (char *filename)
 	if ( (handle = open (filename,O_RDONLY | O_BINARY)) == -1)
 		return;
 
+	printf("	adding %s\n", filename); // FS
+
 	startlump = numlumps;
 	
 	if (strcmpi (filename+strlen(filename)-3 , "wad" ) )

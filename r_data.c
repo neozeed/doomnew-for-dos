@@ -1,31 +1,4 @@
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-// $Log:$
-//
-// Revision 1.3  1997/01/29 20:10
-// DESCRIPTION:
-//	Preparation of data for rendering,
-//	generation of lookups, caching, retrieval by name.
-//
-//-----------------------------------------------------------------------------
-
-
-static const char
-rcsid[] = "$Id: r_data.c,v 1.4 1997/02/03 16:47:55 b1 Exp $";
+// R_data.c
 
 #include "i_system.h"
 #include "z_zone.h"
@@ -40,10 +13,6 @@ rcsid[] = "$Id: r_data.c,v 1.4 1997/02/03 16:47:55 b1 Exp $";
 
 #include "doomstat.h"
 #include "r_sky.h"
-
-//#ifdef LINUX
-//#include  <alloca.h>
-//#endif
 
 #include "r_data.h"
 
@@ -488,7 +457,7 @@ void R_InitTextures (void)
     textureheight = Z_Malloc (numtextures*4, PU_STATIC, 0);
 
     totalwidth = 0;
-    
+
     //	Really complex printing shit...
     temp1 = W_GetNumForName ("S_START");  // P_???????
     temp2 = W_GetNumForName ("S_END") - 1;
@@ -500,7 +469,7 @@ void R_InitTextures (void)
     for (i = 0; i < temp3; i++)
 	printf("\x8");
     printf("\x8\x8\x8\x8\x8\x8\x8\x8\x8\x8");	
-	
+
     for (i=0 ; i<numtextures ; i++, directory++)
     {
 	if (!(i&63))
@@ -653,14 +622,13 @@ void R_InitColormaps (void)
 //
 void R_InitData (void)
 {
-    R_InitTextures ();
-    printf ("\nInitTextures");
-    R_InitFlats ();
-    printf ("\nInitFlats");
-    R_InitSpriteLumps ();
-    printf ("\nInitSprites");
-    R_InitColormaps ();
-    printf ("\nInitColormaps");
+	R_InitTextures ();
+	printf (".");
+	R_InitFlats ();
+	printf (".");
+	R_InitSpriteLumps ();
+	printf (".");
+	R_InitColormaps ();
 }
 
 

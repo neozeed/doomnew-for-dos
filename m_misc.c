@@ -1,41 +1,10 @@
-// Emacs style mode select   -*- C++ -*- 
-//-----------------------------------------------------------------------------
-//
-// $Id:$
-//
-// Copyright (C) 1993-1996 by id Software, Inc.
-//
-// This source is available for distribution and/or modification
-// only under the terms of the DOOM Source Code License as
-// published by id Software. All rights reserved.
-//
-// The source is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// FITNESS FOR A PARTICULAR PURPOSE. See the DOOM Source Code License
-// for more details.
-//
-//
-// $Log:$
-//
-// DESCRIPTION:
-//	Main loop menu stuff.
-//	Default Config File.
-//	PCX Screenshots.
-//
-//-----------------------------------------------------------------------------
+// M_misc.c
 
-static const char
-rcsid[] = "$Id: m_misc.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
-
-#ifdef __NeXT__
-#include <libc.h>
-#else
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <direct.h>
 #include <fcntl.h>
 #include <stdlib.h>
-#endif
 
 #include <ctype.h>
 
@@ -229,15 +198,13 @@ typedef struct
     int		untranslated;		// lousy hack
 } default_t;
 
-//#ifndef __NeXT__
-extern int snd_Channels;
-extern int snd_DesiredMusicDevice, snd_DesiredSfxDevice;
-extern int snd_MusicDevice, // current music card # (index to dmxCodes)
-	snd_SfxDevice; // current sfx card # (index to dmxCodes)
+extern int	snd_Channels;
+extern int	snd_DesiredMusicDevice, snd_DesiredSfxDevice;
+extern int	snd_MusicDevice; // current music card # (index to dmxCodes)
+extern int	snd_SfxDevice; // current sfx card # (index to dmxCodes)
 
-extern int     snd_SBport, snd_SBirq, snd_SBdma;       // sound blaster variables
-extern int     snd_Mport;                              // midi variables
-//#endif
+extern int	snd_SBport, snd_SBirq, snd_SBdma;       // sound blaster variables
+extern int	snd_Mport;                              // midi variables
 
 extern boolean usePalFlash; // FS
 

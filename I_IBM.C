@@ -1274,10 +1274,10 @@ void I_StartupMouse (void)
 
 	if (I_ResetMouse () != 0xffff)
 	{
-		printf ("Mouse: not present ",0);
+		printf ("Mouse: not present\n",0);
 		return;
 	}
-	printf ("Mouse: detected ",0);
+	printf ("Mouse: detected\n",0);
 
 	mousepresent = 1;
 
@@ -1686,20 +1686,18 @@ void I_Init (void)
 		doomcon = (doomcontrol_t *)atoi(myargv[i+1]); 
 		printf ("Using external control API\n"); 
 	} 
- 
- 
-        printf("\nI_StartupDPMI\n",1);
+
+
+	printf("I_StartupDPMI\n",1);
 	I_StartupDPMI();
-        printf("I_StartupMouse\n",1);
+	printf("I_StartupMouse\n",1);
 	I_StartupMouse();
-        printf("I_StartupJoystick\n",1);
-        I_StartupJoystick();
-        printf("I_StartupKeyboard\n",1);
+	printf("I_StartupJoystick\n",1);
+	I_StartupJoystick();
+	printf("I_StartupKeyboard\n",1);
 	I_StartupKeyboard();
-        printf("S_Init...\n",1);
-        S_Init(snd_SfxVolume,snd_MusicVolume); // FS
-	//IO_StartupTimer();
-	//S_Start();
+	printf("I_StartupSound\n",1);
+	S_Init(snd_SfxVolume,snd_MusicVolume); // FS
 }
 
 
@@ -1857,49 +1855,6 @@ void I_InitDiskFlash (void)
 void I_BeginRead (void)
 {
 #if 0
-	byte    *src,*dest;
-	int             y;
-
-	if (!grmode)
-		return;
-
-// write through all planes
-	outp (SC_INDEX,SC_MAPMASK);
-	outp (SC_INDEX+1,15);
-// set write mode 1
-	outp (GC_INDEX,GC_MODE);
-	outp (GC_INDEX+1,inp(GC_INDEX+1)|1);
-
-// copy to backup
-	src = currentscreen + 184*80 + 304/4;
-	dest = (byte *)0xac000 + 184*80 + 288/4;
-	for (y=0 ; y<16 ; y++)
-	{
-		dest[0] = src[0];
-		dest[1] = src[1];
-		dest[2] = src[2];
-		dest[3] = src[3];
-		src += 80;
-		dest += 80;
-	}
-
-// copy disk over
-	dest = currentscreen + 184*80 + 304/4;
-	src = (byte *)0xac000 + 184*80 + 304/4;
-	for (y=0 ; y<16 ; y++)
-	{
-		dest[0] = src[0];
-		dest[1] = src[1];
-		dest[2] = src[2];
-		dest[3] = src[3];
-		src += 80;
-		dest += 80;
-	}
-
-
-// set write mode 0
-	outp (GC_INDEX,GC_MODE);
-	outp (GC_INDEX+1,inp(GC_INDEX+1)&~1);
 #endif
 }
 

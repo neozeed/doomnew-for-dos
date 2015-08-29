@@ -138,8 +138,7 @@ void I_StartupCyberMan(void)
    if ((short)RMI.EAX != 1)
    {
 	  // SWIFT functions not present
-	  printf("CyberMan: Wrong mouse driver - no SWIFT support (AX=%04x).\n",
-			 (unsigned)(short)RMI.EAX);
+	  printf("CyberMan: Wrong mouse driver - no SWIFT support (AX=%04x).\n", (unsigned)(short)RMI.EAX);
    }
    else
    if (pbuf->deviceType != DEVTYPE_CYBERMAN)

@@ -1,3 +1,13 @@
+09-23-13
+ - Weapon pick up text in Netgames.
+
+09-22-13
+ - Default to Super Shotgun in Doom 2 games in coop if you have it.
+ - Fixed -cdrom parameter.
+ - The startup screen should now be extremely close to the original.
+   The only thing that is changed is not showing the netgame parameters
+   if you're starting single player.
+
 09-21-13
  - Load a custom Gravis UltraSound INI file with -usegusini <filename.ini>.
    Error checks are in place to see if the file exists and if you passed

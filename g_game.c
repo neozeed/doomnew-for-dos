@@ -846,6 +846,7 @@ void G_PlayerFinishLevel (int player)
     p->bonuscount = 0; 
 } 
  
+boolean	coop; // FS: Is it coop?
 
 //
 // G_PlayerReborn
@@ -853,21 +854,20 @@ void G_PlayerFinishLevel (int player)
 // almost everything is cleared and initialized 
 //
 void G_PlayerReborn (int player) 
-{ 
-    player_t*	p; 
-    int		i; 
-    int		frags[MAXPLAYERS]; 
-    int		killcount;
-    int		itemcount;
-    int		secretcount; 
+{
+	player_t*	p; 
+	int		i; 
+	int		frags[MAXPLAYERS]; 
+	int		killcount;
+	int		itemcount;
+	int		secretcount; 
+	boolean	coopcards[NUMCARDS]; // FS: Keep cards in Coop
+	boolean	coopbackpack; // FS: Have a backpack?
+	boolean	coopsupershotgun; // FS: Have the super shotgun?
 
-	boolean coopcards[NUMCARDS]; // FS: Keep cards in Coop
-	boolean coop; // FS: Is it coop?
-	boolean coopbackpack; // FS: Have a backpack?
-
-	coop = false; // FS: Clear it out
-        coopbackpack = false; // FS: Clear it out
-        coopcards[NUMCARDS] = false; // FS: Clear it out
+	coopbackpack = false; // FS: Clear it out
+	coopsupershotgun = false; // FS: Clear it out
+	coopcards[NUMCARDS] = false; // FS: Clear it out
 
 	if(netgame && !deathmatch && !M_CheckParm("-oldrules")) // FS: Check for Coop
 	{
@@ -877,37 +877,41 @@ void G_PlayerReborn (int player)
 		{
 			coopbackpack = true;
 		}
+		if (gamemode == commercial && players->weaponowned[wp_supershotgun] == true)
+		{
+			coopsupershotgun = true;
+		}
 	}
-	 
-    memcpy (frags,players[player].frags,sizeof(frags)); 
-    killcount = players[player].killcount; 
-    itemcount = players[player].itemcount; 
-    secretcount = players[player].secretcount; 
-	 
-    p = &players[player]; 
+
+	memcpy (frags,players[player].frags,sizeof(frags)); 
+	killcount = players[player].killcount; 
+	itemcount = players[player].itemcount; 
+	secretcount = players[player].secretcount; 
+
+	p = &players[player]; 
 
 	if(!coop) // FS: Check for Coop
 	{
 		memset(p, 0, sizeof(*p));
 	}
- 
-    memcpy (players[player].frags, frags, sizeof(players[player].frags)); 
+
+	memcpy (players[player].frags, frags, sizeof(players[player].frags)); 
 
 	if (coop)
 	{
 		memcpy(players[player].cards, coopcards, sizeof(coopcards)); // FS: Keep keys in Coop
 	}
-	
-    players[player].killcount = killcount; 
-    players[player].itemcount = itemcount; 
-    players[player].secretcount = secretcount; 
- 
-    p->usedown = p->attackdown = true;	// don't do anything immediately 
-    p->playerstate = PST_LIVE;       
-    p->health = MAXHEALTH; 
-    p->readyweapon = p->pendingweapon = wp_pistol; 
-    p->weaponowned[wp_fist] = true; 
-    p->weaponowned[wp_pistol] = true; 
+
+	players[player].killcount = killcount; 
+	players[player].itemcount = itemcount; 
+	players[player].secretcount = secretcount; 
+
+	p->usedown = p->attackdown = true;	// don't do anything immediately 
+	p->playerstate = PST_LIVE;       
+	p->health = MAXHEALTH; 
+	p->readyweapon = p->pendingweapon = wp_pistol; 
+	p->weaponowned[wp_fist] = true; 
+	p->weaponowned[wp_pistol] = true; 
 
 	if(!coop) // FS: More coop stuff
 	{
@@ -916,7 +920,15 @@ void G_PlayerReborn (int player)
 
 	if(coop)
 	{
-		p->readyweapon = p->pendingweapon = wp_shotgun;
+		if(coopsupershotgun) // FS: If you have the super shotgun, start with that instead.
+		{
+			p->readyweapon = p->pendingweapon = wp_supershotgun;
+			p->weaponowned[wp_supershotgun] = true;
+		}
+		else
+		{
+			p->readyweapon = p->pendingweapon = wp_shotgun;
+		}
 		p->weaponowned[wp_shotgun] = true;
 
 		if(p->ammo[am_shell] < 15)
@@ -926,8 +938,8 @@ void G_PlayerReborn (int player)
 			p->ammo[am_clip] = 50;
 	}
 
-    for (i=0 ; i<NUMAMMO ; i++) 
-	p->maxammo[i] = maxammo[i]; 
+	for (i=0 ; i<NUMAMMO ; i++) 
+		p->maxammo[i] = maxammo[i]; 
 
 	if (coop && coopbackpack) // FS: Give the user their backpack if they had it
 	{
