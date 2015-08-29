@@ -1,0 +1,15 @@
+The following DEHacked strings need to be converted!
+
+d_main.c:        deh_s = DEH_String(copyright_banners[i]);
+d_main.c:	    I_Error(DEH_String("\nYou cannot -file with the shareware "
+d_main.c:		    I_Error(DEH_String("\nThis is not the registered version."));
+g_game.c:        V_DrawPatchDirect(x, box_y, 0, W_CacheLumpName(DEH_String(lumpname), 
+g_game.c:    skytexturename = DEH_String(skytexturename);
+m_menu.c:    lumpname = DEH_String(lumpname);
+m_menu.c:            DEH_String("%s\n\n" DOSY),
+m_menu.c:            DEH_String(M_SelectEndMessage()));
+m_menu.c:        name = DEH_String(currentMenu->menuitems[i].name);
+net_client.c:    strncpy(exitmsg, DEH_String("Player 1 left the game"), sizeof(exitmsg));
+v_video.c:		  W_CacheLumpName (DEH_String("PLAYPAL"), PU_CACHE));
+wi_stuff.c:    if (W_CheckNumForName(DEH_String("WIOBJ")) >= 0)
+wi_stuff.c:            callback(DEH_String("WIOBJ"), &items);

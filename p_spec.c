@@ -52,6 +52,8 @@ rcsid[] = "$Id: p_spec.c,v 1.6 1997/02/03 22:45:12 b1 Exp $";
 // Data.
 #include "sounds.h"
 
+#include "deh_main.h" // FS: For DEH
+
 //
 // Animating textures and planes
 // There is another anim_t used in wi_stuff, unrelated.
@@ -153,22 +155,27 @@ void P_InitPicAnims (void)
     lastanim = anims;
     for (i=0 ; animdefs[i].istexture != -1 ; i++)
     {
+        char *startname, *endname; // FS: From Chocolate Doom for DEH
+
+        startname = DEH_String(animdefs[i].startname);
+        endname = DEH_String(animdefs[i].endname);
+
 	if (animdefs[i].istexture)
 	{
 	    // different episode ?
-	    if (R_CheckTextureNumForName(animdefs[i].startname) == -1)
+	    if (R_CheckTextureNumForName(startname) == -1)
 		continue;	
 
-	    lastanim->picnum = R_TextureNumForName (animdefs[i].endname);
-	    lastanim->basepic = R_TextureNumForName (animdefs[i].startname);
+	    lastanim->picnum = R_TextureNumForName (endname);
+	    lastanim->basepic = R_TextureNumForName (startname);
 	}
 	else
 	{
-	    if (W_CheckNumForName(animdefs[i].startname) == -1)
+	    if (W_CheckNumForName(startname) == -1)
 		continue;
 
-	    lastanim->picnum = R_FlatNumForName (animdefs[i].endname);
-	    lastanim->basepic = R_FlatNumForName (animdefs[i].startname);
+	    lastanim->picnum = R_FlatNumForName (endname);
+	    lastanim->basepic = R_FlatNumForName (startname);
 	}
 
 	lastanim->istexture = animdefs[i].istexture;

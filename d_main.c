@@ -33,6 +33,7 @@
 #include "i_sound.h"
 #include "i_video.h"
 
+#include "deh_main.h" // FS: For DEHacked
 #include "g_game.h"
 
 #include "hu_stuff.h"
@@ -97,8 +98,12 @@ char	mapdir[1024];		   // directory of development maps
 char	basedefault[1024];	  // default file
 extern int headBob; // FS: Head bob toggle
 extern boolean usePalFlash; // FS
+
+// FS: For all the Save, Convert, and Load game stuff
 extern int savegamesize; // FS
 extern int savestringsize; // FS
+extern menu_t SaveDef; // FS
+extern menu_t LoadDef; // FS
 int	saveconvertslot; // FS: Convert Save
 boolean	convertsave = false; // FS: Convert Save
 
@@ -116,7 +121,7 @@ void CleanExit(void) // FS: From Heretic
 	I_ShutdownKeyboard();
 	regs.x.eax = 0x3;
 	int386(0x10, &regs, &regs);
-	printf("DOOM Startup Aborted!\n");
+	DEH_printf("DOOM Startup Aborted!\n");
 	exit(1);
 }
 #endif
@@ -270,7 +275,7 @@ void D_Display (void)
 	
 	// clean up border stuff
 	if (gamestate != oldgamestate && gamestate != GS_LEVEL)
-		I_SetPalette (W_CacheLumpName ("PLAYPAL",PU_CACHE));
+		I_SetPalette (W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
 
 	// see if the border needs to be initially drawn
 	if (gamestate == GS_LEVEL && oldgamestate != GS_LEVEL)
@@ -303,7 +308,7 @@ void D_Display (void)
 			y = 4;
 		else
 			y = viewwindowy+4;
-		V_DrawPatchDirect(viewwindowx+(scaledviewwidth-68)/2,y,0,W_CacheLumpName ("M_PAUSE", PU_CACHE));
+		V_DrawPatchDirect(viewwindowx+(scaledviewwidth-68)/2,y,0,W_CacheLumpName (DEH_String("M_PAUSE"), PU_CACHE));
 	}
 
 
@@ -359,7 +364,7 @@ void D_DoomLoop (void)
 	{
 		char	filename[20];
 		sprintf (filename,"debug%i.txt",consoleplayer);
-		printf ("debug output to: %s\n",filename);
+		DEH_printf ("debug output to: %s\n",filename);
 		debugfile = fopen (filename,"w");
 	}
 	
@@ -462,46 +467,46 @@ void D_DoAdvanceDemo (void)
 			else
 				pagetic = 170;
 			gamestate = GS_DEMOSCREEN;
-			pagename = "TITLEPIC";
+			pagename = DEH_String("TITLEPIC");
 			if ( gamemode == commercial )
 				S_StartMusic(mus_dm2ttl);
 			else
 				S_StartMusic (mus_intro);
 			break;
 		case 1:
-			G_DeferedPlayDemo ("demo1");
+			G_DeferedPlayDemo (DEH_String("demo1"));
 			break;
 		case 2:
 			pagetic = 200;
 			gamestate = GS_DEMOSCREEN;
-			pagename = "CREDIT";
+			pagename = DEH_String("CREDIT");
 			break;
 		case 3:
-			G_DeferedPlayDemo ("demo2");
+			G_DeferedPlayDemo (DEH_String("demo2"));
 			break;
 		case 4:
 			gamestate = GS_DEMOSCREEN;
 			if ( gamemode == commercial)
 			{
 				pagetic = 35 * 11;
-				pagename = "TITLEPIC";
+				pagename = DEH_String("TITLEPIC");
 				S_StartMusic(mus_dm2ttl);
 			}
 			else
 			{
 				pagetic = 200;
 				if ( gamemode == retail || chex) // FS: Chex Quest uses CREDIT
-				  pagename = "CREDIT";
+				  pagename = DEH_String("CREDIT");
 				else
-				  pagename = "HELP2";
+				  pagename = DEH_String("HELP2");
 			}
 			break;
 		case 5:
-			G_DeferedPlayDemo ("demo3");
+			G_DeferedPlayDemo (DEH_String("demo3"));
 			break;
 		// THE DEFINITIVE DOOM Special Edition demo
 		case 6:
-			G_DeferedPlayDemo ("demo4");
+			G_DeferedPlayDemo (DEH_String("demo4"));
 			break;
 	}
 }
@@ -869,10 +874,10 @@ void FindResponseFile (void)
 			handle = fopen (&myargv[i][1],"rb");
 			if (!handle)
 			{
-				printf ("\nNo such response file!");
+				DEH_printf ("\nNo such response file!");
 				exit(1);
 			}
-			printf("Found response file %s!\n",&myargv[i][1]);
+			DEH_printf("Found response file %s!\n",&myargv[i][1]);
 			fseek (handle,0,SEEK_END);
 			size = ftell(handle);
 			fseek (handle,0,SEEK_SET);
@@ -908,13 +913,64 @@ void FindResponseFile (void)
 				myargc = indexinfile;
 
 			// DISPLAY ARGS
-			printf("%d command-line args:\n",myargc);
+			DEH_printf("%d command-line args:\n",myargc);
 			for (k=1;k<myargc;k++)
-				printf("%s\n",myargv[k]);
+				DEH_printf("%s\n",myargv[k]);
 
 			break;
 		}
 }
+
+// Copyright message banners
+// Some dehacked mods replace these.  These are only displayed if they are 
+// replaced by dehacked.
+
+static char *copyright_banners[] =
+{
+    "===========================================================================\n"
+    "ATTENTION:  This version of DOOM has been modified.  If you would like to\n"
+    "get a copy of the original game, call 1-800-IDGAMES or see the readme file.\n"
+    "        You will not receive technical support for modified games.\n"
+    "                      press enter to continue\n"
+    "===========================================================================\n",
+
+    "===========================================================================\n"
+    "                 Commercial product - do not distribute!\n"
+    "         Please report software piracy to the SPA: 1-800-388-PIR8\n"
+    "===========================================================================\n",
+
+    "===========================================================================\n"
+    "                                Shareware!\n"
+    "===========================================================================\n"
+};
+
+// Prints a message only if it has been modified by dehacked.
+
+void PrintDehackedBanners(void)
+{
+    size_t i;
+
+    for (i=0; i<arrlen(copyright_banners); ++i)
+    {
+        char *deh_s;
+
+        deh_s = DEH_String(copyright_banners[i]);
+
+        if (deh_s != copyright_banners[i])
+        {
+            printf("%s", deh_s);
+
+            // Make sure the modified banner always ends in a newline character.
+            // If it doesn't, add a newline.  This fixes av.wad.
+
+            if (deh_s[strlen(deh_s) - 1] != '\n')
+            {
+                printf("\n");
+            }
+        }
+    }
+}
+
 
 
 //
@@ -1037,7 +1093,7 @@ void D_DoomMain (void)
 		int386(0x10,&regs,&regs);
 		dprint (title,FGCOLOR,BGCOLOR);
 		// ADD SPACES TO BUMP EXE SIZE
-		printf("\nP_Init: Checking cmd-line parameters...\n");
+		DEH_printf("\nP_Init: Checking cmd-line parameters...\n");
 	}
 #else
 	printf ("%s\n",title);
@@ -1094,7 +1150,7 @@ void D_DoomMain (void)
 			scale = 10;
 		if (scale > 400)
 			scale = 400;
-		printf ("turbo scale: %i%%\n",scale);
+		DEH_printf ("turbo scale: %i%%\n",scale);
 		forwardmove[0] = forwardmove[0]*scale/100;
 		forwardmove[1] = forwardmove[1]*scale/100;
 		sidemove[0] = sidemove[0]*scale/100;
@@ -1111,7 +1167,7 @@ void D_DoomMain (void)
 	{
 		sprintf (file,"%s.lmp", myargv[p+1]);
 		D_AddFile (file);
-		printf("Playing demo %s.lmp.\n",myargv[p+1]);
+		DEH_printf("Playing demo %s.lmp.\n",myargv[p+1]);
 	}
 	
 	// get skill / episode / map from parms
@@ -1209,6 +1265,7 @@ void D_DoomMain (void)
 					I_Error("\nThis is not the registered version.");
 	}
 
+
 	// If additonal PWAD files are used, print modified banner
 	if (modifiedgame)
 	{
@@ -1256,27 +1313,32 @@ void D_DoomMain (void)
 		// shareware = false;
 	}
 
-	mprintf ("M_Init: Init miscellaneous info.\n");
+#ifdef FEATURE_DEHACKED // FS: DEH
+    printf("DEH_Init: Init Dehacked support.\n");
+    DEH_Init();
+#endif
+
+	DEH_printf ("M_Init: Init miscellaneous info.\n");
 	M_Init ();
 	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
-	mprintf ("R_Init: Init DOOM refresh daemon - ");
+	DEH_printf ("R_Init: Init DOOM refresh daemon - ");
 	R_Init ();
 	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
-	mprintf ("\nP_Init: Init Playloop state.\n");
+	DEH_printf ("\nP_Init: Init Playloop state.\n");
 	P_Init ();
 	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
-	mprintf ("I_Init: Setting up machine state.\n");
+	DEH_printf ("I_Init: Setting up machine state.\n");
 	I_Init ();
 	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
-	mprintf ("D_CheckNetGame: Checking network game status.\n");
+	DEH_printf ("D_CheckNetGame: Checking network game status.\n");
 	D_CheckNetGame ();
 	CheckAbortStartup(); // FS: Check if ESC key is held during startup
 
-	mprintf ("S_Init: Setting up sound.\n"); // FS: This is fake, it's just to make the startup look the same as vanilla
+	DEH_printf ("S_Init: Setting up sound.\n"); // FS: This is fake, it's just to make the startup look the same as vanilla
 
 	mprintf ("HU_Init: Setting up heads up display.\n");
 	HU_Init ();
@@ -1294,7 +1356,7 @@ void D_DoomMain (void)
 		extern  void*	statcopy;							
 
 		statcopy = (void*)atoi(myargv[p+1]);
-		printf ("External statistics registered.\n");
+		DEH_printf ("External statistics registered.\n");
 	}
 	
 	// start the apropriate game based on parms
@@ -1328,6 +1390,7 @@ void D_DoomMain (void)
 			sprintf(file, "c:\\doomdata\\"SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
 		else
 			sprintf(file, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
+		LoadDef.lastOn = SaveDef.lastOn = atoi(myargv[p+1]); // FS: set the slot
 		G_LoadGame (file);
 	}
 
@@ -1340,6 +1403,7 @@ void D_DoomMain (void)
 		else
 			sprintf(file, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
 			saveconvertslot = atoi(myargv[p+1]); // FS: For save convert slot
+		LoadDef.lastOn = SaveDef.lastOn = atoi(myargv[p+1]); // FS: set the slot
 		G_LoadGame (file);
 	}
 
@@ -1361,6 +1425,7 @@ void D_DoomMain (void)
 		else
 			D_StartTitle ();				// start up intro loop
 	}
+
 
 	D_DoomLoop ();  // never returns
 }

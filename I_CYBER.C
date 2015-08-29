@@ -2,7 +2,7 @@
 
 #include <dos.h>
 #include <stdlib.h>
-
+#include "deh_main.h" // FS: DEH
 
 /*
 ====================================================
@@ -138,7 +138,7 @@ void I_StartupCyberMan(void)
    if ((short)RMI.EAX != 1)
    {
 	  // SWIFT functions not present
-	  printf("CyberMan: Wrong mouse driver - no SWIFT support (AX=%04x).\n", (unsigned)(short)RMI.EAX);
+          DEH_printf("CyberMan: Wrong mouse driver - no SWIFT support (AX=%04x).\n", (unsigned)(short)RMI.EAX);
    }
    else
    if (pbuf->deviceType != DEVTYPE_CYBERMAN)
@@ -146,17 +146,17 @@ void I_StartupCyberMan(void)
 	  // no SWIFT device, or not CyberMan
 	  if (pbuf->deviceType == 0)
 	  {
-		 printf("CyberMan: no SWIFT device connected.\n");
+                 DEH_printf("CyberMan: no SWIFT device connected.\n");
 	  }
 	  else
 	  {
-		 printf("CyberMan: SWIFT device is not a CyberMan! (type=%d)\n",
+                 DEH_printf("CyberMan: SWIFT device is not a CyberMan! (type=%d)\n",
 				pbuf->deviceType);
 	  }
    }
    else
    {
-	  printf("CyberMan: CyberMan %d.%02d connected.\n",
+          DEH_printf("CyberMan: CyberMan %d.%02d connected.\n",
 			 pbuf->majorVersion, pbuf->minorVersion);
 	  isCyberPresent = 1;
 	  mousepresent = 0;

@@ -15,6 +15,7 @@
 #include "p_local.h"
 
 #include "s_sound.h"
+#include "deh_main.h" // FS: For DEH
 
 #ifdef __GNUG__
 #pragma implementation "p_inter.h"
@@ -157,25 +158,25 @@ boolean P_GiveWeapon(player_t* player, weapontype_t weapon, boolean dropped)
 			switch (weapon)
 			{
 				case wp_shotgun:
-					player->message = GOTSHOTGUN;
+					player->message = DEH_String(GOTSHOTGUN);
 					break;
 				case wp_chaingun:
-					player->message = GOTCHAINGUN;
+					player->message = DEH_String(GOTCHAINGUN);
 					break;
 				case wp_missile:
-					player->message = GOTLAUNCHER;
+					player->message = DEH_String(GOTLAUNCHER);
 					break;
 				case wp_plasma:
-					player->message = GOTPLASMA;
+					player->message = DEH_String(GOTPLASMA);
 					break;
 				case wp_bfg:
-					player->message = GOTBFG9000;
+					player->message = DEH_String(GOTBFG9000);
 					break;
 				case wp_chainsaw:
-					player->message = GOTCHAINSAW;
+					player->message = DEH_String(GOTCHAINSAW);
 					break;
 				case wp_supershotgun:
-					player->message = GOTSHOTGUN2;
+					player->message = DEH_String(GOTSHOTGUN2);
 					break;
 			}
 		}
@@ -387,7 +388,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up the Chex(R) Armor.";
 			else
-				player->message = GOTARMOR;
+				player->message = DEH_String(GOTARMOR);
 			break;
 
 		case SPR_ARM2:
@@ -396,7 +397,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up the Super Chex(R) Armor!";
 			else
-				player->message = GOTMEGA;
+				player->message = DEH_String(GOTMEGA);
 			break;
 
 		// bonus items
@@ -408,7 +409,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up a glass of water.";
 			else
-				player->message = GOTHTHBONUS;
+				player->message = DEH_String(GOTHTHBONUS);
 			break;
 
 		case SPR_BON2:
@@ -420,7 +421,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up slime repellent.";
 			else
-				player->message = GOTARMBONUS;
+				player->message = DEH_String(GOTARMBONUS);
 			break;
 
 		case SPR_SOUL:
@@ -431,7 +432,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Supercharged Breakfast!";
 			else
-				player->message = GOTSUPER;
+				player->message = DEH_String(GOTSUPER);
 			sound = sfx_getpow;
 			break;
 
@@ -441,7 +442,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			player->health = 200;
 			player->mo->health = player->health;
 			P_GiveArmor (player,2);
-			player->message = GOTMSPHERE;
+			player->message = DEH_String(GOTMSPHERE);
 			sound = sfx_getpow;
 			break;
 	
@@ -453,7 +454,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 				if(chex)
 					player->message = "Picked up a blue key.";
 				else
-					player->message = GOTBLUECARD;
+					player->message = DEH_String(GOTBLUECARD);
 			}
 			P_GiveCard (player, it_bluecard);
 			if (!netgame)
@@ -466,7 +467,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 				if(chex)
 					player->message = "Picked up a yellow key.";
 				else
-					player->message = GOTYELWCARD;
+					player->message = DEH_String(GOTYELWCARD);
 			}
 			P_GiveCard (player, it_yellowcard);
 			if (!netgame)
@@ -479,7 +480,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 				if(chex)
 					player->message = "Picked up a red key.";
 				else
-					player->message = GOTREDCARD;
+					player->message = DEH_String(GOTREDCARD);
 			}
 			P_GiveCard (player, it_redcard);
 			if (!netgame)
@@ -488,7 +489,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 	
 		case SPR_BSKU:
 			if (!player->cards[it_blueskull])
-				player->message = GOTBLUESKUL;
+				player->message = DEH_String(GOTBLUESKUL);
 			P_GiveCard (player, it_blueskull);
 			if (!netgame)
 				break;
@@ -496,7 +497,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 	
 		case SPR_YSKU:
 			if (!player->cards[it_yellowskull])
-				player->message = GOTYELWSKUL;
+				player->message = DEH_String(GOTYELWSKUL);
 			P_GiveCard (player, it_yellowskull);
 			if (!netgame)
 				break;
@@ -504,7 +505,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 	
 		case SPR_RSKU:
 			if (!player->cards[it_redskull])
-				player->message = GOTREDSKULL;
+				player->message = DEH_String(GOTREDSKULL);
 			P_GiveCard (player, it_redskull);
 			if (!netgame)
 				break;
@@ -517,7 +518,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up a bowl of fruit.";
 			else
-				player->message = GOTSTIM;
+				player->message = DEH_String(GOTSTIM);
 			break;
 	
 		case SPR_MEDI:
@@ -529,14 +530,14 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 				if(chex)
 					player->message = "Picked up some needed vegetables!";
 				else
-					player->message = GOTMEDINEED;
+					player->message = DEH_String(GOTMEDINEED);
 			}
 			else
 			{
 				if(chex)
 					player->message = "Picked up a bowl of vegetables.";
 				else
-					player->message = GOTMEDIKIT;
+					player->message = DEH_String(GOTMEDIKIT);
 			}
 			break;
 
@@ -545,14 +546,14 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 		case SPR_PINV:
 			if (!P_GivePower (player, pw_invulnerability))
 				return;
-			player->message = GOTINVUL;
+			player->message = DEH_String(GOTINVUL);
 			sound = sfx_getpow;
 			break;
 	
 		case SPR_PSTR:
 			if (!P_GivePower (player, pw_strength))
 				return;
-			player->message = GOTBERSERK;
+			player->message = DEH_String(GOTBERSERK);
 			if (player->readyweapon != wp_fist)
 				player->pendingweapon = wp_fist;
 			sound = sfx_getpow;
@@ -561,7 +562,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 		case SPR_PINS:
 			if (!P_GivePower (player, pw_invisibility))
 				return;
-			player->message = GOTINVIS;
+			player->message = DEH_String(GOTINVIS);
 			sound = sfx_getpow;
 			break;
 	
@@ -571,21 +572,21 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Slimeproof Suit";
 			else
-				player->message = GOTSUIT;
+				player->message = DEH_String(GOTSUIT);
 			sound = sfx_getpow;
 			break;
 	
 		case SPR_PMAP:
 			if (!P_GivePower (player, pw_allmap))
 				return;
-			player->message = GOTMAP;
+			player->message = DEH_String(GOTMAP);
 			sound = sfx_getpow;
 			break;
 	
 		case SPR_PVIS:
 			if (!P_GivePower (player, pw_infrared))
 				return;
-			player->message = GOTVISOR;
+			player->message = DEH_String(GOTVISOR);
 			sound = sfx_getpow;
 			break;
 	
@@ -604,7 +605,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if (chex)
 				player->message = "Picked up a mini zorch recharge.";
 			else
-				player->message = GOTCLIP;
+				player->message = DEH_String(GOTCLIP);
 			break;
 	
 		case SPR_AMMO:
@@ -613,7 +614,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if (chex)
 				player->message = "Picked up a mini zorch pack.";
 			else
-				player->message = GOTCLIPBOX;
+				player->message = DEH_String(GOTCLIPBOX);
 			break;
 	
 		case SPR_ROCK:
@@ -622,7 +623,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up a zorch propulsor recharge";
 			else
-				player->message = GOTROCKET;
+				player->message = DEH_String(GOTROCKET);
 			break;
 	
 		case SPR_BROK:
@@ -631,7 +632,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up a zorch propulsor pack.";
 			else
-				player->message = GOTROCKBOX;
+				player->message = DEH_String(GOTROCKBOX);
 			break;
 	
 		case SPR_CELL:
@@ -640,7 +641,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up a phasing zorcher recharge.";
 			else
-				player->message = GOTCELL;
+				player->message = DEH_String(GOTCELL);
 			break;
 	
 		case SPR_CELP:
@@ -649,7 +650,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up a phasing zorcher pack.";
 			else
-				player->message = GOTCELLBOX;
+				player->message = DEH_String(GOTCELLBOX);
 			break;
 	
 		case SPR_SHEL:
@@ -658,7 +659,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up a large zorcher recharge.";
 			else
-				player->message = GOTSHELLS;
+				player->message = DEH_String(GOTSHELLS);
 			break;
 	
 		case SPR_SBOX:
@@ -667,7 +668,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up a large zorcher pack.";
 			else
-				player->message = GOTSHELLBOX;
+				player->message = DEH_String(GOTSHELLBOX);
 			break;
 	
 		case SPR_BPAK:
@@ -682,7 +683,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "Picked up a zorchpak!";
 			else
-				player->message = GOTBACKPACK;
+				player->message = DEH_String(GOTBACKPACK);
 			break;
 	
 		// weapons
@@ -692,7 +693,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
  			if(chex)
 				player->message = "You got the LAZ Device!";
 			else
-				player->message = GOTBFG9000;
+				player->message = DEH_String(GOTBFG9000);
 			sound = sfx_wpnup;	
 			break;
 	
@@ -702,7 +703,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "You got the Rapid Zorcher!";
 			else
-				player->message = GOTCHAINGUN;
+				player->message = DEH_String(GOTCHAINGUN);
 			sound = sfx_wpnup;	
 			break;
 	
@@ -712,7 +713,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "You got the Super Bootspork!";
 			else
-				player->message = GOTCHAINSAW;
+				player->message = DEH_String(GOTCHAINSAW);
 			sound = sfx_wpnup;	
 			break;
 	
@@ -722,7 +723,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "You got the Zorch Propulsor!";
 			else
-				player->message = GOTLAUNCHER;
+				player->message = DEH_String(GOTLAUNCHER);
 			sound = sfx_wpnup;	
 			break;
 
@@ -732,7 +733,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "You got the Phasing Zorcher!";
 			else
-				player->message = GOTPLASMA;
+				player->message = DEH_String(GOTPLASMA);
 			sound = sfx_wpnup;	
 			break;
 
@@ -742,7 +743,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "You got the Large Zorcher!";
 			else
-				player->message = GOTSHOTGUN;
+				player->message = DEH_String(GOTSHOTGUN);
 			sound = sfx_wpnup;	
 			break;
 	
@@ -752,7 +753,7 @@ void P_TouchSpecialThing (mobj_t* special, mobj_t* toucher)
 			if(chex)
 				player->message = "You got the Super Large Zorcher!";
 			else
-				player->message = GOTSHOTGUN2;
+				player->message = DEH_String(GOTSHOTGUN2);
 			sound = sfx_wpnup;	
 			break;
 	

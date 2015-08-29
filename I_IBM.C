@@ -20,6 +20,8 @@
 #include "doomdef.h" // FS ?
 #include "oldnew.h" // FS: For toggling old code
 
+#include "deh_main.h" // FS: For DEH
+
 // Macros
 
 #define DPMI_INT 0x31
@@ -987,7 +989,7 @@ void I_InitGraphics(void)
 	regs.w.ax = 0x13;
 	int386(0x10, &regs, &regs);//(const union REGS *)&regs, &regs); // FS: Compiler Warning?
 	pcscreen = destscreen = (byte *)0xa0000;
-	I_SetPalette(W_CacheLumpName("PLAYPAL", PU_CACHE));
+	I_SetPalette(W_CacheLumpName(DEH_String("PLAYPAL"), PU_CACHE));
 	I_InitDiskFlash();
 }
 
@@ -1274,10 +1276,10 @@ void I_StartupMouse (void)
 
 	if (I_ResetMouse () != 0xffff)
 	{
-		printf ("Mouse: not present\n",0);
+                DEH_printf ("Mouse: not present\n",0);
 		return;
 	}
-	printf ("Mouse: detected\n",0);
+	DEH_printf ("Mouse: detected\n"); // FS: DEH
 
 	mousepresent = 1;
 
@@ -1412,27 +1414,27 @@ void I_StartupJoystick (void)
 	if (!I_ReadJoystick ())
 	{
 		joystickpresent = false;
-		printf ("joystick not found ",0);
+                DEH_printf ("joystick not found ");
 		return;
 	}
-	printf("joystick found\n");
+        DEH_printf("joystick found\n");
 	joystickpresent = true;
 
-	printf("CENTER the joystick and press button 1:");
+        DEH_printf("CENTER the joystick and press button 1:");
 	if (!WaitJoyButton ())
 		return;
 	I_ReadJoystick ();
 	centerx = joystickx;
 	centery = joysticky;
 
-	printf("\nPush the joystick to the UPPER LEFT corner and press button 1:");
+        DEH_printf("\nPush the joystick to the UPPER LEFT corner and press button 1:");
 	if (!WaitJoyButton ())
 		return;
 	I_ReadJoystick ();
 	joyxl = (centerx + joystickx)/2;
 	joyyl = (centerx + joysticky)/2;
 
-	printf("\nPush the joystick to the LOWER RIGHT corner and press button 1:");
+        DEH_printf("\nPush the joystick to the LOWER RIGHT corner and press button 1:");
 	if (!WaitJoyButton ())
 		return;
 	I_ReadJoystick ();
@@ -1684,19 +1686,19 @@ void I_Init (void)
 	if (i) 
 	{ 
 		doomcon = (doomcontrol_t *)atoi(myargv[i+1]); 
-		printf ("Using external control API\n"); 
+                DEH_printf ("Using external control API\n"); 
 	} 
 
 
-	printf("I_StartupDPMI\n",1);
+        DEH_printf("I_StartupDPMI\n",1);
 	I_StartupDPMI();
-	printf("I_StartupMouse\n",1);
+        DEH_printf("I_StartupMouse\n",1);
 	I_StartupMouse();
-	printf("I_StartupJoystick\n",1);
+        DEH_printf("I_StartupJoystick\n",1);
 	I_StartupJoystick();
-	printf("I_StartupKeyboard\n",1);
+        DEH_printf("I_StartupKeyboard\n",1);
 	I_StartupKeyboard();
-	printf("I_StartupSound\n",1);
+        DEH_printf("I_StartupSound\n",1);
 	S_Init(snd_SfxVolume,snd_MusicVolume); // FS
 }
 
@@ -1765,7 +1767,7 @@ void I_Quit(void)
 
 	D_QuitNetGame();
 	M_SaveDefaults();
-        scr = (byte *)W_CacheLumpName("ENDOOM", PU_CACHE);
+        scr = (byte *)W_CacheLumpName(DEH_String("ENDOOM"), PU_CACHE);
 	I_Shutdown();
 	memcpy((void *)0xb8000, scr, 80*25*2);
 	regs.w.ax = 0x0200;
@@ -1843,7 +1845,7 @@ void I_InitDiskFlash (void)
 	void    *pic;
 	byte    *temp;
 
-	pic = W_CacheLumpName ("STDISK",PU_CACHE);
+	pic = W_CacheLumpName (DEH_String("STDISK"),PU_CACHE);
 	temp = destscreen;
 	destscreen = (byte *)0xac000;
 	V_DrawPatchDirect (SCREENWIDTH-16,SCREENHEIGHT-16,0,pic);

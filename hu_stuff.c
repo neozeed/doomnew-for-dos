@@ -43,6 +43,8 @@ rcsid[] = "$Id: hu_stuff.c,v 1.4 1997/02/03 16:47:52 b1 Exp $";
 #include "dstrings.h"
 #include "sounds.h"
 
+#include "deh_main.h" // FS: For DEH
+
 //
 // Locally used constants, shortcuts.
 //
@@ -543,7 +545,9 @@ void HU_Start(void)
 				 break;
 			}
 	}
-    
+
+    s = DEH_String(s); // FS: DEH
+
     while (*s)
 	HUlib_addCharToTextLine(&w_title, *(s++));
 
@@ -634,7 +638,7 @@ void HU_Ticker(void)
 				|| chat_dest[i] == HU_BROADCAST))
 			{
 			    HUlib_addMessageToSText(&w_message,
-						    player_names[i],
+						    DEH_String(player_names[i]),
 						    w_inputbuffer[i].l.l);
 			    
 			    message_nottobefuckedwith = true;
@@ -666,7 +670,7 @@ void HU_queueChatChar(char c)
 {
     if (((head + 1) & (QUEUESIZE-1)) == tail)
     {
-	plr->message = HUSTR_MSGU;
+	plr->message = DEH_String(HUSTR_MSGU);
     }
     else
     {
@@ -763,15 +767,15 @@ boolean HU_Responder(event_t *ev)
 		    {
 			num_nobrainers++;
 			if (num_nobrainers < 3)
-			    plr->message = HUSTR_TALKTOSELF1;
+			    plr->message = DEH_String(HUSTR_TALKTOSELF1);
 			else if (num_nobrainers < 6)
-			    plr->message = HUSTR_TALKTOSELF2;
+			    plr->message = DEH_String(HUSTR_TALKTOSELF2);
 			else if (num_nobrainers < 9)
-			    plr->message = HUSTR_TALKTOSELF3;
+			    plr->message = DEH_String(HUSTR_TALKTOSELF3);
 			else if (num_nobrainers < 32)
-			    plr->message = HUSTR_TALKTOSELF4;
+			    plr->message = DEH_String(HUSTR_TALKTOSELF4);
 			else
-			    plr->message = HUSTR_TALKTOSELF5;
+			    plr->message = DEH_String(HUSTR_TALKTOSELF5);
 		    }
 		}
 	    }

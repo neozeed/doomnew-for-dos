@@ -70,7 +70,7 @@ rcsid[] = "$Id: g_game.c,v 1.8 1997/02/03 22:45:09 b1 Exp $";
 
 
 #include "g_game.h"
-
+#include "deh_main.h" // FS: For DEH
 
 #define SAVEGAMESIZE    0x100000 // FS: Was 0x2c000
 #define SAVESTRINGSIZE  256 // FS: Was 24
@@ -504,7 +504,7 @@ void G_DoLoadLevel (void)
     //  a flat. The data is in the WAD only because
     //  we look for an actual index, instead of simply
     //  setting one.
-    skyflatnum = R_FlatNumForName ( SKYFLATNAME );
+    skyflatnum = R_FlatNumForName ( DEH_String(SKYFLATNAME) );
 
     // DOOM determines the sky texture to be used
     // depending on the current episode, and the game version.
@@ -729,7 +729,7 @@ void G_Ticker (void)
 	    {
 		static char turbomessage[80];
 		extern char *player_names[4];
-		sprintf (turbomessage, "%s is turbo!",player_names[i]);
+		sprintf (turbomessage, DEH_String("%s is turbo!"),player_names[i]);
 		players[consoleplayer].message = turbomessage;
 	    }
 			
@@ -1505,7 +1505,7 @@ void G_DoSaveGame (void)
 		convertsave = false;
 	}
 	else
-		players[consoleplayer].message = GGSAVED;
+		players[consoleplayer].message = DEH_String(GGSAVED);
 
     // draw the pattern into the back screen
     R_FillBackScreen ();

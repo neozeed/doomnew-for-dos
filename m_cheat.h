@@ -27,6 +27,8 @@
 // CHEAT SEQUENCE PACKAGE
 //
 
+#define MAX_CHEAT_LEN 25 // FS: For DEH
+
 #define SCRAMBLE(a) \
 ((((a)&1)<<7) + (((a)&2)<<5) + ((a)&4) + (((a)&8)<<1) \
  + (((a)&16)>>1) + ((a)&32) + (((a)&64)>>5) + (((a)&128)>>7))
@@ -49,6 +51,17 @@ cht_GetParam
 ( cheatseq_t*		cht,
   char*			buffer );
 
+extern cheatseq_t cheat_mus;
+extern cheatseq_t cheat_god;
+extern cheatseq_t cheat_ammo;
+extern cheatseq_t cheat_ammonokey;
+extern cheatseq_t cheat_noclip;
+extern cheatseq_t cheat_commercial_noclip;
+extern cheatseq_t cheat_powerup[7];
+extern cheatseq_t cheat_choppers;
+extern cheatseq_t cheat_clev;
+extern cheatseq_t cheat_mypos;
+extern cheatseq_t cheat_amap;
 
 #endif
 //-----------------------------------------------------------------------------

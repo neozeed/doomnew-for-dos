@@ -34,6 +34,8 @@
 
 #include "m_misc.h"
 
+#include "deh_main.h" // FS: For DEH
+
 //
 // M_DrawText
 // Returns the final X coordinate
@@ -540,9 +542,9 @@ void M_ScreenShot (void)
     // save the pcx file
     WritePCXfile (lbmname, linear,
 		  SCREENWIDTH, SCREENHEIGHT,
-		  W_CacheLumpName ("PLAYPAL",PU_CACHE));
+		  W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
 	
-    players[consoleplayer].message = "screen shot";
+    players[consoleplayer].message = DEH_String("screen shot");
 }
 
 

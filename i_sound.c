@@ -10,6 +10,7 @@
 #include "w_wad.h"
 #include "doomstat.h" // FS: For Doom 2 DMXGUSC
 #include "m_argv.h" // FS: For external GUS ini files
+#include "deh_main.h" // FS: For DEH
 
 /*
 ===============
@@ -187,7 +188,10 @@ int I_GetSfxLumpNum(sfxinfo_t *sound)
   if (sound->link) sound = sound->link;
 
   //sprintf(namebuf, "ds%c%s", snd_prefixen[snd_SfxDevice], sound->name);
-  sprintf(namebuf, "ds%s", sound->name); // FS: Please?
+	if(snd_SfxDevice == snd_PC) // FS: From Chocolate Doom
+		sprintf(namebuf, "dp%s", DEH_String(sound->name));
+	else
+		sprintf(namebuf, "ds%s", DEH_String(sound->name)); // FS: Please?
   return W_GetNumForName(namebuf);
 }
 

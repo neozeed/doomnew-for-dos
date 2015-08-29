@@ -22,6 +22,8 @@
 //#include "r_local.h"
 //#include "f_finale.h"
 
+#include "deh_main.h" // FS: For DEH
+
 // Stage of animation:
 //  0 = text, 1 = art screen, 2 = character cast
 int		finalestage;
@@ -96,25 +98,25 @@ void F_StartFinale (void)
 			switch (gameepisode)
 			{
 				case 1:
-					finaleflat = "FLOOR4_8";
+					finaleflat = DEH_String("FLOOR4_8");
 					if(chex) // FS: Chex Quest Finale Text
 						finaletext = e1chextext;
 					else
-						finaletext = e1text;
+						finaletext = DEH_String(e1text);
 					break;
-			case 2:
-					finaleflat = "SFLR6_1";
-					finaletext = e2text;
+				case 2:
+					finaleflat = DEH_String("SFLR6_1");
+					finaletext = DEH_String(e2text);
 					break;
-			case 3:
-					finaleflat = "MFLR8_4";
-					finaletext = e3text;
+				case 3:
+					finaleflat = DEH_String("MFLR8_4");
+					finaletext = DEH_String(e3text);
 					break;
-			case 4:
-					finaleflat = "MFLR8_3";
-					finaletext = e4text;
+				case 4:
+					finaleflat = DEH_String("MFLR8_3");
+					finaletext = DEH_String(e4text);
 					break;
-			default:
+				default:
 					// Ouch.
 					break;
 			}
@@ -129,58 +131,58 @@ void F_StartFinale (void)
 			switch (gamemap)
 			{
 				case 6:
-					finaleflat = "SLIME16";
+					finaleflat = DEH_String("SLIME16");
 					if(plutonia)
-						finaletext = p1text;
+						finaletext = DEH_String(p1text);
 					else if(tnt)
-						finaletext = t1text;
+						finaletext = DEH_String(t1text);
 					else
-						finaletext = c1text;
+						finaletext = DEH_String(c1text);
 					break;
 				case 11:
-					finaleflat = "RROCK14";
+					finaleflat = DEH_String("RROCK14");
 					if(plutonia)
-						finaletext = p2text;
+						finaletext = DEH_String(p2text);
 					else if(tnt)
-						finaletext = t2text;
+						finaletext = DEH_String(t2text);
 					else
-						finaletext = c2text;
+						finaletext = DEH_String(c2text);
 					break;
 				case 20:
-					finaleflat = "RROCK07";
+					finaleflat = DEH_String("RROCK07");
 					if(plutonia)
-						finaletext = p3text;
+						finaletext = DEH_String(p3text);
 					else if(tnt)
-						finaletext = t3text;
+						finaletext = DEH_String(t3text);
 					else
-						finaletext = c3text;
+						finaletext = DEH_String(c3text);
 					break;
 				case 30:
-					finaleflat = "RROCK17";
+					finaleflat = DEH_String("RROCK17");
 					if(plutonia)
-						finaletext = p4text;
+						finaletext = DEH_String(p4text);
 					else if(tnt)
-						finaletext = t4text;
+						finaletext = DEH_String(t4text);
 					else
-						finaletext = c4text;
+						finaletext = DEH_String(c4text);
 					break;
 				case 15:
-					finaleflat = "RROCK13";
+					finaleflat = DEH_String("RROCK13");
 					if(plutonia)
-						finaletext = p5text;
+						finaletext = DEH_String(p5text);
 					else if(tnt)
-						finaletext = t5text;
+						finaletext = DEH_String(t5text);
 					else
-						finaletext = c5text;
+						finaletext = DEH_String(c5text);
 					break;
 				case 31:
-					finaleflat = "RROCK19";
+					finaleflat = DEH_String("RROCK19");
 					if(plutonia)
-						finaletext = p6text;
+						finaletext = DEH_String(p6text);
 					else if(tnt)
-						finaletext = t6text;
+						finaletext = DEH_String(t6text);
 					else
-						finaletext = c6text;
+						finaletext = DEH_String(c6text);
 					break;
 				default:
 					// Ouch.
@@ -192,8 +194,8 @@ void F_StartFinale (void)
 		// Indeterminate.
 		default:
 			S_ChangeMusic(mus_read_m, true);
-			finaleflat = "F_SKY1"; // Not used anywhere else.
-			finaletext = c1text;  // FIXME - other text, music?
+			finaleflat = DEH_String("F_SKY1"); // Not used anywhere else.
+			finaletext = DEH_String(c1text);  // FIXME - other text, music?
 			break;
 	}
 	
@@ -629,9 +631,9 @@ void F_CastDrawer (void)
 	patch_t*		patch;
 
 	// erase the entire screen to a background
-	V_DrawPatch (0,0,0, W_CacheLumpName ("BOSSBACK", PU_CACHE));
+	V_DrawPatch (0,0,0, W_CacheLumpName (DEH_String("BOSSBACK"), PU_CACHE));
 
-	F_CastPrint (castorder[castnum].name);
+	F_CastPrint (DEH_String(castorder[castnum].name));
 
 	// draw the current frame in the middle of the screen
 	sprdef = &sprites[caststate->sprite];
@@ -691,8 +693,8 @@ void F_BunnyScroll (void)
 	int			stage;
 	static int	laststage;
 		
-	p1 = W_CacheLumpName ("PFUB2", PU_LEVEL);
-	p2 = W_CacheLumpName ("PFUB1", PU_LEVEL);
+	p1 = W_CacheLumpName (DEH_String("PFUB2"), PU_LEVEL);
+	p2 = W_CacheLumpName (DEH_String("PFUB1"), PU_LEVEL);
 
 	V_MarkRect (0, 0, SCREENWIDTH, SCREENHEIGHT);
 	
@@ -714,7 +716,7 @@ void F_BunnyScroll (void)
 		return;
 	if (finalecount < 1180)
 	{
-		V_DrawPatch ((SCREENWIDTH-13*8)/2, (SCREENHEIGHT-8*8)/2,0, W_CacheLumpName ("END0",PU_CACHE));
+		V_DrawPatch ((SCREENWIDTH-13*8)/2, (SCREENHEIGHT-8*8)/2,0, W_CacheLumpName (DEH_String("END0"),PU_CACHE));
 		laststage = 0;
 		return;
 	}
@@ -729,7 +731,7 @@ void F_BunnyScroll (void)
 	}
 	
 	sprintf (name,"END%i",stage);
-	V_DrawPatch ((SCREENWIDTH-13*8)/2, (SCREENHEIGHT-8*8)/2,0, W_CacheLumpName (name,PU_CACHE));
+	V_DrawPatch ((SCREENWIDTH-13*8)/2, (SCREENHEIGHT-8*8)/2,0, W_CacheLumpName (DEH_String(name),PU_CACHE));
 }
 
 
@@ -754,16 +756,16 @@ void F_Drawer (void)
 				if ( gamemode == retail || chex) // FS: Chex Quest uses CREDIT
 					V_DrawPatch (0,0,0, W_CacheLumpName("CREDIT",PU_CACHE));
 				else
-					V_DrawPatch (0,0,0, W_CacheLumpName("HELP2",PU_CACHE));
+					V_DrawPatch (0,0,0, W_CacheLumpName(DEH_String("HELP2"),PU_CACHE));
 				break;
 			case 2:
-					V_DrawPatch(0,0,0, W_CacheLumpName("VICTORY2",PU_CACHE));
+					V_DrawPatch(0,0,0, W_CacheLumpName(DEH_String("VICTORY2"),PU_CACHE));
 					break;
 			case 3:
 					F_BunnyScroll ();
 					break;
 			case 4:
-					V_DrawPatch (0,0,0, W_CacheLumpName("ENDPIC",PU_CACHE));
+					V_DrawPatch (0,0,0, W_CacheLumpName(DEH_String("ENDPIC"),PU_CACHE));
 					break;
 		}
 	}

@@ -20,6 +20,8 @@
 
 #include "doomstat.h"
 
+#include "deh_main.h" // FS: For DEH
+
 
 #define S_MAX_VOLUME		127
 
@@ -608,7 +610,7 @@ S_ChangeMusic
     // get lumpnum if neccessary
     if (!music->lumpnum)
     {
-	sprintf(namebuf, "d_%s", music->name);
+	sprintf(namebuf, "d_%s", DEH_String(music->name));
 	music->lumpnum = W_GetNumForName(namebuf);
     }
 

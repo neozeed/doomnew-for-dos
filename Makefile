@@ -88,7 +88,20 @@ LOCOBJS = &
  hu_lib.obj	 &
  s_sound.obj &
  z_zone.obj	 &
+ md5.obj	 &
  info.obj		 &
+ deh_ammo.obj		 &
+ deh_cht.obj		 &
+ deh_io.obj		 &
+ deh_frme.obj		 &
+ deh_map.obj		 &
+ deh_main.obj		 &
+ deh_misc.obj		 &
+ deh_ptr.obj		 &
+ deh_snd.obj		 &
+ deh_text.obj		 &
+ deh_thng.obj		 &
+ deh_wpn.obj		 &
  sounds.obj
 
 d.exe : $(LOCOBJS) i_ibm.obj

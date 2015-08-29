@@ -1,3 +1,11 @@
+09-24-13
+ - Using -loadgame or -convertsave will set the cursor in the main menu to the
+   same slot.  Useful for netgames and just hitting F5 and enter.
+ - Preliminary DEHACKED support!  Code from Chocolate Doom, readapted.
+   Most functions are there, a few stray DEH_Strings remain.
+   NO extended text or extended cheat text limit support.
+ - PC Speaker returns!  Thanks to Chocolate Doom for the fix.
+
 09-23-13
  - Weapon pick up text in Netgames.
  - No friendly fire in coop.

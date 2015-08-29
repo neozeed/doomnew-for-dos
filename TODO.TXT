@@ -1,6 +1,4 @@
 - Automap to show "secrets found: x\y".
-- PC Speaker not working.  Not sure if it requires the snd_Prefixen
-  or some other special I_Sound.C missing things.
 - Fix chainsaw pitch.
 - I_NET.C with WATT32:
   * Fix whatever is stopping it after the first packet is sent.
@@ -9,4 +7,4 @@
   * Finish up few stray unimportant texts.
   * Move keys fullscreen a little to the right and space them out a bit.
 - Fix S_ChangeMusic to pause the music if snd_MusicVolume is 0.
-- Import DEHACKED parsing from Chocolate Doom.
+- Finish up DEHACKED parsing from Chocolate Doom.

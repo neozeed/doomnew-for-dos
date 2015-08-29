@@ -61,6 +61,8 @@ rcsid[] = "$Id: st_stuff.c,v 1.6 1997/02/03 22:45:13 b1 Exp $";
 #include "dstrings.h"
 #include "sounds.h"
 
+#include "deh_main.h" // FS: For DEH
+
 //
 // STATUS BAR DATA
 //
@@ -574,7 +576,7 @@ ST_Responder (event_t* ev)
 			char	buf[3];
 			int		musnum;
 	
-			plyr->message = STSTR_MUS;
+			plyr->message = DEH_String(STSTR_MUS);
 			cht_GetParam(&cheat_mus, buf);
 	
 			if (gamemode == commercial)
@@ -582,7 +584,7 @@ ST_Responder (event_t* ev)
 				musnum = mus_runnin + (buf[0]-'0')*10 + buf[1]-'0' - 1;
 	  
 				if (((buf[0]-'0')*10 + buf[1]-'0') > 35)
-					plyr->message = STSTR_NOMUS;
+					plyr->message = DEH_String(STSTR_NOMUS);
 				else
 					S_ChangeMusic(musnum, 1);
 			}
@@ -591,7 +593,7 @@ ST_Responder (event_t* ev)
 				musnum = mus_e1m1 + (buf[0]-'1')*9 + (buf[1]-'1');
 	  
 				if (((buf[0]-'1')*9 + buf[1]-'1') > 31)
-					plyr->message = STSTR_NOMUS;
+					plyr->message = DEH_String(STSTR_NOMUS);
 				else
 					S_ChangeMusic(musnum, 1);
 			}
@@ -617,10 +619,10 @@ ST_Responder (event_t* ev)
 					plyr->mo->health = 100;
 
 					plyr->health = 100;
-					plyr->message = STSTR_DQDON;
+					plyr->message = DEH_String(STSTR_DQDON);
 				}
 				else 
-					plyr->message = STSTR_DQDOFF;
+					plyr->message = DEH_String(STSTR_DQDOFF);
 			}
 			// 'fa' cheat for killer fucking arsenal
 			else if (cht_CheckCheat(&cheat_ammonokey, ev->data1))
@@ -634,7 +636,7 @@ ST_Responder (event_t* ev)
 				for (i=0;i<NUMAMMO;i++)
 					plyr->ammo[i] = plyr->maxammo[i];
 
-				plyr->message = STSTR_FAADDED;
+				plyr->message = DEH_String(STSTR_FAADDED);
 			}
 			// 'kfa' cheat for key full ammo
 			else if (cht_CheckCheat(&cheat_ammo, ev->data1))
@@ -651,7 +653,7 @@ ST_Responder (event_t* ev)
 				for (i=0;i<NUMCARDS;i++)
 					plyr->cards[i] = true;
 	
-				plyr->message = STSTR_KFAADDED;
+				plyr->message = DEH_String(STSTR_KFAADDED);
 			}
 			// Simplified, accepting both "noclip" and "idspispopd".
 			// no clipping mode cheat
@@ -660,9 +662,9 @@ ST_Responder (event_t* ev)
 				plyr->cheats ^= CF_NOCLIP;
 	
 				if (plyr->cheats & CF_NOCLIP)
-					plyr->message = STSTR_NCON;
+					plyr->message = DEH_String(STSTR_NCON);
 				else
-					plyr->message = STSTR_NCOFF;
+					plyr->message = DEH_String(STSTR_NCOFF);
 			}
 			// 'behold?' power-up cheats
 			for (i=0;i<6;i++)
@@ -676,20 +678,20 @@ ST_Responder (event_t* ev)
 					else
 						plyr->powers[i] = 0;
 	  
-					plyr->message = STSTR_BEHOLDX;
+					plyr->message = DEH_String(STSTR_BEHOLDX);
 				}
 			}
 			// 'behold' power-up menu
 			if (cht_CheckCheat(&cheat_powerup[6], ev->data1))
 			{
-				plyr->message = STSTR_BEHOLD;
+				plyr->message = DEH_String(STSTR_BEHOLD);
 			}
 			// 'choppers' invulnerability & chainsaw
 			else if (cht_CheckCheat(&cheat_choppers, ev->data1))
 			{
 				plyr->weaponowned[wp_chainsaw] = true;
 				plyr->powers[pw_invulnerability] = true;
-				plyr->message = STSTR_CHOPPERS;
+				plyr->message = DEH_String(STSTR_CHOPPERS);
 			}
 			// 'mypos' for player position
 			else if (cht_CheckCheat(&cheat_mypos, ev->data1))
@@ -767,7 +769,7 @@ ST_Responder (event_t* ev)
 			}
 
 			// So be it.
-			plyr->message = STSTR_CLEV;
+			plyr->message = DEH_String(STSTR_CLEV);
 			G_DeferedInitNew(gameskill, epsd, map);
 		}
 	}
@@ -1213,7 +1215,7 @@ void ST_loadGraphics(void)
 
     // Load percent key.
     //Note: why not load STMINUS here, too?
-    tallpercent = (patch_t *) W_CacheLumpName("STTPRCNT", PU_STATIC);
+    tallpercent = (patch_t *) W_CacheLumpName(DEH_String("STTPRCNT"), PU_STATIC);
 
     // key cards
     for (i=0;i<NUMCARDS;i++)
@@ -1223,7 +1225,7 @@ void ST_loadGraphics(void)
     }
 
     // arms background
-    armsbg = (patch_t *) W_CacheLumpName("STARMS", PU_STATIC);
+    armsbg = (patch_t *) W_CacheLumpName(DEH_String("STARMS"), PU_STATIC);
 
     // arms ownership widgets
     for (i=0;i<6;i++)
@@ -1242,7 +1244,7 @@ void ST_loadGraphics(void)
     faceback = (patch_t *) W_CacheLumpName(namebuf, PU_STATIC);
 
     // status bar background bits
-    sbar = (patch_t *) W_CacheLumpName("STBAR", PU_STATIC);
+    sbar = (patch_t *) W_CacheLumpName(DEH_String("STBAR"), PU_STATIC);
 
     // face states
     facenum = 0;
@@ -1264,14 +1266,14 @@ void ST_loadGraphics(void)
 	sprintf(namebuf, "STFKILL%d", i);	// pissed off
 	faces[facenum++] = W_CacheLumpName(namebuf, PU_STATIC);
     }
-    faces[facenum++] = W_CacheLumpName("STFGOD0", PU_STATIC);
-    faces[facenum++] = W_CacheLumpName("STFDEAD0", PU_STATIC);
+    faces[facenum++] = W_CacheLumpName(DEH_String("STFGOD0"), PU_STATIC);
+    faces[facenum++] = W_CacheLumpName(DEH_String("STFDEAD0"), PU_STATIC);
 
 }
 
 void ST_loadData(void)
 {
-    lu_palette = W_GetNumForName ("PLAYPAL");
+    lu_palette = W_GetNumForName (DEH_String("PLAYPAL"));
     ST_loadGraphics();
 }
 
@@ -1577,11 +1579,26 @@ void ST_DrawFullScreenHealth(int x)
 void ST_DrawFullScreenAmmo(int x)
 {
 	char namebuf[9];
+	int	i = 9;
 
 	if(plyr->readyweapon == wp_fist || plyr->readyweapon == wp_chainsaw) // FS: Don't draw a number for Weapon 1
 		return;
 
-	if (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] >= 100)
+	if (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] > 999) // FS: Some DEHacked uses this dumb shit
+	{
+		sprintf(namebuf,"STTNUM%d", i);
+		V_DrawPatchDirect(5, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+		sprintf(namebuf,"STTNUM%d", i);
+		V_DrawPatchDirect(20, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+		sprintf(namebuf,"STTNUM%d", i);
+		V_DrawPatchDirect(35, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+		sprintf(namebuf,"STTNUM%d", i);
+		V_DrawPatchDirect(50, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+	}
+	else if (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] > 99)
 	{
 		sprintf(namebuf,"STTNUM%d", plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 100);
 		V_DrawPatchDirect(5, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));

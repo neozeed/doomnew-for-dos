@@ -23,7 +23,8 @@
 #include "dstrings.h"
 
 #include "am_map.h"
-
+#include "m_cheat.h" // FS: For DEH
+#include "deh_main.h" // FS: For DEH
 
 // For use if I do walls with outsides/insides
 #define REDS		(256-5*16)
@@ -262,7 +263,8 @@ static int markpointnum = 0; // next point to be assigned
 static int followplayer = 1; // specifies whether to follow the player around
 
 static unsigned char cheat_amap_seq[] = { 0xb2, 0x26, 0x26, 0x2e, 0xff };
-static cheatseq_t cheat_amap = { cheat_amap_seq, 0 };
+//static 
+cheatseq_t cheat_amap = { cheat_amap_seq, 0 };
 
 static boolean stopped = true;
 
@@ -665,20 +667,28 @@ boolean AM_Responder (event_t* ev)
 			case AM_FOLLOWKEY:
 				followplayer = !followplayer;
 				f_oldloc.x = MAXINT;
-				plr->message = followplayer ? AMSTR_FOLLOWON : AMSTR_FOLLOWOFF;
+				if (followplayer) // FS: DEH
+					plr->message = DEH_String(AMSTR_FOLLOWON);
+				else
+					plr->message = DEH_String(AMSTR_FOLLOWOFF);
+				//plr->message = followplayer ? AMSTR_FOLLOWON : AMSTR_FOLLOWOFF;
 				break;
 			case AM_GRIDKEY:
 				grid = !grid;
-				plr->message = grid ? AMSTR_GRIDON : AMSTR_GRIDOFF;
+				if (grid) // FS: DEH
+					plr->message = DEH_String(AMSTR_GRIDON);
+				else
+					plr->message = DEH_String(AMSTR_GRIDOFF);
+				//plr->message = grid ? AMSTR_GRIDON : AMSTR_GRIDOFF;
 				break;
 			case AM_MARKKEY:
-				sprintf(buffer, "%s %d", AMSTR_MARKEDSPOT, markpointnum);
+				sprintf(buffer, "%s %d", DEH_String(AMSTR_MARKEDSPOT), markpointnum);
 				plr->message = buffer;
 				AM_addMark();
 				break;
 			case AM_CLEARMARKKEY:
 				AM_clearMarks();
-				plr->message = AMSTR_MARKSCLEARED;
+				plr->message = DEH_String(AMSTR_MARKSCLEARED);
 				break;
 			default:
 				cheatstate=0;

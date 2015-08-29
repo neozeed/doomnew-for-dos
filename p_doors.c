@@ -39,6 +39,8 @@ rcsid[] = "$Id: p_doors.c,v 1.4 1997/02/03 16:47:53 b1 Exp $";
 #include "dstrings.h"
 #include "sounds.h"
 
+#include "deh_main.h" // FS: For DEH
+
 #if 0
 //
 // Sliding door frame information
@@ -224,7 +226,7 @@ EV_DoLockedDoor
 	    return 0;
 	if (!p->cards[it_bluecard] && !p->cards[it_blueskull])
 	{
-	    p->message = PD_BLUEO;
+	    p->message = DEH_String(PD_BLUEO);
 	    S_StartSound(NULL,sfx_oof);
 	    return 0;
 	}
@@ -236,7 +238,7 @@ EV_DoLockedDoor
 	    return 0;
 	if (!p->cards[it_redcard] && !p->cards[it_redskull])
 	{
-	    p->message = PD_REDO;
+	    p->message = DEH_String(PD_REDO);
 	    S_StartSound(NULL,sfx_oof);
 	    return 0;
 	}
@@ -249,7 +251,7 @@ EV_DoLockedDoor
 	if (!p->cards[it_yellowcard] &&
 	    !p->cards[it_yellowskull])
 	{
-	    p->message = PD_YELLOWO;
+	    p->message = DEH_String(PD_YELLOWO);
 	    S_StartSound(NULL,sfx_oof);
 	    return 0;
 	}
@@ -375,7 +377,7 @@ EV_VerticalDoor
 	
 	if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
 	{
-	    player->message = PD_BLUEK;
+	    player->message = DEH_String(PD_BLUEK);
 	    S_StartSound(NULL,sfx_oof);
 	    return;
 	}
@@ -389,7 +391,7 @@ EV_VerticalDoor
 	if (!player->cards[it_yellowcard] &&
 	    !player->cards[it_yellowskull])
 	{
-	    player->message = PD_YELLOWK;
+	    player->message = DEH_String(PD_YELLOWK);
 	    S_StartSound(NULL,sfx_oof);
 	    return;
 	}
@@ -402,7 +404,7 @@ EV_VerticalDoor
 	
 	if (!player->cards[it_redcard] && !player->cards[it_redskull])
 	{
-	    player->message = PD_REDK;
+	    player->message = DEH_String(PD_REDK);
 	    S_StartSound(NULL,sfx_oof);
 	    return;
 	}

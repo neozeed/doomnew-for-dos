@@ -42,6 +42,7 @@ rcsid[] = "$Id: r_draw.c,v 1.4 1997/02/03 16:47:55 b1 Exp $";
 // State.
 #include "doomstat.h"
 
+#include "deh_main.h" // FS: For DEH
 
 // ?
 #define MAXWIDTH			1120
@@ -679,10 +680,10 @@ void R_FillBackScreen (void)
     patch_t*	patch;
 
     // DOOM border patch.
-    char	name1[] = "FLOOR7_2";
+    char        name1[] = "FLOOR7_2";
 
     // DOOM II border patch.
-    char	name2[] = "GRNROCK";	
+    char        name2[] = "GRNROCK"; 
 
     char*	name;
 	
@@ -690,9 +691,9 @@ void R_FillBackScreen (void)
 	return;
 	
     if ( gamemode == commercial)
-	name = name2;
+        name = DEH_String(name2);
     else
-	name = name1;
+        name = DEH_String(name1);
     
     src = W_CacheLumpName (name, PU_CACHE); 
     dest = screens[1]; 
@@ -712,19 +713,19 @@ void R_FillBackScreen (void)
 	} 
     } 
 	
-    patch = W_CacheLumpName ("brdr_t",PU_CACHE);
+    patch = W_CacheLumpName (DEH_String("brdr_t"),PU_CACHE);
 
     for (x=0 ; x<scaledviewwidth ; x+=8)
 	V_DrawPatch (viewwindowx+x,viewwindowy-8,1,patch);
-    patch = W_CacheLumpName ("brdr_b",PU_CACHE);
+    patch = W_CacheLumpName (DEH_String("brdr_b"),PU_CACHE);
 
     for (x=0 ; x<scaledviewwidth ; x+=8)
 	V_DrawPatch (viewwindowx+x,viewwindowy+viewheight,1,patch);
-    patch = W_CacheLumpName ("brdr_l",PU_CACHE);
+    patch = W_CacheLumpName (DEH_String("brdr_l"),PU_CACHE);
 
     for (y=0 ; y<viewheight ; y+=8)
 	V_DrawPatch (viewwindowx-8,viewwindowy+y,1,patch);
-    patch = W_CacheLumpName ("brdr_r",PU_CACHE);
+    patch = W_CacheLumpName (DEH_String("brdr_r"),PU_CACHE);
 
     for (y=0 ; y<viewheight ; y+=8)
 	V_DrawPatch (viewwindowx+scaledviewwidth,viewwindowy+y,1,patch);
@@ -734,22 +735,22 @@ void R_FillBackScreen (void)
     V_DrawPatch (viewwindowx-8,
 		 viewwindowy-8,
 		 1,
-		 W_CacheLumpName ("brdr_tl",PU_CACHE));
+		 W_CacheLumpName (DEH_String("brdr_tl"),PU_CACHE));
     
     V_DrawPatch (viewwindowx+scaledviewwidth,
 		 viewwindowy-8,
 		 1,
-		 W_CacheLumpName ("brdr_tr",PU_CACHE));
+		 W_CacheLumpName (DEH_String("brdr_tr"),PU_CACHE));
     
     V_DrawPatch (viewwindowx-8,
 		 viewwindowy+viewheight,
 		 1,
-		 W_CacheLumpName ("brdr_bl",PU_CACHE));
+		 W_CacheLumpName (DEH_String("brdr_bl"),PU_CACHE));
     
     V_DrawPatch (viewwindowx+scaledviewwidth,
 		 viewwindowy+viewheight,
 		 1,
-		 W_CacheLumpName ("brdr_br",PU_CACHE));
+		 W_CacheLumpName (DEH_String("brdr_br"),PU_CACHE));
 } 
  
 

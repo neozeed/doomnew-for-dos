@@ -45,7 +45,7 @@ typedef unsigned char byte;
 #define MINLONG		((long)0x80000000)
 #endif
 
-
+#define arrlen(array) (sizeof(array) / sizeof(*array)) // FS: For DEH
 byte *I_AllocLow (int length); // FS
 extern boolean debugmode; // checkparam of -debug
 
