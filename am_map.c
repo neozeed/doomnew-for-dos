@@ -26,6 +26,7 @@
 #include "m_cheat.h" // FS: For DEH
 #include "deh_main.h" // FS: For DEH
 
+vertex_t CardPoints[NUMCARDS]; // FS: From Heretic, Show Keycard in Easy mode
 // For use if I do walls with outsides/insides
 #define REDS		(256-5*16)
 #define REDRANGE	16
@@ -41,6 +42,10 @@
 #define YELLOWRANGE	1
 #define BLACK		0
 #define WHITE		(256-47)
+#define BLUEKEY 	197 // FS: From Heretic
+#define YELLOWKEY	(256-32+5) // FS: From Heretic
+#define GREENKEY	220 // FS: From Heretic
+#define REDKEY		3000 // FS: From Heretic
 
 // Automap colors
 #define BACKGROUND	BLACK
@@ -56,8 +61,8 @@
 #define CDWALLRANGE	YELLOWRANGE
 #define THINGCOLORS	GREENS
 #define THINGRANGE	GREENRANGE
-#define SECRETWALLCOLORS WALLCOLORS
-#define SECRETWALLRANGE WALLRANGE
+#define SECRETWALLCOLORS GREENS // FS: WALLCOLORS
+#define SECRETWALLRANGE 32
 #define GRIDCOLORS	(GRAYS + GRAYSRANGE/2)
 #define GRIDRANGE	0
 #define XHAIRCOLORS	GRAYS
@@ -147,6 +152,21 @@ mline_t player_arrow[] = {
 };
 #undef R
 #define NUMPLYRLINES (sizeof(player_arrow)/sizeof(mline_t))
+
+// FS
+#define R ((8*PLAYERRADIUS)/7)
+mline_t keysquare[] = {
+	{ { 0, 0 }, { R/4, -R/2 } },
+	{ { R/4, -R/2 }, { R/2, -R/2 } },
+	{ { R/2, -R/2 }, { R/2, R/2 } },
+	{ { R/2, R/2 }, { R/4, R/2 } },
+	{ { R/4, R/2 }, { 0, 0 } }, // handle part type thing
+	{ { 0, 0 }, { -R, 0 } }, // stem
+	{ { -R, 0 }, { -R, -R/2 } }, // end lockpick part
+	{ { -3*R/4, 0 }, { -3*R/4, -R/4 } }
+	};
+#define NUMKEYSQUARELINES (sizeof(keysquare)/sizeof(mline_t))
+#undef R
 
 #define R ((8*PLAYERRADIUS)/7)
 mline_t cheat_player_arrow[] = {
@@ -441,7 +461,9 @@ void AM_initVariables(void)
 {
 	int pnum;
 	static event_t st_notify = { ev_keyup, AM_MSGENTERED };
-
+	thinker_t *think; // FS
+	mobj_t *mo; // FS
+	
 	automapactive = true;
 	fb = screens[0];
 
@@ -472,6 +494,49 @@ void AM_initVariables(void)
 	old_m_y = m_y;
 	old_m_w = m_w;
 	old_m_h = m_h;
+
+
+	// FS: load in the location of keys, if in baby mode
+	memset(CardPoints, 0, sizeof(vertex_t)*6);
+	if(gameskill == sk_baby)
+	{
+		for(think = thinkercap.next; think != &thinkercap; think = think->next)
+		{
+			if(think->function.acp1 != (actionf_p1)P_MobjThinker)
+			{ //not a mobj
+				continue;
+			}
+			mo = (mobj_t *)think;
+			switch(mo->type)
+			{
+				case MT_MISC4: // FS: Blue
+					CardPoints[0].x = mo->x;
+					CardPoints[0].y = mo->y;
+					break;
+				case MT_MISC5: // FS: Red
+					CardPoints[1].x = mo->x;
+					CardPoints[1].y = mo->y;
+					break;
+				case MT_MISC6: // FS: Yellow
+					CardPoints[2].x = mo->x;
+					CardPoints[2].y = mo->y;
+					break;
+				case MT_MISC7: // FS: Yellow
+					CardPoints[4].x = mo->x;
+					CardPoints[4].y = mo->y;
+					break;
+				case MT_MISC8: // FS: Red
+					CardPoints[5].x = mo->x;
+					CardPoints[5].y = mo->y;
+					break;				
+				case MT_MISC9: // FS: Blue
+					CardPoints[3].x = mo->x;
+					CardPoints[3].y = mo->y;
+					break;				
+			}
+		}
+	}
+
 
 	// inform the status bar of the change
 	ST_Responder(&st_notify);
@@ -1123,6 +1188,26 @@ void AM_drawWalls(void)
 					else
 						AM_drawMline(&l, WALLCOLORS+lightlev);
 				}
+				else if(lines[i].special > 25 && lines[i].special < 35)
+				{
+					switch(lines[i].special)
+					{
+						case 26:
+						case 32:
+							AM_drawMline(&l, BLUEKEY);
+							break;
+						case 27:
+						case 34:
+							AM_drawMline(&l, YELLOWKEY);
+							break;
+						case 28:
+						case 33:
+							AM_drawMline(&l, REDKEY);
+							break;
+						default:
+							break;
+					}
+				}
 				else if (lines[i].backsector->floorheight != lines[i].frontsector->floorheight)
 				{
 					AM_drawMline(&l, FDWALLCOLORS + lightlev); // floor level change
@@ -1283,6 +1368,39 @@ void AM_drawCrosshair(int color)
 
 }
 
+void AM_drawkeys(void)
+{
+	if(CardPoints[0].x != 0 || CardPoints[0].y != 0)
+	{
+		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, BLUEKEY,
+			CardPoints[0].x, CardPoints[0].y);
+	}
+	if(CardPoints[1].x != 0 || CardPoints[1].y != 0)
+	{
+		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, REDKEY,
+			CardPoints[1].x, CardPoints[1].y);
+	}
+	if(CardPoints[2].x != 0 || CardPoints[2].y != 0)
+	{
+		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, YELLOWKEY,
+			CardPoints[2].x, CardPoints[2].y);
+	}
+	if(CardPoints[3].x != 0 || CardPoints[3].y != 0)
+	{
+		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, BLUEKEY,
+			CardPoints[3].x, CardPoints[3].y);
+	}
+	if(CardPoints[4].x != 0 || CardPoints[4].y != 0)
+	{
+		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, YELLOWKEY,
+			CardPoints[4].x, CardPoints[4].y);
+	}
+	if(CardPoints[5].x != 0 || CardPoints[5].y != 0)
+	{
+		AM_drawLineCharacter(keysquare, NUMKEYSQUARELINES, 0, 0, REDKEY,
+			CardPoints[5].x, CardPoints[5].y);
+	}	
+}
 void AM_Drawer (void)
 {
 	if (!automapactive)
@@ -1297,6 +1415,9 @@ void AM_Drawer (void)
 		AM_drawThings(THINGCOLORS, THINGRANGE);
 	AM_drawCrosshair(XHAIRCOLORS);
 
+	if (gameskill == sk_baby)
+		AM_drawKeys(); //FS 
+		
 	AM_drawMarks();
 
 	V_MarkRect(f_x, f_y, f_w, f_h);

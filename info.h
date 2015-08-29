@@ -1208,12 +1208,12 @@ typedef enum {
     MT_MISC1,
     MT_MISC2,
     MT_MISC3,
-    MT_MISC4,
-    MT_MISC5,
-    MT_MISC6,
-    MT_MISC7,
-    MT_MISC8,
-    MT_MISC9,
+    MT_MISC4, // FS: 48 Blue Card
+    MT_MISC5, // FS: 49 Red Card
+    MT_MISC6, // FS: 50 Yellow Card
+    MT_MISC7, // FS: 51 Yellow Skull
+    MT_MISC8, // FS: 52 Red Skull
+    MT_MISC9, // FS: 53 Blue Skull
     MT_MISC10,
     MT_MISC11,
     MT_MISC12,

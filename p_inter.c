@@ -258,9 +258,15 @@ boolean P_GiveArmor (player_t* player, int armortype)
 void P_GiveCard (player_t* player, card_t card)
 {
 	int i; // FS: Give keys to all players in Coop   
-
+	extern vertex_t CardPoints[]; // FS: From Heretic, Show Keycard in Easy mode
+	
 	if (player->cards[card])
 		return;
+	if (player == &players[consoleplayer])
+	{
+		CardPoints[card].x = 0;
+		CardPoints[card].y = 0;
+	}		
 	player->bonuscount = BONUSADD;
 	player->cards[card] = 1;
 
@@ -273,6 +279,9 @@ void P_GiveCard (player_t* player, card_t card)
 			player->bonuscount = BONUSADD;
 			player->cards[card] = true;
 
+			CardPoints[card].x = 0;
+			CardPoints[card].y = 0;
+		
 			if(gamemode == commercial)
 				S_StartSound(0,sfx_radio);
 			else

@@ -1,3 +1,6 @@
+10-01-13
+ - Automap code for keys (in easy skill) and secret doors from Heretic.
+
 09-29-13
  - Put a "return" instead of a "break" in switch(gamemap) for Chex Quest.
    Was causing Map 5 finishes to trigger the Finale or nothing at all!
