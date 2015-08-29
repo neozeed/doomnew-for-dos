@@ -56,6 +56,7 @@
 #define NUM_QUITMESSAGES   22
 
 extern char* endmsg[];
+extern char* endmsg2[]; // FS: Fuck this shit
 
 
 #endif

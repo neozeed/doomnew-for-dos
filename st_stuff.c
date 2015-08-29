@@ -392,7 +392,7 @@ static int	keyboxes[3];
 // a random number per tick
 static int	st_randomnumber;  
 
-
+boolean usePalFlash; // FS: No Palette Flashing
 
 // Massive bunches of cheat shit
 //  to keep it from being easy to figure them out.
@@ -1079,7 +1079,8 @@ void ST_doPaletteStuff(void)
     else
 	palette = 0;
 
-	palette = 0; // FS: FIXME MAKE USEPALFLASH
+	if (usePalFlash == false)
+		palette = 0; // FS: No Palette Flashing
 
     if (palette != st_palette)
     {
@@ -1146,9 +1147,12 @@ void ST_diffDraw(void)
 
 void ST_Drawer (boolean fullscreen, boolean refresh)
 {
-  	if (fullscreen && !automapactive) // FS
-		ST_DrawFullScreenStuff();
-
+        if (fullscreen && !automapactive) // FS
+        {
+                ST_DrawFullScreenStuff();
+			ST_doPaletteStuff();
+                return;
+        }
     st_statusbaron = (!fullscreen) || automapactive;
     st_firsttime = st_firsttime || refresh;
 
@@ -1514,7 +1518,115 @@ void ST_Init (void)
     screens[4] = (byte *) Z_Malloc(ST_WIDTH*ST_HEIGHT, PU_STATIC, 0);
 }
 
-void ST_DrawFullScreenStuff (void)
+// FS: Draw Health in Full Screen
+void ST_DrawFullScreenHealth(int x)
 {
 
+	char namebuf[9];
+
+		if (plyr->mo->health >= 100)
+		{
+			sprintf(namebuf,"STTNUM%d", plyr->mo->health / 100);
+			V_DrawPatchDirect(5, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+			sprintf(namebuf,"STTNUM%d", (plyr->mo->health / 10) % 10);
+			V_DrawPatchDirect(20, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+			sprintf(namebuf,"STTNUM%d", (plyr->mo->health / 1) % 10);
+			V_DrawPatchDirect(35, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+		}
+		else if (plyr->mo->health < 100 && plyr->mo->health > 0)
+		{
+			if( (plyr->mo->health / 10) % 10 > 0)
+			{
+				sprintf(namebuf,"STTNUM%d", (plyr->mo->health /10) % 10);
+				V_DrawPatchDirect(20, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+			}
+			sprintf(namebuf,"STTNUM%d", (plyr->mo->health / 1) % 10);
+			V_DrawPatchDirect(35, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+		}
+		else
+			V_DrawPatchDirect(35,180, 0, W_CacheLumpName("STTNUM0", PU_CACHE));
+	V_DrawPatchDirect(50,180, 0, W_CacheLumpName("STTPRCNT", PU_STATIC));
+}
+
+// FS: Draw Ammo in Full Screen
+void ST_DrawFullScreenAmmo(int x)
+{
+	char namebuf[9];
+
+		if (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] >= 100)
+		{
+			sprintf(namebuf,"STTNUM%d", plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 100);
+			V_DrawPatchDirect(5, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+			sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 10) % 10);
+			V_DrawPatchDirect(20, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+			sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 1) % 10);
+			V_DrawPatchDirect(35, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+		}
+		else if (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] < 100)
+		{
+			if( (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] /10) % 10 > 0)
+			{
+				sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] /10) % 10);
+				V_DrawPatchDirect(20, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+			}
+			sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 1) % 10);
+			V_DrawPatchDirect(35, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+		}
+}
+
+// FS: Draw Ammo in Full Screen
+void ST_DrawFullScreenArmor(int x)
+{
+	char namebuf[9];
+
+		if (plyr->armorpoints >= 100)
+		{
+			sprintf(namebuf,"STTNUM%d", plyr->armorpoints / 100);
+			V_DrawPatchDirect(270, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+			sprintf(namebuf,"STTNUM%d", (plyr->armorpoints / 10) % 10);
+			V_DrawPatchDirect(285, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+			sprintf(namebuf,"STTNUM%d", (plyr->armorpoints / 1) % 10);
+			V_DrawPatchDirect(300, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+		}
+		else if (plyr->armorpoints < 100)
+		{
+			if( (plyr->armorpoints /10) % 10 > 0)
+			{
+				sprintf(namebuf,"STTNUM%d", (plyr->armorpoints /10) % 10);
+				V_DrawPatchDirect(285, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+			}
+			sprintf(namebuf,"STTNUM%d", (plyr->armorpoints / 1) % 10);
+			V_DrawPatchDirect(300, 180, 0, W_CacheLumpName(namebuf, PU_CACHE));
+		}
+}
+
+// FS: Draw Cards/Keys, Health, Ammo, and Armor in Full Screen
+extern boolean 	readthisfullscreenhack; // FS: Hack for Read This!/Credits so DrawFullScreenStuff doesn't draw over it.
+void ST_DrawFullScreenStuff (void)
+{
+        if(readthisfullscreenhack || gamestate != GS_LEVEL || automapactive)
+		return;
+
+	if(plyr->cards[0] && !plyr->cards[3]) // Blue
+	    V_DrawPatchDirect(260,176, 0, W_CacheLumpName("STKEYS0",PU_CACHE));
+	if(plyr->cards[1] && !plyr->cards[4]) // Yellow
+	    V_DrawPatchDirect(260,183, 0, W_CacheLumpName("STKEYS1",PU_CACHE));
+	if(plyr->cards[2] && !plyr->cards[5]) // Read
+	    V_DrawPatchDirect(260,190, 0, W_CacheLumpName("STKEYS2",PU_CACHE));
+	if(plyr->cards[3]) // Blue
+	    V_DrawPatchDirect(260,170, 0, W_CacheLumpName("STKEYS3",PU_CACHE));
+	if(plyr->cards[4]) // Yellow
+	    V_DrawPatchDirect(260,180, 0, W_CacheLumpName("STKEYS4",PU_CACHE));
+	if(plyr->cards[5]) // Read
+	    V_DrawPatchDirect(260,190, 0, W_CacheLumpName("STKEYS5",PU_CACHE));
+
+	ST_DrawFullScreenHealth(plyr->mo->health);
+	ST_DrawFullScreenAmmo(plyr->ammo[weaponinfo[plyr->readyweapon].ammo]);
+	ST_DrawFullScreenArmor(plyr->armorpoints);
 }

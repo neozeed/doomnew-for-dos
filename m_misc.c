@@ -233,7 +233,7 @@ extern int     snd_SBport, snd_SBirq, snd_SBdma;       // sound blaster variable
 extern int     snd_Mport;                              // midi variables
 //#endif
 
-boolean usePalFlash; // FS
+extern boolean usePalFlash; // FS
 
 default_t defaults[] =
 {

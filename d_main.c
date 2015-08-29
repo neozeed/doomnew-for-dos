@@ -250,7 +250,6 @@ void D_Display (void)
 	    redrawsbar = true;              // just put away the help screen
 
 	ST_Drawer (viewheight == 200, redrawsbar );
-        UpdateState |= I_FULLVIEW; // FS
         fullscreen = viewheight == 200;
 	break;
 
@@ -326,6 +325,8 @@ void D_Display (void)
     // normal update
     if (!wipe)
     {
+        if (fullscreen) // FS: Full screen new school
+                ST_Drawer (viewheight == 200, redrawsbar );
         I_Update ();              // page flip or blit buffer
 	return;
     }

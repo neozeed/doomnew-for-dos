@@ -101,7 +101,7 @@ int			messageLastMenuActive;
 
 // timed message = no input from user
 boolean			messageNeedsInput;     
-
+boolean 	readthisfullscreenhack; // FS 
 void    (*messageRoutine)(int response);
 
 #define SAVESTRINGSIZE 	24
@@ -923,6 +923,7 @@ void M_Episode(int choice)
     {
 	M_StartMessage(SWSTRING,NULL,false);
 	M_SetupNextMenu(&ReadDef1);
+	readthisfullscreenhack = true;
 	return;
     }
 
@@ -1022,26 +1023,27 @@ void M_EndGame(int choice)
 }
 
 
-
-
 //
 // M_ReadThis
 //
 void M_ReadThis(int choice)
 {
     choice = 0;
+	readthisfullscreenhack = true;
     M_SetupNextMenu(&ReadDef1);
 }
 
 void M_ReadThis2(int choice)
 {
     choice = 0;
+	readthisfullscreenhack = true;
     M_SetupNextMenu(&ReadDef2);
 }
 
 void M_FinishReadThis(int choice)
 {
     choice = 0;
+	readthisfullscreenhack = false;
     M_SetupNextMenu(&MainDef);
 }
 
@@ -1097,13 +1099,17 @@ void M_QuitResponse(int ch)
 
 void M_QuitDOOM(int choice)
 {
-  // We pick index 0 which is language sensitive,
-  //  or one at random, between 1 and maximum number.
-  if (language != english )
-    sprintf(endstring,"%s\n\n"DOSY, endmsg[0] );
-  else
-    sprintf(endstring,"%s\n\n"DOSY, endmsg[ (gametic%(NUM_QUITMESSAGES-2))+1 ]);
-  M_StartMessage(endstring,M_QuitResponse,true);
+	// FS: Fixed this mess
+	if (language != english )
+		sprintf(endstring,"%s\n\n"DOSY, endmsg[0] );
+	else
+	{
+		if(gamemode == commercial)
+			sprintf(endstring,"%s\n\n"DOSY, endmsg2[ (gametic%(9-2))+1 ]);
+		else
+			sprintf(endstring,"%s\n\n"DOSY, endmsg[ (gametic% (9-2))+1 ]);
+	}
+	M_StartMessage(endstring,M_QuitResponse,true);
 }
 
 
@@ -1145,6 +1151,19 @@ void M_ChangeDetail(int choice)
 	players[consoleplayer].message = DETAILLO;*/
 }
 
+void M_ChangePalFlashes(int choice) // FS: Palette Flashes Toggle
+{
+	extern boolean usePalFlash;
+	usePalFlash ^= 1;
+	if(usePalFlash)
+	{
+		P_SetMessage(&players[consoleplayer], "PALETTE FLASHES ON", true);
+	}
+	else
+	{
+		P_SetMessage(&players[consoleplayer], "PALETTE FLASHES OFF", true);
+	}
+}
 
 
 
@@ -1539,7 +1558,7 @@ boolean M_Responder (event_t* ev)
 	      currentMenu = &ReadDef2;
 	    else
 	      currentMenu = &ReadDef1;
-	    
+		readthisfullscreenhack = true;
 	    itemOn = 0;
 	    S_StartSound(NULL,sfx_swtchn);
 	    return true;
@@ -1563,8 +1582,9 @@ boolean M_Responder (event_t* ev)
 	    S_StartSound(NULL,sfx_swtchn);
 	    return true;
 				
-	  case KEY_F5:            // Detail toggle
-	    M_ChangeDetail(0);
+	  case KEY_F5:            // FS: Change Palette Flashing  was // Detail toggle
+//	    M_ChangeDetail(0);
+		M_ChangePalFlashes(0);
 	    S_StartSound(NULL,sfx_swtchn);
 	    return true;
 				
