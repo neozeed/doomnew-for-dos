@@ -1452,6 +1452,12 @@ void D_DoomMain (void)
 	{
 		novert = 1;
 	}
+
+	if (M_CheckParm("-noprecache")) // FS
+	{
+		extern int noprecache;
+		noprecache = 1;
+	}
 	
 	if ( gameaction != ga_loadgame )
 	{

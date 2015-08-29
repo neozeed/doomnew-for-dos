@@ -587,7 +587,8 @@ P_SetupLevel
     int		i;
     char	lumpname[9];
     int		lumpnum;
-	
+	extern int	noprecache; // FS: No graphics precaching
+
     totalkills = totalitems = totalsecret = wminfo.maxfrags = 0;
     wminfo.partime = 180;
     for (i=0 ; i<MAXPLAYERS ; i++)
@@ -682,9 +683,12 @@ P_SetupLevel
     //	UNUSED P_ConnectSubsectors ();
 
     // preload graphics
-    if (precache)
-	R_PrecacheLevel ();
-
+    if(!noprecache) // FS: No graphics precaching
+	{
+	    if (precache)
+			R_PrecacheLevel ();
+	}
+	
     //printf ("free memory: 0x%x\n", Z_FreeMemory());
 
 }

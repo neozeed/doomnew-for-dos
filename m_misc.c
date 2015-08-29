@@ -177,6 +177,7 @@ int headBob; // FS: Head bob toggle
 extern int	drawTime; // FS: Draw Time on Automap
 int	useIntGus; // FS: Use internal GUS1M WADs
 int novert; // FS: No vertical mouse movement
+int noprecache; // FS: No graphics precaching
 
 extern int	use_wpnbinds; // FS: Custom weapon keys
 extern int	wpn_shotgun; // FS: Custom weapon keys
@@ -298,6 +299,7 @@ default_t	extendeddefaults[] =
 	{ "drawTime", &drawTime, 0}, // FS: Draw time on Automap
 	{ "useIntGus", &useIntGus, 0}, // FS: Use internal GUS WADs
 	{ "novert", &novert, 0}, // FS: No vertical mouse movement
+	{ "noprecache", &noprecache, 0}, // FS: No graphics precaching
 
 	// FS: Use custom weapon binds
 	{ "use_wpnbinds", &use_wpnbinds, 0},

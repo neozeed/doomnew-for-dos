@@ -1,3 +1,6 @@
+10-05-13
+ - noprecache in EXTEND.CFG to disable graphics precaching.
+
 10-04-13
  - "-gus" paramater now loads the wads internally from the EXE.
    You no longer need the GUS1M.WAD or GUS1MIID.WAD present to load it.
