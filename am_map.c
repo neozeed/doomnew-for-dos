@@ -42,6 +42,7 @@ vertex_t CardPoints[NUMCARDS]; // FS: From Heretic, Show Keycard in Easy mode
 #define YELLOWRANGE	1
 #define BLACK		0
 #define WHITE		(256-47)
+
 #define BLUEKEY 	197 // FS: From Heretic
 #define YELLOWKEY	(256-32+5) // FS: From Heretic
 #define GREENKEY	220 // FS: From Heretic
@@ -153,6 +154,7 @@ mline_t player_arrow[] = {
 #undef R
 #define NUMPLYRLINES (sizeof(player_arrow)/sizeof(mline_t))
 
+
 // FS
 #define R ((8*PLAYERRADIUS)/7)
 mline_t keysquare[] = {
@@ -167,6 +169,7 @@ mline_t keysquare[] = {
 	};
 #define NUMKEYSQUARELINES (sizeof(keysquare)/sizeof(mline_t))
 #undef R
+
 
 #define R ((8*PLAYERRADIUS)/7)
 mline_t cheat_player_arrow[] = {
@@ -494,6 +497,7 @@ void AM_initVariables(void)
 	old_m_y = m_y;
 	old_m_w = m_w;
 	old_m_h = m_h;
+
 
 
 	// FS: load in the location of keys, if in baby mode
@@ -1188,7 +1192,8 @@ void AM_drawWalls(void)
 					else
 						AM_drawMline(&l, WALLCOLORS+lightlev);
 				}
-				else if(lines[i].special > 25 && lines[i].special < 35)
+                                /*
+                                else if(lines[i].special > 25 && lines[i].special < 35)
 				{
 					switch(lines[i].special)
 					{
@@ -1208,7 +1213,8 @@ void AM_drawWalls(void)
 							break;
 					}
 				}
-				else if (lines[i].backsector->floorheight != lines[i].frontsector->floorheight)
+                                */
+                                else if (lines[i].backsector->floorheight != lines[i].frontsector->floorheight)
 				{
 					AM_drawMline(&l, FDWALLCOLORS + lightlev); // floor level change
 				}
@@ -1368,6 +1374,7 @@ void AM_drawCrosshair(int color)
 
 }
 
+
 void AM_drawkeys(void)
 {
 	if(CardPoints[0].x != 0 || CardPoints[0].y != 0)
@@ -1401,6 +1408,7 @@ void AM_drawkeys(void)
 			CardPoints[5].x, CardPoints[5].y);
 	}	
 }
+
 void AM_Drawer (void)
 {
 	if (!automapactive)

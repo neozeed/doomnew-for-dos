@@ -1,3 +1,19 @@
+11-03-13
+ - Disabled drawing coloured doors in automap, might be causing crashes.
+
+10-26-13
+ - nowipe in EXTEND.CFG to disable the screen melt/wipe effect.
+ - "-perdgate" will now allow longer intermissions so you can read the
+   intermission text.
+ - Fixed E4M1 detection fuckery.
+ - Long strings are allowed from Chocolate Doom's Dehacked.
+   Potential overflow issues, but should work okay for most things.
+   Long cheats are not enabled (yet).
+
+10-17-13
+ - A bit smarter with loading new games from fake netgames.
+ - deh_internal to toggle loading internal DEHacked files.
+
 10-16-13
  - Save and Load slots consistent with each other.
  - Raised limits to wHeretic limits.

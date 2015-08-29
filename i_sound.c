@@ -40,6 +40,8 @@ void I_StartupTimer (void)
 
 void I_ShutdownTimer (void)
 {
+	dprintf("I_ShutdownTimer()\n"); // FS: DEBUG
+
 	TSM_DelService(tsm_ID);
 	TSM_Remove();
 }
@@ -435,6 +437,8 @@ void I_StartupSound (void)
 
 void I_ShutdownSound (void)
 {
+	dprintf("I_ShutdownSound()\n"); // FS: DEBUG
+
 	DMX_DeInit();
 	I_ShutdownTimer();
 }

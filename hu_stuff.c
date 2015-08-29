@@ -572,14 +572,22 @@ void HU_Start(void)
 // FS: Draw the SECRETS FOUND text on the Automap
 void HU_SetupSecretsText(void)
 {
-	char	*secrets = "SECRETS FOUND: 999/999"; // FS: Hacky shit because I forget proper string formatting
-	
-	HUlib_clearTextLine(&w_secret); // FS: Clear the old string
-	
-	sprintf(secrets, "SECRETS FOUND: %i/%i", players[consoleplayer].secretcount, totalsecret);
+	char	secrets[24];
+	int		i;
 
-	while (*secrets)
-		HUlib_addCharToTextLine(&w_secret, *(secrets++)); // FS: Add it all in...
+	HUlib_clearTextLine(&w_secret); // FS: Clear the old string
+
+	sprintf(secrets, "SECRETS FOUND: %i/%i\0", players[consoleplayer].secretcount, totalsecret);
+
+	for (i = 0; i <= 24; i++) // FS: Add it all in...
+	{
+		if(secrets[i] == '\0')
+		{
+			break;
+		}
+		HUlib_addCharToTextLine(&w_secret, secrets[i]);
+	}
+
 	HUlib_drawTextLine(&w_secret, false); // FS: Now draw it!
 }
 
@@ -589,23 +597,29 @@ void HU_SetupTimeText(void)
 	struct tm	*local = NULL;
 	time_t		utc = 0;
 	const char *timefmt = NULL;
-	char		st[80];
-	char		*sttime;
+	char		st[14];
+	int			i;
+
 	utc = time (NULL);
 	local = localtime (&utc);
 
 	if (drawTime == 1)
-		timefmt = "%H:%M:%S %p"; // FS: Military
+		timefmt = "%H:%M:%S %p\0"; // FS: Military
 	else if (drawTime > 1)
-		timefmt = "%I:%M:%S %p"; // FS: Regular
+		timefmt = "%I:%M:%S %p\0"; // FS: Regular
 	strftime (st, sizeof (st), timefmt, local);
 	
 	HUlib_clearTextLine(&w_time); // FS: Clear the old string
-	
-	sprintf(sttime, "%s", st);
 
-	while (*sttime)
-		HUlib_addCharToTextLine(&w_time, *(sttime++)); // FS: Add it all in...
+	for(i = 0; i <= 14; i++)
+	{
+		if(st[i] == '\0')
+		{
+			break;
+		}
+		HUlib_addCharToTextLine(&w_time, st[i]);
+	}
+
 	HUlib_drawTextLine(&w_time, false); // FS: Now draw it!
 }
 

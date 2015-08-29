@@ -126,6 +126,11 @@ i_ibm.obj:
 clean : .SYMBOLIC
  del *.obj
  del *.dsg
+ del *.cfg
+ del *.wad
+ del *.deh
+ del *.dsg
+ del dndebug.txt
  del out.txt
  del d.exe
  del stripd.exe

@@ -35,6 +35,8 @@ int	clipammo[NUMAMMO] = {10, 4, 20, 1};
 
 extern boolean	chex; // FS: For Chex(R) Quest.  Hacky, needs to be redone.
 extern boolean	coop;
+//extern vertex_t CardPoints[]; // FS: From Heretic, Show Keycard in Easy mode
+
 //
 // GET STUFF
 //
@@ -257,63 +259,66 @@ boolean P_GiveArmor (player_t* player, int armortype)
 //
 void P_GiveCard (player_t* player, card_t card)
 {
-	int i; // FS: Give keys to all players in Coop   
-	extern vertex_t CardPoints[]; // FS: From Heretic, Show Keycard in Easy mode
-	
 	if (player->cards[card])
 		return;
-	if (player == &players[consoleplayer])
-	{
-		CardPoints[card].x = 0;
-		CardPoints[card].y = 0;
-	}		
+//	if (player == &players[consoleplayer])
+//	{
+//		CardPoints[card].x = 0;
+//		CardPoints[card].y = 0;
+//	}		
 	player->bonuscount = BONUSADD;
 	player->cards[card] = 1;
 
-	if (coop) // FS: Give it to all in coop
-	{
-		for (i = 0; i < MAXPLAYERS; i++)
-		{
-			player = &players[i];
-
-			player->bonuscount = BONUSADD;
-			player->cards[card] = true;
-
-			CardPoints[card].x = 0;
-			CardPoints[card].y = 0;
-		
-			if(gamemode == commercial)
-				S_StartSound(0,sfx_radio);
-			else
-				S_StartSound(0,sfx_tink);
-
-			switch(card)
-			{
-				case it_bluecard:
-					P_SetMessage(player, "EVERYONE HAS THE BLUE KEYCARD!", true);
-					break;
-				case it_yellowcard:
-					P_SetMessage(player, "EVERYONE HAS THE YELLOW KEYCARD!", true);
-					break;
-				case it_redcard:
-					P_SetMessage(player, "EVERYONE HAS THE RED KEYCARD!", true);
-					break;
-				case it_blueskull:
-					P_SetMessage(player, "EVERYONE HAS THE BLUE SKULL KEY!", true);
-					break;
-				case it_yellowskull:
-					P_SetMessage(player, "EVERYONE HAS THE YELLOW SKULL KEY!", true);
-					break;
-				case it_redskull:
-					P_SetMessage(player, "EVERYONE HAS THE RED SKULL KEY!", true);
-					break;
-				default:
-					break;
-			}
-		}
-	}	  
+	P_GiveCardCoop(player, card);
 }
 
+void P_GiveCardCoop (player_t* player, card_t card)
+{
+	int i; // FS: Give keys to all players in Coop   
+	
+	if(!coop)
+		return;
+
+	for (i = 0; i < MAXPLAYERS; i++)
+	{
+		player = &players[i];
+
+		player->bonuscount = BONUSADD;
+		player->cards[card] = true;
+
+//		CardPoints[card].x = 0;
+//		CardPoints[card].y = 0;
+		
+		if(gamemode == commercial)
+			S_StartSound(0,sfx_radio);
+		else
+			S_StartSound(0,sfx_tink);
+
+		switch(card)
+		{
+			case it_bluecard:
+				P_SetMessage(player, "EVERYONE HAS THE BLUE KEYCARD!", true);
+				break;
+			case it_yellowcard:
+				P_SetMessage(player, "EVERYONE HAS THE YELLOW KEYCARD!", true);
+				break;
+			case it_redcard:
+				P_SetMessage(player, "EVERYONE HAS THE RED KEYCARD!", true);
+				break;
+			case it_blueskull:
+				P_SetMessage(player, "EVERYONE HAS THE BLUE SKULL KEY!", true);
+				break;
+			case it_yellowskull:
+				P_SetMessage(player, "EVERYONE HAS THE YELLOW SKULL KEY!", true);
+				break;
+			case it_redskull:
+				P_SetMessage(player, "EVERYONE HAS THE RED SKULL KEY!", true);
+				break;
+			default:
+				break;
+		}
+	}
+}
 
 //
 // P_GivePower

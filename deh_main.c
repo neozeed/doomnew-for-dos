@@ -71,6 +71,7 @@ boolean deh_allow_long_cheats = false;
 
 boolean deh_apply_cheats = true;
 
+boolean	deh_internal = true; // FS
 //
 // List of section types:
 //
@@ -234,9 +235,7 @@ static void DEH_ParseComment(char *comment)
 
     if (strstr(comment, "*allow-long-strings*") != NULL)
     {
-        //deh_allow_long_strings = true;
-	printf("DEH_Error: Allow Long Strings disabled in this build!"); // FS: FIXME
-	exit(0);
+		deh_allow_long_strings = true;
     }
 
     // Allow magic comments to allow longer cheat replacements than
@@ -355,9 +354,15 @@ int DEH_LoadFile(char *filename)
 
     if (context == NULL)
     {
-        fprintf(stderr, "DEH_LoadFile: Unable to open %s, attempting to load from WAD\n", filename);
-        DEH_LoadLumpByName(filename);
-        return 0;
+    	if(deh_internal) // FS: Attempt to load the file from the WAD
+    	{
+	        fprintf(stderr, "DEH_LoadFile: Unable to open %s, attempting to load internally\n", filename);
+			DEH_LoadLumpByName(filename);
+		}
+		else
+			fprintf(stderr, "DEH_LoadFile: Unable to open %s\n", filename);
+
+		return 0;
     }
     
     DEH_ParseContext(context);

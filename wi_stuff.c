@@ -373,6 +373,7 @@ static patch_t*		bp[MAXPLAYERS];
  // Name graphics of each level (centered)
 static patch_t**	lnames;
 extern boolean		chex; // FS: Chex Quest specific stuff
+extern boolean		perdgate; // FS
 
 //
 // CODE
@@ -684,14 +685,18 @@ void WI_initNoState(void)
 {
 	state = NoState;
 	acceleratestage = 0;
-	cnt = 10;
+	
+	if(perdgate) // FS
+		cnt = 100;
+	else
+		cnt = 10;
 }
 
 void WI_updateNoState(void) {
 
 	WI_updateAnimatedBack();
 
-	if (!--cnt)
+	if (!--cnt || (perdgate && acceleratestage) ) // FS
 	{
 		WI_End();
 		G_WorldDone();

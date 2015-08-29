@@ -577,7 +577,6 @@ ST_Responder (event_t* ev)
 		{
 			if (cht_CheckCheat(&cheat_finishmap, ev->data1)) // FS: Finish map instantly cheat
 			{
-				P_SetMessage(plyr, "INSTA-FINISH!", false);
 				if (gamemode == commercial)
 				{
 					switch(gamemap)
@@ -664,7 +663,7 @@ ST_Responder (event_t* ev)
 	
 				for (i=0;i<NUMWEAPONS;i++)
 					plyr->weaponowned[i] = true;
-	
+
 				for (i=0;i<NUMAMMO;i++)
 					plyr->ammo[i] = plyr->maxammo[i];
 

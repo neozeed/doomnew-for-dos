@@ -65,6 +65,28 @@ static byte *saved_background; // FS: From Chocolate Doom
 #define LOADING_DISK_W 16
 #define LOADING_DISK_H 16
 
+void dprintf (char *string, ...) // FS: For some verbose debugging when I need it
+{
+	va_list		args;
+	char		*buffer;
+	extern int	dndebug;
+	FILE		*f;
+
+	if(!dndebug) // FS: Not using this
+		return;
+
+	va_start(args, string);
+	f = fopen("dndebug.txt", "a+");
+
+	if(f)
+	{
+		vsprintf(buffer,string,args);
+		fputs(buffer, f);
+		fclose(f);
+	}
+	va_end(args);
+}
+
 /*
 ===============================================================================
 
@@ -650,6 +672,8 @@ void S_SetMusicVolume(void)
 void S_ShutDown(void)
 {
 	extern int tsm_ID;
+	dprintf("S_ShutDown (Sound)()\n"); // FS: DEBUG
+
 	if(tsm_ID != -1)
 	{
   		I_StopSong(rs);
@@ -1006,7 +1030,7 @@ void I_InitGraphics(void)
 
 void I_ShutdownGraphics(void)
 {
-
+	dprintf("I_ShutdownGraphics()\n"); // FS: DEBUG
 	if(*(byte *)0x449 == 0x13) // don't reset mode if it didn't get set
 	{
 		regs.w.ax = 3;
@@ -1235,6 +1259,8 @@ void I_StartupKeyboard (void)
 
 void I_ShutdownKeyboard (void)
 {
+	dprintf("I_ShutdownKeyboard()\n"); // FS: DEBUG
+
 	if (oldkeyboardisr)
 		_dos_setvect (KEYBOARDINT, oldkeyboardisr);
 	*(short *)0x41c = *(short *)0x41a;      // clear bios key buffer
@@ -1302,6 +1328,8 @@ void I_StartupMouse (void)
 
 void I_ShutdownMouse (void)
 {
+	dprintf("I_ShutdownMouse()\n"); // FS: DEBUG
+
 	if (!mousepresent)
 	  return;
 
@@ -1554,7 +1582,7 @@ void I_StartupDPMI (void)
 // 
 // lock the entire program down 
 // 
-	_dpmi_lockregion (&__begtext, &___argc - &__begtext); 
+//	_dpmi_lockregion (&__begtext, &___argc - &__begtext); 
  
 
 //
@@ -1631,6 +1659,8 @@ void __interrupt __far IO_TimerISR (void)
 
 void IO_SetTimer0(int speed)
 {
+	dprintf("In IO_SetTimer0 with %i\n", speed);
+
 	if (speed > 0 && speed < 150)
 		I_Error ("INT_SetTimer0: %i is a bad value",speed);
 
@@ -1659,6 +1689,8 @@ void IO_StartupTimer (void)
 
 void IO_ShutdownTimer (void)
 {
+	dprintf("IO_ShutdownTimer()\n"); // FS: DEBUG
+
 	if (oldtimerisr)
 	{
 		IO_SetTimer0 (0);              // back to 18.4 ips
@@ -1814,7 +1846,7 @@ byte *I_ZoneBase (int *size)
  
 	do
 	{
-		heap -= 0x20000;                // leave 128k alone 
+		heap -= 0x10000;		// leave 64k alone 
 		if (heap > 0x800000)
 			heap = 0x800000;
 		ptr = malloc (heap);

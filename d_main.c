@@ -208,6 +208,7 @@ void D_Display (void)
 	int				y;
 	boolean			done;
 	boolean			wipe;
+	extern	int		noWipe; // FS
 	boolean			redrawsbar;
 
 	if (nodrawers)
@@ -230,6 +231,9 @@ void D_Display (void)
 		wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
 	}
 	else
+		wipe = false;
+
+	if(noWipe) // FS: Skip drawing Wipes if we want
 		wipe = false;
 
 	if (gamestate == GS_LEVEL && gametic)
@@ -749,6 +753,7 @@ void IdentifyVersion (void)
 	{
 		gamemode = commercial;
 		devparm = false;
+		perdgate = true;
 
 		strcpy(basedefault, "default.cfg");
 		D_AddFile("perdgate.wad");
@@ -841,11 +846,13 @@ void IdentifyVersion (void)
 
 	if ( !access (doomwad,0) )
 	{
+		W_AddFile (doomwad); // FS: Gotta add this earlier to check Ultimate Doom-ness
+		
 		if (W_CheckNumForName("e4m1") != -1) // FS: If Episode 4 exists, then we assume it's Ultimate Doom
 			gamemode = retail;
 		else
 			gamemode = registered;
-		D_AddFile (doomwad);
+
 		return;
 	}
 
@@ -1230,16 +1237,20 @@ void D_DoomMain (void)
 
 	if(modifiedgame) // FS: Look for an internal DEHacked file if it's a modified game.
 	{
-		lumpnum = 0;
-		mprintf("	looking for internal DEHacked file...");
-		lumpnum = W_CheckNumForName("dehacked.deh");
-		if(lumpnum != -1)
+		extern boolean	deh_internal;
+		if (deh_internal)
 		{
-			mprintf(" found!\n");
-			DEH_LoadLumpByName("dehacked.deh");
+			lumpnum = 0;
+			mprintf("	looking for internal DEHacked file...");
+			lumpnum = W_CheckNumForName("dehacked.deh");
+			if(lumpnum != -1)
+			{
+				mprintf(" found!\n");
+				DEH_LoadLumpByName("dehacked.deh");
+			}
+			else
+				mprintf(" not found!\n");
 		}
-		else
-			mprintf(" not found!\n");
 	}
 	
 	if(hacx) // FS: Load HACX internal DEH

@@ -847,14 +847,17 @@ void G_PlayerReborn (int player)
 	if(netgame && !deathmatch && !M_CheckParm("-oldrules")) // FS: Check for Coop
 	{
 		coop = true;
-		memcpy(coopcards, players[player].cards, sizeof(coopcards)); // FS: Keep cards in Coop
-		if (players[player].backpack)
+		if(gameaction != ga_newgame) // FS: Don't keep all this in a fake netgame
 		{
-			coopbackpack = true;
-		}
-		if (gamemode == commercial && players->weaponowned[wp_supershotgun] == true)
-		{
-			coopsupershotgun = true;
+			memcpy(coopcards, players[player].cards, sizeof(coopcards)); // FS: Keep cards in Coop
+			if (players[player].backpack)
+			{
+				coopbackpack = true;
+			}
+			if (gamemode == commercial && players->weaponowned[wp_supershotgun] == true)
+			{
+				coopsupershotgun = true;
+			}
 		}
 	}
 
@@ -877,6 +880,11 @@ void G_PlayerReborn (int player)
 		memcpy(players[player].cards, coopcards, sizeof(coopcards)); // FS: Keep keys in Coop
 	}
 
+	if (coop && gameaction == ga_newgame)
+	{
+		memset(p,0,sizeof(*p));
+	}
+	
 	players[player].killcount = killcount; 
 	players[player].itemcount = itemcount; 
 	players[player].secretcount = secretcount; 
@@ -924,7 +932,6 @@ void G_PlayerReborn (int player)
 		}
 		p->backpack = true;
 	}
- 
 }
 
 //
@@ -1545,8 +1552,8 @@ G_InitNew
 
     if (paused) 
     { 
-	paused = false; 
-	S_ResumeSound (); 
+		paused = false; 
+		S_ResumeSound (); 
     } 
 	
 

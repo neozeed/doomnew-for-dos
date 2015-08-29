@@ -309,6 +309,11 @@ P_CheckSight
     
     // First check for trivial rejection.
 
+	if (t1 == NULL) // FS: HACK
+		return false;
+	if (t2 == NULL)
+		return false;
+		
     // Determine subsector entries in REJECT table.
     s1 = (t1->subsector->sector - sectors);
     s2 = (t2->subsector->sector - sectors);

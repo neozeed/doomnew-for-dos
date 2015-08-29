@@ -179,6 +179,7 @@ int	useIntGus; // FS: Use internal GUS1M WADs
 int novert; // FS: No vertical mouse movement
 int noprecache; // FS: No graphics precaching
 int noquitsound; // FS: No quit sound
+int nowipe; // FS: No Wipes
 
 extern int	use_wpnbinds; // FS: Custom weapon keys
 extern int	wpn_shotgun; // FS: Custom weapon keys
@@ -216,6 +217,8 @@ extern int	snd_Mport;                              // midi variables
 
 extern boolean usePalFlash; // FS
 extern boolean deh_apply_cheats; // FS
+extern boolean deh_internal; // FS
+int	dndebug; // FS
 
 default_t defaults[] =
 {
@@ -303,6 +306,7 @@ default_t	extendeddefaults[] =
 	{ "novert", &novert, 0}, // FS: No vertical mouse movement
 	{ "noprecache", &noprecache, 0}, // FS: No graphics precaching
 	{ "noquitsound", &noquitsound, 0}, // FS: No quit sound
+	{ "nowipe", &nowipe, 0}, // FS: No Wipes
 
 	// FS: Use custom weapon binds
 	{ "use_wpnbinds", &use_wpnbinds, 0},
@@ -311,7 +315,9 @@ default_t	extendeddefaults[] =
 	{ "wpn_rocket", &wpn_rocket, 16, 1 }, // FS: Q
 	{ "wpn_plasma", &wpn_plasma, 46, 1 }, // FS: C
 	{ "disk_flash_icon", &grmode, 1 }, // FS: Disk Flashing
-	{ "deh_apply_cheats", &deh_apply_cheats, 1} // FS: Apply DEHacked Cheats
+	{ "deh_apply_cheats", &deh_apply_cheats, 1}, // FS: Apply DEHacked Cheats
+	{ "deh_internal", &deh_internal, 1}, // FS: Load DEHs from WADs
+	{ "dndebug", &dndebug, 0} // FS: Verbose debugging for my sanity
 };
 
 int numextendeddefaults; // FS

@@ -273,7 +273,7 @@ void S_StartSoundAtVolume (void* origin_p, int sfx_id, int volume)
 	if (!sfx->data)
 	{
 		// DOS remains, 8bit handling
-		sfx->data = (void *) W_CacheLumpNum(sfx->lumpnum, PU_MUSIC);
+		sfx->data = (void *) W_CacheLumpNum(sfx->lumpnum, PU_SOUND);
 #ifdef __WATCOMC__
 		_dpmi_lockregion(sfx->data, lumpinfo[sfx->lumpnum].size);
 #endif
@@ -360,7 +360,7 @@ void S_UpdateSounds(void* listener_p)
 	{
 		for (i=1 ; i<NUMSFX ; i++)
 		{
-			if (S_sfx[i].usefulness < 1 && S_sfx[i].usefulness > -1)
+			if (S_sfx[i].usefulness < 1 && S_sfx[i].usefulness > -1 && S_sfx[i].data) // FS
 			{
 				if (--S_sfx[i].usefulness == -1)
 				{
@@ -368,7 +368,8 @@ void S_UpdateSounds(void* listener_p)
 #ifdef __WATCOMC__
 					_dpmi_unlockregion(S_sfx[i].data, lumpinfo[S_sfx[i].lumpnum].size);
 #endif
-					S_sfx[i].data = 0;
+					S_sfx[i].usefulness = 1; // FS
+					S_sfx[i].data = NULL; // FS
 				}
 			}
 		}
@@ -531,7 +532,7 @@ void S_StopMusic(void)
 #ifdef __WATCOMC__
 		_dpmi_unlockregion(mus_playing->data, lumpinfo[mus_playing->lumpnum].size);
 #endif	
-		mus_playing->data = 0;
+		mus_playing->data = NULL; // FS
 		mus_playing = 0;
 	}
 }
