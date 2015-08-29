@@ -1,3 +1,11 @@
+10-13-13
+ - Removed the DEH startup banners as it's causing a hard lock in
+   debug compiled builds.
+ - Hacked around braintargeton for Doom 2 final boss and save restores.
+   Was causing crashes for me in Perdition's Gate.
+ - noquitsound in EXTEND.CFG to disable the randomized quit sound.
+ - Fixed MASSACRE cheat not killing Lost Souls.
+
 10-06-13
  - If you're in a fake netgame (i.e. ipxsetup -nodes 1) you can
    now load a game or start a new one.
@@ -10,7 +18,7 @@
    You no longer need the GUS1M.WAD or GUS1MIID.WAD present to load it.
  - useIntGus in EXTEND.CFG to always autoload the updated GUS1M WADs.
  - Moved all the new config stuff to EXTEND.CFG.  Was starting to get
-   out of hand. :P
+   out of hand.
  - novert is now in EXTEND.CFG as well.  Setting "-novert" will also
    toggle novert in EXTEND.CFG.
 
@@ -48,8 +56,8 @@
 09-25-13
  - Fixed the sky never changing in Ultimate Doom.  Silly pack_plut and pack_tnt
    fuckin' my game up!
- - Fixed chainsaw pitch.  Just required removing the whole pitch hack in general.
-   Again, thanks to Chocolate Doom.
+ - Fixed chainsaw pitch.  Just required removing the whole pitch hack in 
+   general.  Again, thanks to Chocolate Doom.
  - Added the PC Speaker sound hacks; originally left in Heretic's I_Sound.c.
 
 09-24-13
@@ -171,7 +179,7 @@
    * P_SetMessage function.
    * New coop rules (keep keys, weapons, backpack).
    * Secret Area found message.
-   * Massacre Cheat.
+   * MASSACRE Cheat.
    * HHSCOTT Cheat -- instantly finish level.
  - Added -perdgate, -hell2pay, and -helltopay to load Perdition's Gate and
    Hell to Pay commercial Mega WADs.

@@ -237,25 +237,25 @@ void P_ArchiveThinkers (void)
     // save off the current thinkers
     for (th = thinkercap.next ; th != &thinkercap ; th=th->next)
     {
-	if (th->function.acp1 == (actionf_p1)P_MobjThinker)
-	{
-	    *save_p++ = tc_mobj;
-	    PADSAVEP();
-	    mobj = (mobj_t *)save_p;
-	    memcpy (mobj, th, sizeof(*mobj));
-	    save_p += sizeof(*mobj);
-	    mobj->state = (state_t *)(mobj->state - states);
+		if (th->function.acp1 == (actionf_p1)P_MobjThinker)
+		{
+			*save_p++ = tc_mobj;
+			PADSAVEP();
+			mobj = (mobj_t *)save_p;
+			memcpy (mobj, th, sizeof(*mobj));
+			save_p += sizeof(*mobj);
+			mobj->state = (state_t *)(mobj->state - states);
 	    
-	    if (mobj->player)
-		mobj->player = (player_t *)((mobj->player-players) + 1);
-	    continue;
-	}
-		
-	// I_Error ("P_ArchiveThinkers: Unknown thinker function");
-    }
+			if (mobj->player)
+				mobj->player = (player_t *)((mobj->player-players) + 1);
+			continue;
+		}
 
-    // add a terminating marker
-    *save_p++ = tc_end;	
+	// I_Error ("P_ArchiveThinkers: Unknown thinker function");
+	}
+
+	// add a terminating marker
+	*save_p++ = tc_end;	
 }
 
 

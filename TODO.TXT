@@ -7,3 +7,4 @@
 - DEHACKED:
   * Allow Long Strings
   * Allow Long Cheats
+  * Fix startup banner (again!)

@@ -1324,13 +1324,14 @@ void D_DoomMain (void)
 	if (gamemode == registered || gamemode == retail) // FS
 	{
 		DEH_printf ("	registered version.\n");
-		DEH_snprintf(bannerbuffer, 285,
-			"===========================================================================\n"
+                //DEH_snprintf(bannerbuffer, 285,
+                mprintf(
+                	"===========================================================================\n"
 			"             This version is NOT SHAREWARE, do not distribute!\n"
 			"         Please report software piracy to the SPA: 1-800-388-PIR8\n"
 			"===========================================================================\n"
 		);
-		DEH_printf(bannerbuffer);
+                //DEH_printf(bannerbuffer);
 	}
 	
 	if (gamemode == shareware)
@@ -1339,13 +1340,14 @@ void D_DoomMain (void)
 	if (gamemode == commercial)
 	{
 		DEH_printf ("	commercial version.\n");
-		DEH_snprintf(bannerbuffer, 269,
-			"===========================================================================\n"
+                //DEH_snprintf(bannerbuffer, 269,
+                mprintf(
+                	"===========================================================================\n"
 			"                            Do not distribute!\n"
 			"         Please report software piracy to the SPA: 1-800-388-PIR8\n"
 			"===========================================================================\n"
 		);
-		DEH_printf(bannerbuffer);
+                //DEH_printf(bannerbuffer);
 	}
 
 	DEH_printf ("M_Init: Init miscellaneous info.\n");
