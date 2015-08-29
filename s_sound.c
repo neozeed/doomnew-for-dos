@@ -139,7 +139,10 @@ void S_Init (int sfxVolume, int musicVolume)
 		S_sfx[i].lumpnum = S_sfx[i].usefulness = -1;
 }
 
-
+void S_FreeChannels(void)
+{
+	Z_Free(channels);
+}
 
 
 //

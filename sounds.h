@@ -151,7 +151,7 @@ typedef enum
     mus_e1m7,
     mus_e1m8,
     mus_e1m9,
-    mus_e2m1,
+    mus_e2m1, // 10
     mus_e2m2,
     mus_e2m3,
     mus_e2m4,
@@ -161,7 +161,7 @@ typedef enum
     mus_e2m8,
     mus_e2m9,
     mus_e3m1,
-    mus_e3m2,
+    mus_e3m2, // 20
     mus_e3m3,
     mus_e3m4,
     mus_e3m5,
@@ -171,10 +171,10 @@ typedef enum
     mus_e3m9,
     mus_inter,
     mus_intro,
-    mus_bunny,
+    mus_bunny, // 30
     mus_victor,
     mus_introa,
-    mus_runnin,
+    mus_runnin, // 33
     mus_stalks,
     mus_countd,
     mus_betwee,

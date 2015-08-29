@@ -371,6 +371,7 @@ static int	st_randomnumber;
 
 boolean usePalFlash; // FS: No Palette Flashing
 extern boolean	chex; // FS: For Chex Quest
+extern boolean 	readthisfullscreenhack; // FS: Hack for Read This!/Credits so DrawFullScreenStuff doesn't draw over it.
 
 // Massive bunches of cheat shit
 //  to keep it from being easy to figure them out.
@@ -558,7 +559,7 @@ ST_Responder (event_t* ev)
 			{
 				musnum = mus_runnin + (buf[0]-'0')*10 + buf[1]-'0' - 1;
 	  
-				if (((buf[0]-'0')*10 + buf[1]-'0') > 35)
+				if ( (((buf[0]-'0')*10 + buf[1]-'0') > 35) || musnum <= mus_introa ) // FS: Can -1 with idmus00
 					plyr->message = DEH_String(STSTR_NOMUS);
 				else
 					S_ChangeMusic(musnum, 1);
@@ -567,13 +568,13 @@ ST_Responder (event_t* ev)
 			{
 				musnum = mus_e1m1 + (buf[0]-'1')*9 + (buf[1]-'1');
 	  
-				if (((buf[0]-'1')*9 + buf[1]-'1') > 31)
+				if ( (((buf[0]-'1')*9 + buf[1]-'1') > 31) || musnum < mus_e1m1 ) // FS: Can -1 with idmus00
 					plyr->message = DEH_String(STSTR_NOMUS);
 				else
 					S_ChangeMusic(musnum, 1);
 			}
 		}
-		if (!netgame && gameskill != sk_nightmare)
+		if ( (!netgame && gameskill != sk_nightmare) || M_CheckParm("-cheats") )
 		{
 			if (cht_CheckCheat(&cheat_finishmap, ev->data1)) // FS: Finish map instantly cheat
 			{
@@ -667,6 +668,15 @@ ST_Responder (event_t* ev)
 				for (i=0;i<NUMAMMO;i++)
 					plyr->ammo[i] = plyr->maxammo[i];
 
+				if(plyr->backpack == false) // FS: Give us the backpack and maxed out too, ya know...
+				{
+					for(i = 0; i < NUMAMMO; i++)
+					{
+						plyr->ammo[i] = plyr->maxammo[i] *= 2;
+					}
+					plyr->backpack = true;
+				}
+				
 				plyr->message = DEH_String(STSTR_FAADDED);
 			}
 			// 'kfa' cheat for key full ammo
@@ -683,6 +693,15 @@ ST_Responder (event_t* ev)
 	
 				for (i=0;i<NUMCARDS;i++)
 					plyr->cards[i] = true;
+
+				if(plyr->backpack == false) // FS: Give us the backpack and maxed out too, ya know...
+				{
+					for(i = 0; i < NUMAMMO; i++)
+					{
+						plyr->ammo[i] = plyr->maxammo[i] *= 2;
+					}
+					plyr->backpack = true;
+				}
 	
 				plyr->message = DEH_String(STSTR_KFAADDED);
 			}
@@ -737,13 +756,16 @@ ST_Responder (event_t* ev)
 		}
 
 		// 'clev' change-level cheat
-		if (cht_CheckCheat(&cheat_clev, ev->data1) && !netgame) // FS: Can't use this in a netgame!
+                if (cht_CheckCheat(&cheat_clev, ev->data1))
 		{
 			char		buf[3];
 			int		epsd;
 			int		map;
 
 			cht_GetParam(&cheat_clev, buf);
+
+                        if(netgame && !M_CheckParm("-cheats")) // FS: Can't use this in a netgame!
+                                return false;
 
 			if (gamemode == commercial)
 			{
@@ -1203,13 +1225,20 @@ void ST_diffDraw(void)
 
 void ST_Drawer (boolean fullscreen, boolean refresh)
 {
-        if (fullscreen && !automapactive) // FS
-        {
-                ST_DrawFullScreenStuff();
-			ST_doPaletteStuff();
-                return;
-        }
+	if (fullscreen && !automapactive) // FS
+	{
+		ST_DrawFullScreenStuff();
+		ST_doPaletteStuff();
+		return;
+	}
+
     st_statusbaron = (!fullscreen) || automapactive;
+
+    if(readthisfullscreenhack || gamestate != GS_LEVEL) // FS: Some stepping over the read this screen if automap is also active, hah.
+    {
+    	st_statusbaron = false;
+    }
+
     st_firsttime = st_firsttime || refresh;
 
     // Do red-/gold-shifts from damage/items
@@ -1704,11 +1733,12 @@ void ST_DrawFullScreenKeys (void)
 }
 
 // FS: Draw Cards/Keys, Health, Ammo, and Armor in Full Screen
-extern boolean 	readthisfullscreenhack; // FS: Hack for Read This!/Credits so DrawFullScreenStuff doesn't draw over it.
 void ST_DrawFullScreenStuff (void)
 {
 	if(readthisfullscreenhack || gamestate != GS_LEVEL || automapactive)
+	{
 		return;
+	}
 
 	ST_DrawFullScreenKeys();
 	ST_DrawFullScreenHealth(plyr->mo->health);

@@ -72,6 +72,8 @@ boolean deh_allow_long_cheats = false;
 boolean deh_apply_cheats = true;
 
 boolean	deh_internal = true; // FS
+
+boolean deh_skip_ga_victory = false; // FS: Skip ga_victory for custom games because it looks stupid!
 //
 // List of section types:
 //
@@ -245,8 +247,13 @@ static void DEH_ParseComment(char *comment)
     if (strstr(comment, "*allow-long-cheats*") != NULL)
     {
         //deh_allow_long_cheats = true;
-	printf("DEH_Error: Allow Long Cheats disabled in this build!"); // FS: FIXME
-	exit(0);
+		printf("DEH_Error: Allow Long Cheats disabled in this build!"); // FS: FIXME
+		exit(0);
+    }
+    
+    if (strstr(comment, "*skip_ga_victory*") != NULL) // FS: Skip GA_Victory because it looks stupid!
+    {
+    	deh_skip_ga_victory = true;
     }
 }
 

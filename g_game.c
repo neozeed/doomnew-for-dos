@@ -198,7 +198,7 @@ int		bodyqueslot;
  
 void*		statcopy;				// for statistics driver
 extern boolean	chex; // FS: For Chex(R) Quest.
- 
+extern deh_skip_ga_victory; // FS
  
 int G_CmdChecksum (ticcmd_t* cmd) 
 { 
@@ -244,100 +244,92 @@ void G_BuildTiccmd (ticcmd_t* cmd)
 	if(isCyberPresent) // FS: From Heretic
 		I_ReadCyberCmd(cmd);
  
-    strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe] 
-        || joybuttons[joybstrafe]; 
+    strafe = gamekeydown[key_strafe] || mousebuttons[mousebstrafe] || joybuttons[joybstrafe]; 
     speed = gamekeydown[key_speed] || joybuttons[joybspeed];
 
-	if (!M_CheckParm("-debug"))
+	if (!demoplayback)
 	{
-                if (gamekeydown[key_speed] || joybuttons[joybspeed]) // FS: could cheat with ultrafast movement, from DOSDOOM.
+		if (gamekeydown[key_speed] || joybuttons[joybspeed]) // FS: could cheat with ultrafast movement, from DOSDOOM.
 			speed = !speed;
 	}
- 
 
     forward = side = 0;
    
     // use two stage accelerative turning
     // on the keyboard and joystick
-    if (joyxmove < 0
-	|| joyxmove > 0  
-	|| gamekeydown[key_right]
-	|| gamekeydown[key_left]) 
-	turnheld += ticdup; 
+    if (joyxmove < 0 || joyxmove > 0 || gamekeydown[key_right] || gamekeydown[key_left]) 
+		turnheld += ticdup; 
     else 
-	turnheld = 0; 
+		turnheld = 0; 
 
     if (turnheld < SLOWTURNTICS) 
-	tspeed = 2;             // slow turn 
+		tspeed = 2;             // slow turn 
     else 
-
-	tspeed = speed;
+		tspeed = speed;
 
 
     // let movement keys cancel each other out
     if (strafe) 
     { 
-	if (gamekeydown[key_right]) 
-	{
-	    // fprintf(stderr, "strafe right\n");
-	    side += sidemove[speed]; 
-	}
-	if (gamekeydown[key_left]) 
-	{
-	    //	fprintf(stderr, "strafe left\n");
-	    side -= sidemove[speed]; 
-	}
-	if (joyxmove > 0) 
-	    side += sidemove[speed]; 
-	if (joyxmove < 0) 
-	    side -= sidemove[speed]; 
- 
+		if (gamekeydown[key_right]) 
+		{
+		    // fprintf(stderr, "strafe right\n");
+		    side += sidemove[speed]; 
+		}
+		if (gamekeydown[key_left]) 
+		{
+		    //	fprintf(stderr, "strafe left\n");
+		    side -= sidemove[speed]; 
+		}
+		if (joyxmove > 0) 
+		    side += sidemove[speed]; 
+		if (joyxmove < 0) 
+		    side -= sidemove[speed]; 
     } 
     else 
     { 
-	if (gamekeydown[key_right]) 
-	    cmd->angleturn -= angleturn[tspeed]; 
-	if (gamekeydown[key_left]) 
-	    cmd->angleturn += angleturn[tspeed]; 
-	if (joyxmove > 0) 
-	    cmd->angleturn -= angleturn[tspeed]; 
-	if (joyxmove < 0) 
-	    cmd->angleturn += angleturn[tspeed]; 
+		if (gamekeydown[key_right]) 
+		    cmd->angleturn -= angleturn[tspeed]; 
+		if (gamekeydown[key_left]) 
+		    cmd->angleturn += angleturn[tspeed]; 
+		if (joyxmove > 0) 
+		    cmd->angleturn -= angleturn[tspeed]; 
+		if (joyxmove < 0) 
+		    cmd->angleturn += angleturn[tspeed]; 
     } 
  
     if (gamekeydown[key_up]) 
     {
-	// fprintf(stderr, "up\n");
-	forward += forwardmove[speed]; 
+		// fprintf(stderr, "up\n");
+		forward += forwardmove[speed]; 
     }
     if (gamekeydown[key_down]) 
     {
-	// fprintf(stderr, "down\n");
-	forward -= forwardmove[speed]; 
+		// fprintf(stderr, "down\n");
+		forward -= forwardmove[speed]; 
     }
 
 
     if (joyymove < 0)
-	forward += forwardmove[speed]; 
+		forward += forwardmove[speed]; 
     if (joyymove > 0) 
-	forward -= forwardmove[speed]; 
+		forward -= forwardmove[speed]; 
     if (gamekeydown[key_straferight]) 
-	side += sidemove[speed]; 
+		side += sidemove[speed]; 
     if (gamekeydown[key_strafeleft]) 
-	side -= sidemove[speed];
+		side -= sidemove[speed];
     
     // buttons
     cmd->chatchar = HU_dequeueChatChar(); 
  
-    if (gamekeydown[key_fire] || mousebuttons[mousebfire] 
-	|| joybuttons[joybfire]) 
-	cmd->buttons |= BT_ATTACK; 
+    if (gamekeydown[key_fire] || mousebuttons[mousebfire] || joybuttons[joybfire]) 
+		cmd->buttons |= BT_ATTACK; 
  
     if (gamekeydown[key_use] || joybuttons[joybuse] ) 
     { 
-	cmd->buttons |= BT_USE;
-	// clear double clicks if hit use button 
-	dclicks = 0;                   
+		cmd->buttons |= BT_USE;
+		// clear double clicks if hit use button 
+		dclicks = 0;                   
     } 
 
 	if(use_wpnbinds) // FS: Custom weapon keys
@@ -366,85 +358,83 @@ void G_BuildTiccmd (ticcmd_t* cmd)
 
     // chainsaw overrides 
     for (i=0 ; i<NUMWEAPONS-1 ; i++)        
-	if (gamekeydown['1'+i]) 
-	{ 
-	    cmd->buttons |= BT_CHANGE; 
-	    cmd->buttons |= i<<BT_WEAPONSHIFT; 
-	    break; 
-	}
+		if (gamekeydown['1'+i]) 
+		{ 
+		    cmd->buttons |= BT_CHANGE; 
+		    cmd->buttons |= i<<BT_WEAPONSHIFT; 
+		    break; 
+		}
     
     // mouse
     if (mousebuttons[mousebforward]) 
-	forward += forwardmove[speed];
+		forward += forwardmove[speed];
     
     // forward double click
     if (mousebuttons[mousebforward] != dclickstate && dclicktime > 1 ) 
     { 
-	dclickstate = mousebuttons[mousebforward]; 
-	if (dclickstate) 
-	    dclicks++; 
-	if (dclicks == 2) 
-	{ 
-	    cmd->buttons |= BT_USE; 
-	    dclicks = 0; 
-	} 
-	else 
-	    dclicktime = 0; 
+		dclickstate = mousebuttons[mousebforward]; 
+		if (dclickstate) 
+		    dclicks++; 
+		if (dclicks == 2) 
+		{ 
+		    cmd->buttons |= BT_USE; 
+		    dclicks = 0; 
+		} 
+		else 
+		    dclicktime = 0; 
     } 
     else 
     { 
-	dclicktime += ticdup; 
-	if (dclicktime > 20) 
-	{ 
-	    dclicks = 0; 
-	    dclickstate = 0; 
-	} 
+		dclicktime += ticdup; 
+		if (dclicktime > 20) 
+		{ 
+		    dclicks = 0; 
+		    dclickstate = 0; 
+		} 
     }
     
     // strafe double click
-    bstrafe =
-	mousebuttons[mousebstrafe] 
-	|| joybuttons[joybstrafe]; 
+    bstrafe = mousebuttons[mousebstrafe] || joybuttons[joybstrafe]; 
     if (bstrafe != dclickstate2 && dclicktime2 > 1 ) 
-    { 
-	dclickstate2 = bstrafe; 
-	if (dclickstate2) 
-	    dclicks2++; 
-	if (dclicks2 == 2) 
-	{ 
-	    cmd->buttons |= BT_USE; 
-	    dclicks2 = 0; 
-	} 
-	else 
-	    dclicktime2 = 0; 
+    {
+		dclickstate2 = bstrafe; 
+		if (dclickstate2) 
+		    dclicks2++; 
+		if (dclicks2 == 2) 
+		{ 
+		    cmd->buttons |= BT_USE; 
+		    dclicks2 = 0; 
+		} 
+		else 
+		    dclicktime2 = 0; 
     } 
     else 
     { 
-	dclicktime2 += ticdup; 
-	if (dclicktime2 > 20) 
-	{ 
-	    dclicks2 = 0; 
-	    dclickstate2 = 0; 
-	} 
+		dclicktime2 += ticdup; 
+		if (dclicktime2 > 20) 
+		{ 
+		    dclicks2 = 0; 
+		    dclickstate2 = 0; 
+		} 
     } 
  
     forward += mousey; 
     if (strafe) 
-	side += mousex*2; 
+		side += mousex*2; 
     else 
-	cmd->angleturn -= mousex*0x8; 
+		cmd->angleturn -= mousex*0x8; 
 
     mousex = mousey = 0; 
 
 
     if (forward > MAXPLMOVE) 
-	forward = MAXPLMOVE; 
+		forward = MAXPLMOVE; 
     else if (forward < -MAXPLMOVE) 
-	forward = -MAXPLMOVE; 
+		forward = -MAXPLMOVE; 
     if (side > MAXPLMOVE) 
-	side = MAXPLMOVE; 
+		side = MAXPLMOVE; 
     else if (side < -MAXPLMOVE) 
-	side = -MAXPLMOVE; 
+		side = -MAXPLMOVE; 
  
     cmd->forwardmove += forward; 
     cmd->sidemove += side;
@@ -453,14 +443,14 @@ void G_BuildTiccmd (ticcmd_t* cmd)
     // special buttons
     if (sendpause) 
     { 
-	sendpause = false; 
-	cmd->buttons = BT_SPECIAL | BTS_PAUSE; 
+		sendpause = false; 
+		cmd->buttons = BT_SPECIAL | BTS_PAUSE; 
     } 
  
     if (sendsave) 
     { 
-	sendsave = false; 
-	cmd->buttons = BT_SPECIAL | BTS_SAVEGAME | (savegameslot<<BTS_SAVESHIFT); 
+		sendsave = false; 
+		cmd->buttons = BT_SPECIAL | BTS_SAVEGAME | (savegameslot<<BTS_SAVESHIFT); 
     } 
 
 }
@@ -1274,8 +1264,14 @@ void G_WorldDone (void)
 				if (!secretexit)
 					break;
 			case 6:
+				if (deh_skip_ga_victory == true) // FS: Skip it!
+					break;
 			case 11:
+				if (deh_skip_ga_victory == true) // FS: Skip it!
+					break;			
 			case 20:
+				if (deh_skip_ga_victory == true) // FS: Skip it!
+					break;			
 			case 30:
 				F_StartFinale ();
 				break;
@@ -1327,7 +1323,7 @@ void G_LoadGame (char* name)
 void G_DoLoadGame (void) 
 { 
 	int		length; 
-	int		i; 
+	int		i;
 	int		a,b,c; 
 	char		vcheck[VERSIONSIZE]; 
 	char		convertsavename[32]; // FS: For Convert Save
@@ -1366,7 +1362,7 @@ void G_DoLoadGame (void)
 		return;				// bad version
 	}
 
-	save_p += VERSIONSIZE; 
+	save_p += VERSIONSIZE;
 
 	gameskill = *save_p++; 
 	gameepisode = *save_p++; 
@@ -1450,6 +1446,7 @@ void G_DoSaveGame (void)
     memcpy (save_p, name2, VERSIONSIZE);
     save_p += VERSIONSIZE;
 
+	
     *save_p++ = gameskill;
     *save_p++ = gameepisode;
     *save_p++ = gamemap;
@@ -1719,7 +1716,7 @@ void G_RecordDemo (char* name)
     maxsize = 0x20000;
     i = M_CheckParm ("-maxdemo");
     if (i && i<myargc-1)
-	maxsize = atoi(myargv[i+1])*1024;
+		maxsize = atoi(myargv[i+1])*1024;
     demobuffer = Z_Malloc (maxsize,PU_STATIC,NULL); 
     demoend = demobuffer + maxsize;
 	
@@ -1831,41 +1828,40 @@ boolean G_CheckDemoStatus (void)
 	 
     if (timingdemo) 
     { 
-	endtime = I_GetTime (); 
-	I_Error ("timed %i gametics in %i realtics",gametic 
-		 , endtime-starttime); 
+		endtime = I_GetTime ();
+		I_Error ("timed %i gametics in %i realtics",gametic, endtime-starttime); 
     } 
 	 
     if (demoplayback) 
     { 
-	if (singledemo) 
-	    I_Quit (); 
+		if (singledemo) 
+		    I_Quit (); 
 			 
-	Z_ChangeTag (demobuffer, PU_CACHE); 
-	demoplayback = false; 
-	netdemo = false;
+		Z_ChangeTag (demobuffer, PU_CACHE); 
+		demoplayback = false; 
+		netdemo = false;
 	
-	if(!netgame) // FS: Needed for fake netgames
-	{
-		netgame = false;
-		deathmatch = false;
-		playeringame[1] = playeringame[2] = playeringame[3] = 0;
-		respawnparm = false;
-		fastparm = false;
-		nomonsters = false;
-		consoleplayer = 0;
-		D_AdvanceDemo ();
-	}
-	return true; 
+		if(!netgame) // FS: Needed for fake netgames
+		{
+			netgame = false;
+			deathmatch = false;
+			playeringame[1] = playeringame[2] = playeringame[3] = 0;
+			respawnparm = false;
+			fastparm = false;
+			nomonsters = false;
+			consoleplayer = 0;
+			D_AdvanceDemo ();
+		}
+		return true; 
     } 
  
     if (demorecording) 
     { 
-	*demo_p++ = DEMOMARKER; 
-	M_WriteFile (demoname, demobuffer, demo_p - demobuffer); 
-	Z_Free (demobuffer); 
-	demorecording = false; 
-	I_Error ("Demo %s recorded",demoname); 
+		*demo_p++ = DEMOMARKER; 
+		M_WriteFile (demoname, demobuffer, demo_p - demobuffer); 
+		Z_Free (demobuffer); 
+		demorecording = false; 
+		I_Error ("Demo %s recorded",demoname); 
     } 
 	 
     return false; 

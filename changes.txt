@@ -1,3 +1,18 @@
+11-03-14
+ - Got a GUS and an SB-compatible living in harmony?  Awesome.
+   Want to show off the difference?  Use -usesb at startup to force
+   SB detection at A220 I5 D1.
+
+04-07-14
+ - *skip_ga_victory* in *.DEH comments to allow skipping of the
+    ga_victory after map 6, and so on.  Useful for megawads.
+
+01-19-14
+ - IDFA/IDKFA gives you backpack + full ammo.
+
+01-07-14
+ - Fixed the ability to do IDMUS00.
+
 11-03-13
  - Disabled drawing coloured doors in automap, might be causing crashes.
 

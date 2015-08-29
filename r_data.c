@@ -560,7 +560,7 @@ void R_InitFlats (void)
     flattranslation = Z_Malloc ((numflats+1)*4, PU_STATIC, 0);
     
     for (i=0 ; i<numflats ; i++)
-	flattranslation[i] = i;
+		flattranslation[i] = i;
 }
 
 

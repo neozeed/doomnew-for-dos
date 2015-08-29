@@ -327,7 +327,7 @@ void D_Display (void)
 	if (!wipe)
 	{
 		if (fullscreen) // FS: Full screen new school
-				ST_Drawer (viewheight == 200, redrawsbar );
+			ST_Drawer (viewheight == 200, redrawsbar );
 		I_Update ();			  // page flip or blit buffer
 		return;
 	}
@@ -619,9 +619,8 @@ void mprintf(char *string)
 //
 void D_AddFile (char *file)
 {
-	int	 numwadfiles;
 	char	*newfile;
-
+	int		numwadfiles;
 	for (numwadfiles = 0 ; wadfiles[numwadfiles] ; numwadfiles++)
 	;
 
@@ -961,7 +960,7 @@ void D_DoomMain (void)
 	boolean devMap;
 	char *bannerbuffer; // FS
 	int	lumpnum; // FS
-	
+
 	FindResponseFile ();
 
 	devparm = M_CheckParm ("-devparm"); // FS: Needs to be sooner in case you use -regdev, etc.
@@ -1443,7 +1442,7 @@ void D_DoomMain (void)
 		extern int noprecache;
 		noprecache = 1;
 	}
-	
+
 	if ( gameaction != ga_loadgame )
 	{
 	  	if (autostart || netgame)

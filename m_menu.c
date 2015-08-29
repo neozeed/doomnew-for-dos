@@ -583,7 +583,7 @@ void M_DoSave(int slot)
 
     // PICK QUICKSAVE SLOT YET?
     if (quickSaveSlot == -2)
-	quickSaveSlot = slot;
+		quickSaveSlot = slot;
 }
 
 //
@@ -597,7 +597,7 @@ void M_SaveSelect(int choice)
     saveSlot = choice;
     strcpy(saveOldString,savegamestrings[choice]);
     if (!strcmp(savegamestrings[choice],EMPTYSTRING))
-	savegamestrings[choice][0] = 0;
+		savegamestrings[choice][0] = 0;
     saveCharIndex = strlen(savegamestrings[choice]);
 }
 
@@ -652,20 +652,20 @@ void M_QuickSave(void)
 {
     if (!usergame)
     {
-	S_StartSound(NULL,sfx_oof);
-	return;
+		S_StartSound(NULL,sfx_oof);
+		return;
     }
 
     if (gamestate != GS_LEVEL)
-	return;
+		return;
 	
     if (quickSaveSlot < 0)
     {
-	M_StartControlPanel();
-	M_ReadSaveStrings();
-	M_SetupNextMenu(&SaveDef);
-	quickSaveSlot = -2;	// means to pick a slot now
-	return;
+		M_StartControlPanel();
+		M_ReadSaveStrings();
+		M_SetupNextMenu(&SaveDef);
+		quickSaveSlot = -2;	// means to pick a slot now
+		return;
     }
     sprintf(tempstring,QSPROMPT,savegamestrings[quickSaveSlot]);
     M_StartMessage(tempstring,M_QuickSaveResponse,true,false);
@@ -893,8 +893,7 @@ void M_ChooseSkill(int choice)
 
 void M_Episode(int choice)
 {
-    if ( (gamemode == shareware)
-	 && choice)
+    if ( (gamemode == shareware) && choice)
     {
 		M_StartMessage(DEH_String(SWSTRING),NULL,false,true);
 		M_SetupNextMenu(&ReadDef2);
@@ -902,8 +901,7 @@ void M_Episode(int choice)
     }
 
     // Yet another hack...
-    if ( (gamemode == registered)
-	 && (choice > 2))
+    if ( (gamemode == registered) && (choice > 2))
     {
       fprintf( stderr,
 	       "M_Episode: 4th episode requires UltimateDOOM\n");
@@ -1205,19 +1203,13 @@ void M_DrawThermo (int x, int y, int thermWidth, int thermDot)
 
 
 
-void
-M_DrawEmptyCell
-( menu_t*	menu,
-  int		item )
+void M_DrawEmptyCell (menu_t* menu, int item)
 {
     V_DrawPatchDirect (menu->x - 10,        menu->y+item*LINEHEIGHT - 1, 0,
 		       W_CacheLumpName(DEH_String("M_CELL1"),PU_CACHE));
 }
 
-void
-M_DrawSelCell
-( menu_t*	menu,
-  int		item )
+void M_DrawSelCell (menu_t* menu, int item)
 {
     V_DrawPatchDirect (menu->x - 10,        menu->y+item*LINEHEIGHT - 1, 0,
 		       W_CacheLumpName(DEH_String("M_CELL2"),PU_CACHE));
@@ -1256,11 +1248,11 @@ int M_StringWidth(char* string)
 	
     for (i = 0;i < strlen(string);i++)
     {
-	c = toupper(string[i]) - HU_FONTSTART;
-	if (c < 0 || c >= HU_FONTSIZE)
-	    w += 4;
-	else
-	    w += SHORT (hu_font[c]->width);
+		c = toupper(string[i]) - HU_FONTSTART;
+		if (c < 0 || c >= HU_FONTSIZE)
+		    w += 4;
+		else
+		    w += SHORT (hu_font[c]->width);
     }
 		
     return w;
@@ -1279,8 +1271,8 @@ int M_StringHeight(char* string)
 	
     h = height;
     for (i = 0;i < strlen(string);i++)
-	if (string[i] == '\n')
-	    h += height;
+		if (string[i] == '\n')
+		    h += height;
 		
     return h;
 }
@@ -1289,11 +1281,7 @@ int M_StringHeight(char* string)
 //
 //      Write a string using the hu_font
 //
-void
-M_WriteText
-( int		x,
-  int		y,
-  char*		string)
+void M_WriteText (int x, int y, char* string)
 {
     int		w;
     char*	ch;
@@ -1308,28 +1296,28 @@ M_WriteText
 	
     while(1)
     {
-	c = *ch++;
-	if (!c)
-	    break;
-	if (c == '\n')
-	{
-	    cx = x;
-	    cy += 12;
-	    continue;
-	}
+		c = *ch++;
+		if (!c)
+		    break;
+		if (c == '\n')
+		{
+		    cx = x;
+		    cy += 12;
+		    continue;
+		}
 		
-	c = toupper(c) - HU_FONTSTART;
-	if (c < 0 || c>= HU_FONTSIZE)
-	{
-	    cx += 4;
-	    continue;
-	}
+		c = toupper(c) - HU_FONTSTART;
+		if (c < 0 || c>= HU_FONTSIZE)
+		{
+		    cx += 4;
+		    continue;
+		}
 		
-	w = SHORT (hu_font[c]->width);
-	if (cx+w > SCREENWIDTH)
-	    break;
-	V_DrawPatchDirect(cx, cy, 0, hu_font[c]);
-	cx+=w;
+		w = SHORT (hu_font[c]->width);
+		if (cx+w > SCREENWIDTH)
+		    break;
+		V_DrawPatchDirect(cx, cy, 0, hu_font[c]);
+		cx+=w;
     }
 }
 
@@ -1435,8 +1423,7 @@ boolean M_Responder (event_t* ev)
 				mousewait = I_GetTime() + 15;
 			}
 		}
-		else
-		if (ev->type == ev_keydown)
+		else if (ev->type == ev_keydown)
 		{
 			ch = ev->data1;
 		}
@@ -1756,7 +1743,7 @@ void M_Drawer (void)
 	short			max;
 	char			string[80]; // FS: Was 40
 	char			*name; // FS: For DEH
-	int			start;
+	int				start;
 
 	inhelpscreens = false;
 
@@ -1770,14 +1757,14 @@ void M_Drawer (void)
 		{
 			int foundnewline = 0;
 		    for (i = 0; i < strlen(messageString + start); i++)
-			if (messageString[start + i] == '\n')
-			{
-			    memset(string, 0, sizeof(string));
-			    strncpy(string, messageString + start, i);
-			    foundnewline = 1;
-			    start += i + 1;
-			    break;
-			}
+				if (messageString[start + i] == '\n')
+				{
+				    memset(string, 0, sizeof(string));
+				    strncpy(string, messageString + start, i);
+				    foundnewline = 1;
+				    start += i + 1;
+				    break;
+				}
 				
 		    if (!foundnewline)
 			{
@@ -1899,10 +1886,10 @@ void M_Init (void)
 			break;
  		case shareware:
 			// Episode 2 and 3 are handled,
-		//  branching to an ad screen.
+			//  branching to an ad screen.
 			ReadDef2.x = 280;
 			ReadDef2.y = 185;		
-	      case registered:
+		case registered:
 			// We need to remove the fourth episode.
 			EpiDef.numitems--;
 			break;

@@ -143,6 +143,7 @@ void P_MovePlayer (player_t* player)
 		if (cmd->sidemove && onground)
 			P_Thrust (player, player->mo->angle-ANG90, cmd->sidemove*2048);
 	}
+
 	else
 	{
 		if (cmd->forwardmove && onground)

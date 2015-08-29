@@ -12,6 +12,8 @@
 #include "deh_main.h" // FS: For DEH
 #include "GUS.H" // FS: Internal GUS
 
+extern void S_FreeChannels (void); // FS
+
 /*
 ===============
 =
@@ -255,7 +257,16 @@ void I_sndArbitrateCards(void)
 		snd_SfxDevice = snd_none;
 	if (M_CheckParm("-nomusic"))
 		snd_MusicDevice = snd_none;
-
+		
+	if (M_CheckParm("-usesb")) // FS: Force an SB if you're using a GUS combo
+	{
+		snd_MusicDevice = snd_SfxDevice = snd_SB;
+		snd_SBport = 220; // FS: Standardish defaults, make this a CheckParm or something, man.
+		snd_SBirq = 5; 
+		snd_SBdma = 1;
+		printf("  Forcing SB detection at A220 I5 D1.\n");		
+	}
+	
 	if (snd_MusicDevice > snd_MPU && snd_MusicDevice <= snd_MPU3)
 		snd_MusicDevice = snd_MPU;
 	if (snd_MusicDevice == snd_SB)
@@ -438,6 +449,7 @@ void I_StartupSound (void)
 void I_ShutdownSound (void)
 {
 	dprintf("I_ShutdownSound()\n"); // FS: DEBUG
+	S_FreeChannels(); // FS
 
 	DMX_DeInit();
 	I_ShutdownTimer();

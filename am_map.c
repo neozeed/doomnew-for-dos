@@ -569,7 +569,6 @@ void AM_unloadPics(void)
   
 	for (i=0;i<10;i++)
 	Z_ChangeTag(marknums[i], PU_CACHE);
-
 }
 
 void AM_clearMarks(void)

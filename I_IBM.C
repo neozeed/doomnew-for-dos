@@ -669,6 +669,7 @@ void S_SetMusicVolume(void)
 	}
 }
 #endif
+
 void S_ShutDown(void)
 {
 	extern int tsm_ID;
@@ -1030,7 +1031,15 @@ void I_InitGraphics(void)
 
 void I_ShutdownGraphics(void)
 {
+	int	i;
+	extern spritedef_t*	sprites;
+	
 	dprintf("I_ShutdownGraphics()\n"); // FS: DEBUG
+	Z_Free(saved_background);
+	Z_Free(disk_image);
+	Z_Free(flattranslation);
+	Z_Free(sprites);
+	
 	if(*(byte *)0x449 == 0x13) // don't reset mode if it didn't get set
 	{
 		regs.w.ax = 3;
