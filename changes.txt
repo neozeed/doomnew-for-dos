@@ -1,3 +1,33 @@
 09-13-13
- - STUFF AND THINGS.
+ - Fixed out of control input.
+ - From Heretic v1.3a port:
+   * P_SetMessage function.
+   * New coop rules (keep keys, weapons, backpack).
+   * Secret Area found message.
+   * Massacre Cheat.
+   * HHSCOTT Cheat -- instantly finish level.
 
+09-12-13
+ - Fixed music loading issues, doom 2 loading, etc.
+ - Added -doomu, -doom, -doom2, -tnt, -plutonia to force a specific game.
+   Will look for the proper WAD file to do so.
+ - Fixed a few other misc details like some dpmi_lockregion related stuff
+   for DMX sound, episode 2 and 3 buttons not showing the second one,
+   the mnum = -9 hack, linuxness math fuckery, and probably other things 
+   I don't remember currently.
+
+09-11-13
+ - Fixed graphics.
+
+09-10-13
+ - Sound and graphics.
+
+09-09-13
+ - Music.
+
+06-01-13'ish
+ - Compiling and linking with DMX.  No sound, music, graphics.  
+   Broken WAD loading.
+
+12-19-12
+ - First attempt.

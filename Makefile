@@ -89,11 +89,12 @@ LOCOBJS = &
  sounds.obj
 
 d.exe : $(LOCOBJS) i_ibm.obj
- wlink @tic.lnk
+ wlink @doomnew.lnk
  copy d.exe stripd.exe
  wstrip stripd.exe
- 4gwbind 4gwpro.exe stripd.exe doom.exe -V 
-# sb /R /O doom.exe #Uncomment this to use DOS32/a
+ 4gwbind 4gwpro.exe stripd.exe doomnew.exe -V 
+ copy /y doomnew.exe D:\PROJ\doom\doom
+# sb /R /O doomnew.exe #Uncomment this to use DOS32/a
 
 i_ibm.obj:
  wcc386 /zp1 /4r /zq /ei /j i_ibm.c
@@ -106,13 +107,17 @@ i_ibm.obj:
 
 clean : .SYMBOLIC
  del *.obj
+ del *.dsg
+ del out.txt
  del d.exe
  del stripd.exe
  del doom.exe
+ del doomnew.exe
  
 final : .SYMBOLIC
- wlink @tic.lnk
+ wlink @doomnew.lnk
  copy d.exe stripd.exe
  wstrip stripd.exe
- 4gwbind 4gwpro.exe stripd.exe doom.exe -V 
- sb /R /O doom.exe
+ 4gwbind 4gwpro.exe stripd.exe doomnew.exe -V 
+ copy /y doomnew.exe D:\PROJ\doom\doom
+ sb /R /O doomnew.exe

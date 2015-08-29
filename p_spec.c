@@ -52,7 +52,6 @@ rcsid[] = "$Id: p_spec.c,v 1.6 1997/02/03 22:45:12 b1 Exp $";
 // Data.
 #include "sounds.h"
 
-
 //
 // Animating textures and planes
 // There is another anim_t used in wi_stuff, unrelated.
@@ -1049,7 +1048,8 @@ void P_PlayerInSpecialSector (player_t* player)
 	// SECRET SECTOR
 	player->secretcount++;
 	sector->special = 0;
-	player->message = "YOU FOUND A SECRET AREA!"; // FS: Alert me about a secret area
+	P_SetMessage(player,"YOU FOUND A SECRET AREA!",true); // FS: Alert me about a secret area
+
 	if ( gamemode == commercial ) // FS: Play a sound for secrets
 		S_StartSound(0, sfx_radio);
 	else

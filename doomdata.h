@@ -214,6 +214,7 @@ typedef struct
 
 byte *I_AllocLow (int length); // FS
 
+
 #endif			// __DOOMDATA__
 //-----------------------------------------------------------------------------
 //

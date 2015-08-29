@@ -823,6 +823,24 @@ void G_PlayerReborn (int player)
     int		killcount;
     int		itemcount;
     int		secretcount; 
+
+	boolean coopcards[NUMCARDS]; // FS: Keep cards in Coop
+	boolean coop; // FS: Is it coop?
+	boolean coopbackpack; // FS: Have a backpack?
+
+	coop = false; // FS: Clear it out
+        coopbackpack = false; // FS: Clear it out
+        coopcards[NUMCARDS] = false; // FS: Clear it out
+
+	if(netgame && !deathmatch && !M_CheckParm("-oldrules")) // FS: Check for Coop
+	{
+		coop = true;
+		memcpy(coopcards, players[player].cards, sizeof(coopcards)); // FS: Keep cards in Coop
+		if (players[player].backpack)
+		{
+			coopbackpack = true;
+		}
+	}
 	 
     memcpy (frags,players[player].frags,sizeof(frags)); 
     killcount = players[player].killcount; 
@@ -830,9 +848,19 @@ void G_PlayerReborn (int player)
     secretcount = players[player].secretcount; 
 	 
     p = &players[player]; 
-    memset (p, 0, sizeof(*p)); 
+
+	if(!coop) // FS: Check for Coop
+	{
+		memset(p, 0, sizeof(*p));
+	}
  
     memcpy (players[player].frags, frags, sizeof(players[player].frags)); 
+
+	if (coop)
+	{
+		memcpy(players[player].cards, coopcards, sizeof(coopcards)); // FS: Keep keys in Coop
+	}
+	
     players[player].killcount = killcount; 
     players[player].itemcount = itemcount; 
     players[player].secretcount = secretcount; 
@@ -844,10 +872,19 @@ void G_PlayerReborn (int player)
     p->weaponowned[wp_fist] = true; 
     p->weaponowned[wp_pistol] = true; 
     p->ammo[am_clip] = 50; 
-	 
+
     for (i=0 ; i<NUMAMMO ; i++) 
 	p->maxammo[i] = maxammo[i]; 
-		 
+
+	if (coop && coopbackpack) // FS: Give the user their backpack if they had it
+	{
+		for(i = 0; i < NUMAMMO; i++)
+		{
+			p->maxammo[i] *= 2;
+		}
+		p->backpack = true;
+	}
+ 
 }
 
 //
@@ -1231,7 +1268,7 @@ void G_DoLoadGame (void)
     // skip the description field 
     memset (vcheck,0,sizeof(vcheck)); 
     sprintf (vcheck,"version %i",VERSION); 
-    if (strcmp (save_p, vcheck)) 
+    if (strcmp ((char *)save_p, vcheck)) // FS: Compiler warning 
 	return;				// bad version 
     save_p += VERSIONSIZE; 
 			 

@@ -384,6 +384,22 @@ char frenchKeyMap[128]=
     'P','A','R','S','T','U','V','Z','X','Y','W','^','\\','$','^',127
 };
 
+// FS: From Heretic -- Yeah yeah, should be in P_Inter.c but fuck it.
+
+void P_SetMessage(player_t *player, char *message, boolean ultmsg)
+{
+	if(!message_on && !ultmsg)
+	{
+		return;
+	}
+	player->message = message;
+	if(ultmsg)
+	{
+		message_dontfuckwithme = true;
+	}
+}
+
+
 char ForeignTranslation(unsigned char ch)
 {
     return ch < 128 ? frenchKeyMap[ch] : ch;
@@ -520,7 +536,7 @@ void HU_Ticker(void)
 
 	// display message if necessary
 	if ((plr->message && !message_nottobefuckedwith)
-	    || (plr->message && message_dontfuckwithme))
+            || (plr->message && message_dontfuckwithme))
 	{
 	    HUlib_addMessageToSText(&w_message, 0, plr->message);
 	    plr->message = 0;

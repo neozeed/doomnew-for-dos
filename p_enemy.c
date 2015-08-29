@@ -2006,3 +2006,32 @@ void A_PlayerScream (mobj_t* mo)
     
     S_StartSound (mo, sound);
 }
+
+//----------------------------------------------------------------------------
+//
+// PROC P_Massacre
+//
+// Kills all monsters.
+//
+//----------------------------------------------------------------------------
+// FS: From Heretic
+
+void P_Massacre(void)
+{
+	mobj_t *mo;
+	thinker_t *think;
+
+	for(think = thinkercap.next; think != &thinkercap;
+		think = think->next)
+	{
+                if (think->function.acp1 != (actionf_p1)P_MobjThinker)
+		{ // Not a mobj thinker
+			continue;
+		}
+		mo = (mobj_t *)think;
+		if((mo->flags&MF_COUNTKILL) && (mo->health > 0))
+		{
+			P_DamageMobj(mo, NULL, NULL, 10000);
+		}
+	}
+}

@@ -462,6 +462,32 @@ unsigned char	cheat_mypos_seq[] =
     0xb2, 0x26, 0xb6, 0xba, 0x2a, 0xf6, 0xea, 0xff	// idmypos
 }; 
 
+// FS: hhscott finish map instantly cheap
+unsigned char	cheat_finishmap_seq[] =
+{
+	SCRAMBLE('h'),
+	SCRAMBLE('h'),
+	SCRAMBLE('s'),
+	SCRAMBLE('c'),
+	SCRAMBLE('o'),
+	SCRAMBLE('t'),
+	SCRAMBLE('t'),
+	0xff
+};
+
+// FS: Heretic massacre cheat
+unsigned char	cheat_massacre_seq[] =
+{
+	SCRAMBLE('m'),
+	SCRAMBLE('a'),
+	SCRAMBLE('s'),
+	SCRAMBLE('s'),
+	SCRAMBLE('a'),
+	SCRAMBLE('c'),
+	SCRAMBLE('r'),
+	SCRAMBLE('e'),
+	0xff
+};
 
 // Now what?
 cheatseq_t	cheat_mus = { cheat_mus_seq, 0 };
@@ -470,6 +496,8 @@ cheatseq_t	cheat_ammo = { cheat_ammo_seq, 0 };
 cheatseq_t	cheat_ammonokey = { cheat_ammonokey_seq, 0 };
 cheatseq_t	cheat_noclip = { cheat_noclip_seq, 0 };
 cheatseq_t	cheat_commercial_noclip = { cheat_commercial_noclip_seq, 0 };
+cheatseq_t	cheat_finishmap = {cheat_finishmap_seq, 0 }; // FS: finish map instantly cheat
+cheatseq_t	cheat_massacre = {cheat_massacre_seq, 0 }; // FS: massacre heretic cheat
 
 cheatseq_t	cheat_powerup[7] =
 {
@@ -545,6 +573,15 @@ ST_Responder (event_t* ev)
       // b. - enabled for more debug fun.
       // if (gameskill != sk_nightmare) {
       
+	if (cht_CheckCheat(&cheat_finishmap, ev->data1)) // FS: Finish map instantly cheat
+	{
+		G_ExitLevel();
+	}
+	if (cht_CheckCheat(&cheat_massacre, ev->data1)) // FS: Finish map instantly cheat
+	{
+		P_SetMessage(plyr,"MASSACRE!", true);
+		P_Massacre();
+	}
       // 'dqd' cheat for toggleable god mode
       if (cht_CheckCheat(&cheat_god, ev->data1))
       {

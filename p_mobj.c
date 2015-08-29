@@ -588,7 +588,7 @@ void P_RespawnSpecials (void)
     int			i;
 
     // only respawn items in deathmatch
-    if (deathmatch != 2)
+    if (!netgame) //deathmatch != 2) // FS: Coop respawn too ya know...
 	return;	// 
 
     // nothing left to respawn?

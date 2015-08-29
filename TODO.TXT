@@ -1,8 +1,11 @@
+- Palette Flash to actually be used from config.
 - Fix snd_SfxVolume multiplier. **HACKED AROUND**
   This will also fix the Sound Volume slider in the Menu.
 - Automap to show "secrets found: x\y".
-- P_SetMessage "ultimate messages" from Heretic.
-- PC Speaker not working?  May be related to the gametics/buffer overflow.
+- PC Speaker not working.  Not sure if it requires the snd_Prefixen
+  or some other special I_Sound.C missing things.
 - Draw Ammo, Health, Armor and Keys in fullscreen.
 - Headbob and Palette Flash on Options Menu.
-
+- Fix endstring/quit messages to work for proper gamemodes.
+- novert paramater.
+- ifdef WATCOMC for colour bar at startup.
