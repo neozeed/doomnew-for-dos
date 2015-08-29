@@ -1,5 +1,9 @@
 09-23-13
  - Weapon pick up text in Netgames.
+ - No friendly fire in coop.
+ - "-noexit" to disable exits in netgames.  Useful for DM maps.  Only works
+   for valid netgames.  You can test it out with IPXSETUP.EXE -NODES 1
+   -NOEXIT.
 
 09-22-13
  - Default to Super Shotgun in Doom 2 games in coop if you have it.

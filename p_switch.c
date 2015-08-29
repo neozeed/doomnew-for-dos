@@ -354,10 +354,15 @@ P_UseSpecialLine
 	break;
 	
       case 11:
-	// Exit level
-	P_ChangeSwitchTexture(line,0);
-	G_ExitLevel ();
-	break;
+		// Exit level
+		if (netgame && M_CheckParm("-noexit")) // FS: No Exit!
+		{
+			P_SetMessage(&players[consoleplayer], "EXITS DISABLED!", true);
+			break;
+		}
+		P_ChangeSwitchTexture(line,0);
+		G_ExitLevel ();
+		break;
 	
       case 14:
 	// Raise Floor 32 and change texture
@@ -426,10 +431,15 @@ P_UseSpecialLine
 	break;
 	
       case 51:
-	// Secret EXIT
-	P_ChangeSwitchTexture(line,0);
-	G_SecretExitLevel ();
-	break;
+		if (netgame && M_CheckParm("-noexit")) // FS: No Exit!
+		{
+			P_SetMessage(&players[consoleplayer], "EXITS DISABLED!", true);
+			break;
+		}
+		// Secret EXIT
+		P_ChangeSwitchTexture(line,0);
+		G_SecretExitLevel ();
+		break;
 	
       case 55:
 	// Raise Floor Crush

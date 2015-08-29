@@ -10,4 +10,3 @@
   * Move keys fullscreen a little to the right and space them out a bit.
 - Fix S_ChangeMusic to pause the music if snd_MusicVolume is 0.
 - Import DEHACKED parsing from Chocolate Doom.
-
