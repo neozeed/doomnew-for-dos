@@ -9,6 +9,7 @@
 #include "z_zone.h"
 #include "w_wad.h"
 #include "doomstat.h" // FS: For Doom 2 DMXGUSC
+#include "m_argv.h" // FS: For external GUS ini files
 
 /*
 ===============
@@ -275,13 +276,35 @@ void I_sndArbitrateCards(void)
   //
   if (gus)
   {
+	byte *gusbuffer;
+	int	gusfilelength;
+	int	p;
+
 	if (GF1_Detect()) printf("Dude.  The GUS ain't responding.\n",1);
 	else
 	{
-		if(gamemode == commercial) // FS: For Doom 2
+		p = M_CheckParm("-usegusini");
+		if (p) // FS: Allow an external ini file
+		{
+			if(p < myargc-1)
+			{
+				char *gusfile = myargv[p+1];
+				gusfilelength = M_ReadFile(gusfile, &gusbuffer);
+				GF1_SetMap((char *)gusbuffer, gusfilelength);
+				Z_Free(gusbuffer); // FS: We're done with it
+			}
+			else
+			{
+				I_ShutdownKeyboard();
+				printf("ERROR: No external GUS file specified! Use -usegusini <filename.ini>.\n");
+				exit(1);
+			}
+		}
+		else if(gamemode == commercial) // FS: For Doom 2
 		{
 			dmxlump = W_GetNumForName("dmxgusc");
 			GF1_SetMap(W_CacheLumpNum(dmxlump, PU_CACHE), lumpinfo[dmxlump].size);
+			// FS: GF1_SetMap (char *entire file, int size of file)
 		}
 		else
 		{

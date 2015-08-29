@@ -1,3 +1,8 @@
+09-21-13
+ - Load a custom Gravis UltraSound INI file with -usegusini <filename.ini>.
+   Error checks are in place to see if the file exists and if you passed
+   something after -usegusini.
+
 09-20-13
  - IDMUS is no longer a cheat.
  - From Heretic v1.3a port:
