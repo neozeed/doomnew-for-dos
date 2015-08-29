@@ -148,7 +148,7 @@ sfxinfo_t S_sfx[] =
   { "pepain", false, 96, 0, -1, -1, 0 },
   { "slop", false, 78, 0, -1, -1, 0 },
   { "itemup", true, 78, 0, -1, -1, 0 },
-  { "wpnup", true, 78, 0, -1, -1, 0 },
+  { "wpnup", false, 120, 0, -1, -1, 0 },  // FS: true, 78
   { "oof", false, 96, 0, -1, -1, 0 },
   { "telept", false, 32, 0, -1, -1, 0 },
   { "posit1", true, 98, 0, -1, -1, 0 },

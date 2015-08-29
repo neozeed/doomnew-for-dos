@@ -136,6 +136,8 @@ extern int headBob; // FS: Head bob toggle
 extern boolean usePalFlash; // FS
 extern int savegamesize; // FS
 extern int savestringsize; // FS
+int	saveconvertslot; // FS: Convert Save
+boolean	convertsave = false; // FS: Convert Save
 
 void D_CheckNetGame (void);
 void D_ProcessEvents (void);
@@ -1384,6 +1386,19 @@ mprintf ("ST_Init: Init status bar.\n");
 	    sprintf(file, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
 	G_LoadGame (file);
     }
+
+    p = M_CheckParm ("-convertsave");
+    if (p && p < myargc-1)
+    {
+	convertsave = true;
+	if (M_CheckParm("-cdrom"))
+	    sprintf(file, "c:\\doomdata\\"SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
+	else
+	    sprintf(file, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
+		saveconvertslot = atoi(myargv[p+1]); // FS: For save convert slot
+	G_LoadGame (file);
+    }
+
 
         if (M_CheckParm("-noheadbob")) // FS
         {

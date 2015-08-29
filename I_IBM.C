@@ -1,7 +1,5 @@
 // I_IBM.C
 
-//#define OLDSOUND
-
 #include <dos.h>
 #include <conio.h>
 #include <stdlib.h>
@@ -20,6 +18,7 @@
 #include "v_video.h"
 #include "d_event.h"
 #include "doomdef.h" // FS ?
+#include "oldnew.h" // FS: For toggling old code
 
 // Macros
 
@@ -1993,6 +1992,8 @@ extern  doomcom_t               *doomcom;
 ====================
 */
 
+
+#ifdef OLDNET
 void I_InitNetwork (void)
 {
 	int             i;
@@ -2023,15 +2024,17 @@ doomcom->skill = startskill;
 doomcom->episode = startepisode;
 doomcom->map = startmap;
 doomcom->deathmatch = deathmatch;
-
 }
+#endif
 
+#ifdef OLDNET
 void I_NetCmd (void)
 {
 	if (!netgame)
 		I_Error ("I_NetCmd when not in netgame");
 	DPMIInt (doomcom->intnum);
 }
+#endif
 
 int i_Vector;
 externdata_t *i_ExternData;

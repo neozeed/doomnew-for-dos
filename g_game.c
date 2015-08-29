@@ -27,6 +27,7 @@ rcsid[] = "$Id: g_game.c,v 1.8 1997/02/03 22:45:09 b1 Exp $";
 #include <string.h>
 #include <stdlib.h>
 
+
 #include "doomdef.h" 
 #include "doomstat.h"
 
@@ -1312,6 +1313,8 @@ void G_DoWorldDone (void)
 // Can be called by the startup code or the menu task. 
 //
 extern boolean setsizeneeded;
+extern int	saveconvertslot; // FS: Convert Save
+extern boolean	convertsave; // FS: Convert Save
 void R_ExecuteSetViewSize (void);
 
 char	savename[256];
@@ -1331,23 +1334,42 @@ void G_DoLoadGame (void)
 	int		i; 
 	int		a,b,c; 
 	char		vcheck[VERSIONSIZE]; 
+	char		convertsavename[32]; // FS: For Convert Save
 
 	gameaction = ga_nothing; 
+
+	if (convertsave) // FS: Convert old saves
+	{
+		savegamesize = 0x2c000;
+		savestringsize = 24;
+	}
 
 	length = M_ReadFile (savename, &savebuffer); 
 	save_p = savebuffer + savestringsize;
 
+	if (convertsave) // FS: Convert old saves
+	{
+		sprintf(convertsavename, (char *)save_p-savestringsize);
+	}
+
 	// skip the description field 
 	memset (vcheck,0,sizeof(vcheck)); 
 	sprintf (vcheck,"version %i",VERSION); 
+
 	if ((strcmp ((char *)save_p, vcheck))) // FS: Compiler warning
 	{
+		if(convertsave) // FS: Can't convert a new save!
+			I_Error("ERROR: Save game is already new version!");
+
+		Z_Free(savebuffer); // FS: Free the savebuffer
+
 		if(M_CheckParm("-oldsave"))
-			P_SetMessage(&players[consoleplayer], "Wrong version.  Try loading without -oldsave!", true);
+			P_SetMessage(&players[consoleplayer], "WRONG VERSION. TRY LOADING WITHOUT -OLDSAVE!", true);
 		else
-			P_SetMessage(&players[consoleplayer], "Old version! Use -oldsave to load it!", true); // FS: Warn us
+			P_SetMessage(&players[consoleplayer], "OLD VERSION! USE -OLDSAVE TO LOAD IT!", true); // FS: Warn us
 		return;				// bad version
 	}
+
 	save_p += VERSIONSIZE; 
 
 	gameskill = *save_p++; 
@@ -1370,7 +1392,7 @@ void G_DoLoadGame (void)
 	P_UnArchiveWorld (); 
 	P_UnArchiveThinkers ();
 
-	if(M_CheckParm("-oldsave")) // FS: Use old stuff
+	if(M_CheckParm("-oldsave") || convertsave) // FS: Use old stuff
 		P_UnArchiveSpecialsOld();
 	else
 		P_UnArchiveSpecials (); 
@@ -1380,6 +1402,14 @@ void G_DoLoadGame (void)
 
 	// done 
 	Z_Free (savebuffer); 
+
+	
+	if(convertsave) // FS: Convert Save
+	{
+		savegamesize = 0x100000; // FS: Normally 0x2c000
+		savestringsize = 256; // FS: Normally 24
+		G_SaveGame(saveconvertslot, convertsavename);
+	}
 
 	if (setsizeneeded)
 		R_ExecuteSetViewSize ();
@@ -1436,7 +1466,10 @@ void G_DoSaveGame (void)
     P_ArchivePlayers ();
     P_ArchiveWorld ();
     P_ArchiveThinkers ();
-	if(M_CheckParm("-oldsave")) // FS: Use old stuff
+
+	if(convertsave) // FS: Convert Save
+		P_ArchiveSpecials();
+	else if(M_CheckParm("-oldsave")) // FS: Use old stuff
 		P_ArchiveSpecialsOld();
 	else
 		P_ArchiveSpecials ();
@@ -1447,10 +1480,20 @@ void G_DoSaveGame (void)
     if (length > savegamesize)
 	I_Error ("Savegame buffer overrun");
     M_WriteFile (name, savebuffer, length);
+
+	if(convertsave) // FS: Convert Save
+		G_LoadGame(name);
+
     gameaction = ga_nothing;
     savedescription[0] = 0;
 
-    players[consoleplayer].message = GGSAVED;
+	if(convertsave)
+	{
+		P_SetMessage(&players[consoleplayer], "SAVE CONVERTED!", true);
+		convertsave = false;
+	}
+	else
+		players[consoleplayer].message = GGSAVED;
 
     // draw the pattern into the back screen
     R_FillBackScreen ();

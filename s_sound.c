@@ -271,9 +271,8 @@ S_StartSoundAtVolume
   
   
   // Debug.
-  /*fprintf( stderr,
-  	   "S_StartSoundAtVolume: playing sound %d (%s)\n",
-  	   sfx_id, S_sfx[sfx_id].name );*/
+  //printf( "S_StartSoundAtVolume: playing sound %d (%s)\n",
+  //         sfx_id, S_sfx[sfx_id].name );
   
   // check for bogus sound #
   if (sfx_id < 1 || sfx_id > NUMSFX)

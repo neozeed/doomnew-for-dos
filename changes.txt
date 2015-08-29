@@ -1,3 +1,18 @@
+09-20-13
+ - IDMUS is no longer a cheat.
+ - From Heretic v1.3a port:
+   * Player Died! message.
+ - Disabled cheating in nightmare again, except IDDT and IDCLEV like original.
+
+09-19-13
+ - -convertsave <slot #> parameter.  Convert your old saves to the new ones!
+   I don't think it will corrupt it, but do a backup first just in case.
+ - Z_Free(&savebuffer) when you error out of incorrect versions.
+
+09-18-13
+ - Changed priority of the weapon pickup sound.  Stuff was taking over it, and
+   I'm sure I don't remember Doom being that weird about it.
+
 09-17-13
  - Fixed animated background intermissions.  Was if(commercial), needed to be
    if(gamemode == commercial).

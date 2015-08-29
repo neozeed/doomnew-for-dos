@@ -794,6 +794,10 @@ void P_KillMobj( mobj_t* source, mobj_t* target )
 {
 	mobjtype_t	item;
 	mobj_t*	mo;
+	int i, z; // FS: For Player Died message
+	player_t *player, *playermsg; // FS: For Player Died message
+	char buffer[30]; // FS: For Player Died message
+	int playnum; // FS: For Player Died message
 	
 	target->flags &= ~(MF_SHOOTABLE|MF_FLOAT|MF_SKULLFLY);
 
@@ -829,6 +833,43 @@ void P_KillMobj( mobj_t* source, mobj_t* target )
 			
 		target->flags &= ~MF_SOLID;
 		target->player->playerstate = PST_DEAD;
+
+		if (netgame && !deathmatch && !M_CheckParm("-oldrules")) // FS: Broadcast death in coop
+		{
+			for (z = 0; z <MAXPLAYERS; z++)
+			{
+				player = &players[z];
+				if(player == target->player)
+				{
+					playnum = z;
+
+				}
+			}
+			
+			for (i = 0; i < MAXPLAYERS; i++)
+			{
+				player = &players[i];
+				switch(playnum)
+				{
+					case 0:
+						P_SetMessage(player, "PLAYER 1 DIED!", true);
+						break;
+					case 1:
+						P_SetMessage(player, "PLAYER 2 DIED!", true);
+						break;
+					case 2:
+						P_SetMessage(player, "PLAYER 3 DIED!", true);
+						break;
+					case 3:
+						P_SetMessage(player, "PLAYER 4 DIED!", true);
+						break;
+					default: // FS: Shouldn't happen... but?
+						P_SetMessage(player, "PLAYER DIED!", true);
+						break;
+				}
+			}
+		}
+
 		P_DropWeapon (target->player);
 
 		if (target->player == &players[consoleplayer] && automapactive)
@@ -850,8 +891,6 @@ void P_KillMobj( mobj_t* source, mobj_t* target )
 	if (target->tics < 1)
 		target->tics = 1;
 		
-    //I_StartSound (&actor->r, actor->info->deathsound);
-
 	if(chex) // FS: Don't drop items in Chex Quest
 		return;
 
