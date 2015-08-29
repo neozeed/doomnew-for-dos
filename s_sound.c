@@ -559,11 +559,9 @@ void S_UpdateSounds(void* listener_p)
 	    }
 	}
     }
-    // kill music if it is a single-play && finished
-    // if (	mus_playing
-    //      && !I_QrySongPlaying(mus_playing->handle)
-    //      && !mus_paused )
-    // S_StopMusic();
+    // FS: kill music if it the volume becomes 0
+     if (mus_playing && snd_MusicVolume == 0 && !mus_paused )
+	     S_PauseSound();
 }
 
 void S_SetMusicVolume(int volume)
@@ -574,9 +572,21 @@ void S_SetMusicVolume(int volume)
 		I_Error("Attempt to set music volume at %d", volume);
 	}    
 
-    I_SetMusicVolume(127);
-    I_SetMusicVolume(volume);
-    snd_MusicVolume = volume;
+	I_SetMusicVolume(127);
+	I_SetMusicVolume(volume);
+	snd_MusicVolume = volume;
+
+	if(snd_MusicVolume == 0) // FS: Need to stop the song, mang.
+	{
+		I_PauseSong(mus_playing->handle);
+		mus_paused = true;
+	}
+	else if(mus_paused)
+	{
+		mus_paused = false;
+		I_ResumeSong(mus_playing->handle);
+	}
+
 }
 
 

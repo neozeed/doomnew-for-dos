@@ -98,15 +98,15 @@ void D_DoomLoop (void);
 char*		wadfiles[MAXWADFILES];
 
 
-boolean		devparm;	// started game with -devparm
-boolean         nomonsters;	// checkparm of -nomonsters
-boolean         respawnparm;	// checkparm of -respawn
-boolean         fastparm;	// checkparm of -fast
-boolean         debugmode; // FS
+boolean	devparm; // started game with -devparm
+boolean	nomonsters;	// checkparm of -nomonsters
+boolean	respawnparm; // checkparm of -respawn
+boolean	fastparm; // checkparm of -fast
+boolean	debugmode; // FS
 
-boolean         drone;
+boolean	drone;
 
-boolean		singletics = false; // debug flag to cancel adaptiveness
+boolean	singletics = false; // debug flag to cancel adaptiveness
 
 
 
@@ -114,26 +114,28 @@ boolean		singletics = false; // debug flag to cancel adaptiveness
 //extern  int	sfxVolume;
 //extern  int	musicVolume;
 
-extern  boolean	inhelpscreens;
+extern boolean	inhelpscreens;
 
-skill_t		startskill;
-int             startepisode;
-int		startmap;
-boolean		autostart;
+skill_t	startskill;
+int	startepisode;
+int	startmap;
+boolean	autostart;
 
 FILE*		debugfile;
 
-boolean		advancedemo;
-boolean		plutonia; // FS
-boolean		tnt; // FS
+boolean	advancedemo;
+boolean	plutonia; // FS
+boolean	tnt; // FS
+boolean	chex; // FS: For Chex(R) Quest
 
 
-
-char		wadfile[1024];		// primary wad file
-char		mapdir[1024];           // directory of development maps
-char		basedefault[1024];      // default file
+char	wadfile[1024];		// primary wad file
+char	mapdir[1024];           // directory of development maps
+char	basedefault[1024];      // default file
 extern int headBob; // FS: Head bob toggle
 extern boolean usePalFlash; // FS
+extern int savegamesize; // FS
+extern int savestringsize; // FS
 
 void D_CheckNetGame (void);
 void D_ProcessEvents (void);
@@ -663,64 +665,91 @@ void D_AddFile (char *file)
 void IdentifyVersion (void)
 {
 
-    char	doom1wad[10] = "doom1.wad";
-    char	doomwad[9] = "doom.wad";
-    char	doomuwad[10] = "doomu.wad";
-    char	doom2wad[10] = "doom2.wad";
+	char	doom1wad[10] = "doom1.wad";
+	char	doomwad[9] = "doom.wad";
+	char	doomuwad[10] = "doomu.wad";
+	char	doom2wad[10] = "doom2.wad";
 
-    char	doom2fwad[10] = "doom2f.wad";
-    char	plutoniawad[13] = "plutonia.wad";
-    char	tntwad[8] = "tnt.wad";
+	char	doom2fwad[10] = "doom2f.wad";
+	char	plutoniawad[13] = "plutonia.wad";
+	char	tntwad[8] = "tnt.wad";
+	char	chexwad[9] = "chex.wad"; // FS: Chex Quest 1
+	char	chex2wad[10] = "chex2.wad"; // FS: Chex Quest 2
 
-    sprintf(basedefault, "default.cfg");
+	sprintf(basedefault, "default.cfg");
 
-    if (M_CheckParm ("-shdev"))
-    {
-	gamemode = shareware;
-	devparm = true;
-	D_AddFile (DEVDATA"doom1.wad");
-	D_AddFile (DEVMAPS"data_se/texture1.lmp");
-	D_AddFile (DEVMAPS"data_se/pnames.lmp");
-	strcpy (basedefault,DEVDATA"default.cfg");
-	return;
-    }
+	if (M_CheckParm ("-shdev"))
+	{
+		gamemode = shareware;
+		devparm = true;
+		D_AddFile (DEVDATA"doom1.wad");
+		D_AddFile (DEVMAPS"data_se/texture1.lmp");
+		D_AddFile (DEVMAPS"data_se/pnames.lmp");
+		strcpy (basedefault,DEVDATA"default.cfg");
+		return;
+	}
 
-    if (M_CheckParm ("-regdev"))
-    {
-	gamemode = registered;
-	devparm = true;
-        D_AddFile ("doom.wad");
-        D_AddFile ("data_se/texture1.lmp");
-        D_AddFile ("data_se/texture2.lmp");
-        D_AddFile ("data_se/pnames.lmp");
-	strcpy (basedefault,DEVDATA"default.cfg");
-	return;
-    }
+	if (M_CheckParm ("-regdev"))
+	{
+		gamemode = registered;
+		devparm = true;
+		D_AddFile (DEVDATA"doom.wad");
+		D_AddFile (DEVMAPS"data_se/texture1.lmp");
+		D_AddFile (DEVMAPS"data_se/texture2.lmp");
+		D_AddFile (DEVMAPS"data_se/pnames.lmp");
+		strcpy (basedefault,DEVDATA"default.cfg");
+		return;
+	}
 
-    if (M_CheckParm ("-comdev"))
-    {
-	gamemode = commercial;
-	devparm = true;
-	/* I don't bother
-	if(plutonia)
-	    D_AddFile (DEVDATA"plutonia.wad");
-	else if(tnt)
-	    D_AddFile (DEVDATA"tnt.wad");
-	else*/
-	    D_AddFile (DEVDATA"doom2.wad");
+	if (M_CheckParm ("-comdev"))
+	{
+		gamemode = commercial;
+		devparm = true;
+		/* I don't bother
+		if(plutonia)
+		    D_AddFile (DEVDATA"plutonia.wad");
+		else if(tnt)
+		    D_AddFile (DEVDATA"tnt.wad");
+		else*/
+		    D_AddFile (DEVDATA"doom2.wad");
 	    
-//	D_AddFile (DEVMAPS"cdata/texture1.lmp");
-//	D_AddFile (DEVMAPS"cdata/pnames.lmp");
-//	strcpy (basedefault,DEVDATA"default.cfg");
-	strcpy(basedefault, "default.cfg");
-	D_AddFile("doom2.wad");
-	return;
-    }
+		D_AddFile (DEVMAPS"cdata/texture1.lmp");
+		D_AddFile (DEVMAPS"cdata/pnames.lmp");
+		strcpy (basedefault,DEVDATA"default.cfg");
+		strcpy(basedefault, "default.cfg");
+		return;
+	}
+
+	if (M_CheckParm ("-chex")) // FS: Chex Quest
+	{
+		gamemode = registered;
+		devparm = false;
+		chex = true;
+		strcpy(basedefault, "default.cfg");
+		D_AddFile("chex.wad");
+		return;
+	}
+
+	if (M_CheckParm ("-chex2")) // FS: Chex Quest 2
+	{
+		gamemode = registered;
+		devparm = false;
+		chex = true;
+		strcpy(basedefault, "default.cfg");
+
+		if ( !access (chexwad, 0) )
+			D_AddFile (chexwad);
+		else
+			I_Error("You need CHEX.WAD to play Chex Quest 2!");
+
+		D_AddFile("chex2.wad");
+		return;
+	}
 
 	if (M_CheckParm ("-tnt"))
 	{
 		gamemode = commercial;
-		devparm = true;
+		devparm = false;
 		tnt = true; // FS
 		strcpy(basedefault, "default.cfg");
 		D_AddFile("tnt.wad");
@@ -729,7 +758,7 @@ void IdentifyVersion (void)
 	if (M_CheckParm ("-doom2"))
 	{
 		gamemode = commercial;
-		devparm = true;
+		devparm = false;
 
 		strcpy(basedefault, "default.cfg");
 		D_AddFile("doom2.wad");
@@ -738,7 +767,7 @@ void IdentifyVersion (void)
 	if (M_CheckParm ("-helltopay") || M_CheckParm("-hell2pay")) // FS: Hell to pay commercial WAD
 	{
 		gamemode = commercial;
-		devparm = true;
+		devparm = false;
 
 		strcpy(basedefault, "default.cfg");
 		D_AddFile("hell2pay.wad");
@@ -748,7 +777,7 @@ void IdentifyVersion (void)
 	if (M_CheckParm ("-perdgate")) // FS: Perdition's Gate commercial WAD
 	{
 		gamemode = commercial;
-		devparm = true;
+		devparm = false;
 
 		strcpy(basedefault, "default.cfg");
 		D_AddFile("perdgate.wad");
@@ -758,7 +787,7 @@ void IdentifyVersion (void)
 	if (M_CheckParm ("-doomu"))
 	{
 		gamemode = retail;
-		devparm = true;
+		devparm = false;
 
 		strcpy(basedefault, "default.cfg");
 		D_AddFile("doomu.wad");
@@ -767,7 +796,7 @@ void IdentifyVersion (void)
 	if (M_CheckParm ("-plutonia"))
 	{
 		gamemode = commercial;
-		devparm = true;
+		devparm = false;
 		plutonia = true; // FS
 		strcpy(basedefault, "default.cfg");
 		D_AddFile("plutonia.wad");
@@ -776,7 +805,7 @@ void IdentifyVersion (void)
 	if (M_CheckParm ("-doom"))
 	{
 		gamemode = registered;
-		devparm = true;
+		devparm = false;
 
 		strcpy(basedefault, "default.cfg");
 		if (!access (doomwad,0)) // FS: Hack for 3-episode version from Ultimate WAD
@@ -837,18 +866,35 @@ void IdentifyVersion (void)
       return;
     }
 
-    if ( !access (doom1wad,0) )
-    {
-      gamemode = shareware;
-      D_AddFile (doom1wad);
-      return;
-    }
+	if ( !access (doom1wad,0) )
+	{
+		gamemode = shareware;
+		D_AddFile (doom1wad);
+		return;
+	}
 
-	//printf("Game mode indeterminate.\n");
-	//gamemode = indetermined;
+	if ( !access (chexwad, 0) )
+	{
+		gamemode = registered;
+		D_AddFile (chexwad);
+		return;
+	}
 
-    exit(1);
-    I_Error ("Game mode indeterminate\n");
+	if ( !access (chex2wad, 0) )
+	{
+		gamemode = registered;
+
+		if ( !access (chexwad, 0) )
+			D_AddFile (chexwad);
+		else
+			I_Error("You need CHEX.WAD to play Chex Quest 2!");
+
+		D_AddFile (chex2wad);
+		return;
+	}
+
+	printf("Game mode indeterminate\n");
+	exit(1);
 }
 
 //
@@ -939,6 +985,8 @@ void D_DoomMain (void)
 	//char *screen;
 
     FindResponseFile ();
+
+    devparm = M_CheckParm ("-devparm"); // FS: Needs to be sooner in case you use -regdev, etc.
 	
     IdentifyVersion ();
 
@@ -948,7 +996,12 @@ void D_DoomMain (void)
     nomonsters = M_CheckParm ("-nomonsters");
     respawnparm = M_CheckParm ("-respawn");
     fastparm = M_CheckParm ("-fast");
-    devparm = M_CheckParm ("-devparm");
+
+	if (M_CheckParm("-oldsave")) // FS: Use old save if we still have them
+	{
+		savegamesize = 0x2c000;
+		savestringsize = 24;
+	}
     if (M_CheckParm ("-altdeath"))
 	deathmatch = 2;
     else if (M_CheckParm ("-deathmatch"))

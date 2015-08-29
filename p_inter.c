@@ -58,6 +58,7 @@ rcsid[] = "$Id: p_inter.c,v 1.4 1997/02/03 22:45:11 b1 Exp $";
 int	maxammo[NUMAMMO] = {200, 50, 300, 50};
 int	clipammo[NUMAMMO] = {10, 4, 20, 1};
 
+extern boolean chex; // FS: For Chex(R) Quest.  Hacky, needs to be redone.
 
 //
 // GET STUFF
@@ -70,93 +71,87 @@ int	clipammo[NUMAMMO] = {10, 4, 20, 1};
 // Returns false if the ammo can't be picked up at all
 //
 
-boolean
-P_GiveAmmo
-( player_t*	player,
-  ammotype_t	ammo,
-  int		num )
+boolean P_GiveAmmo (player_t* player,ammotype_t	ammo,int num)
 {
-    int		oldammo;
+	int	oldammo;
 	
-    if (ammo == am_noammo)
-	return false;
+	if (ammo == am_noammo)
+		return false;
 		
-    if (ammo < 0 || ammo > NUMAMMO)
-	I_Error ("P_GiveAmmo: bad type %i", ammo);
+	if (ammo < 0 || ammo > NUMAMMO)
+		I_Error ("P_GiveAmmo: bad type %i", ammo);
 		
-    if ( player->ammo[ammo] == player->maxammo[ammo]  )
-	return false;
+	if ( player->ammo[ammo] == player->maxammo[ammo]  )
+		return false;
 		
-    if (num)
-	num *= clipammo[ammo];
-    else
-	num = clipammo[ammo]/2;
+	if (num)
+		num *= clipammo[ammo];
+	else
+		num = clipammo[ammo]/2;
     
-    if (gameskill == sk_baby
-	|| gameskill == sk_nightmare)
-    {
-	// give double ammo in trainer mode,
-	// you'll need in nightmare
-	num <<= 1;
-    }
-    
-		
-    oldammo = player->ammo[ammo];
-    player->ammo[ammo] += num;
+	if (gameskill == sk_baby || gameskill == sk_nightmare)
+	{
+		// give double ammo in trainer mode,
+		// you'll need in nightmare
+		num <<= 1;
+	}
 
-    if (player->ammo[ammo] > player->maxammo[ammo])
-	player->ammo[ammo] = player->maxammo[ammo];
+	
+	oldammo = player->ammo[ammo];
+	player->ammo[ammo] += num;
 
-    // If non zero ammo, 
-    // don't change up weapons,
-    // player was lower on purpose.
-    if (oldammo)
-	return true;	
+	if (player->ammo[ammo] > player->maxammo[ammo])
+		player->ammo[ammo] = player->maxammo[ammo];
 
-    // We were down to zero,
-    // so select a new weapon.
-    // Preferences are not user selectable.
-    switch (ammo)
-    {
-      case am_clip:
-	if (player->readyweapon == wp_fist)
+	// If non zero ammo, 
+	// don't change up weapons,
+	// player was lower on purpose.
+	if (oldammo)
+		return true;	
+
+	// We were down to zero,
+	// so select a new weapon.
+	// Preferences are not user selectable.
+	switch (ammo)
 	{
-	    if (player->weaponowned[wp_chaingun])
-		player->pendingweapon = wp_chaingun;
-	    else
-		player->pendingweapon = wp_pistol;
+		case am_clip:
+			if (player->readyweapon == wp_fist)
+			{
+				if (player->weaponowned[wp_chaingun])
+					player->pendingweapon = wp_chaingun;
+				else
+					player->pendingweapon = wp_pistol;
+			}
+			break;
+
+		case am_shell:
+			if (player->readyweapon == wp_fist || player->readyweapon == wp_pistol)
+			{
+				if (player->weaponowned[wp_shotgun])
+					player->pendingweapon = wp_shotgun;
+			}
+			break;
+
+		case am_cell:
+			if (player->readyweapon == wp_fist || player->readyweapon == wp_pistol)
+			{
+				if (player->weaponowned[wp_plasma])
+					player->pendingweapon = wp_plasma;
+			}
+			break;
+
+		case am_misl:
+		if (player->readyweapon == wp_fist)
+		{
+			if (player->weaponowned[wp_missile])
+				player->pendingweapon = wp_missile;
+		}
+
+		default:
+			break;
 	}
-	break;
 	
-      case am_shell:
-	if (player->readyweapon == wp_fist
-	    || player->readyweapon == wp_pistol)
-	{
-	    if (player->weaponowned[wp_shotgun])
-		player->pendingweapon = wp_shotgun;
-	}
-	break;
-	
-      case am_cell:
-	if (player->readyweapon == wp_fist
-	    || player->readyweapon == wp_pistol)
-	{
-	    if (player->weaponowned[wp_plasma])
-		player->pendingweapon = wp_plasma;
-	}
-	break;
-	
-      case am_misl:
-	if (player->readyweapon == wp_fist)
-	{
-	    if (player->weaponowned[wp_missile])
-		player->pendingweapon = wp_missile;
-	}
-      default:
-	break;
-    }
-	
-    return true;
+	return true;
 }
 
 
@@ -164,11 +159,7 @@ P_GiveAmmo
 // P_GiveWeapon
 // The weapon name may have a MF_DROPPED flag ored in.
 //
-boolean
-P_GiveWeapon
-( player_t*	player,
-  weapontype_t	weapon,
-  boolean	dropped )
+boolean P_GiveWeapon( player_t* player, weapontype_t weapon, boolean dropped )
 {
     boolean	gaveammo;
     boolean	gaveweapon;
@@ -411,13 +402,19 @@ P_TouchSpecialThing
       case SPR_ARM1:
 	if (!P_GiveArmor (player, 1))
 	    return;
-	player->message = GOTARMOR;
+	if(chex)
+		player->message = "Picked up the Chex(R) Armor.";
+	else
+		player->message = GOTARMOR;
 	break;
 		
       case SPR_ARM2:
 	if (!P_GiveArmor (player, 2))
 	    return;
-	player->message = GOTMEGA;
+	if(chex)
+		player->message = "Picked up the Super Chex(R) Armor!";
+	else
+		player->message = GOTMEGA;
 	break;
 	
 	// bonus items
@@ -426,7 +423,10 @@ P_TouchSpecialThing
 	if (player->health > 200)
 	    player->health = 200;
 	player->mo->health = player->health;
-	player->message = GOTHTHBONUS;
+	if(chex)
+		player->message = "Picked up a glass of water.";
+	else
+		player->message = GOTHTHBONUS;
 	break;
 	
       case SPR_BON2:
@@ -435,7 +435,10 @@ P_TouchSpecialThing
 	    player->armorpoints = 200;
 	if (!player->armortype)
 	    player->armortype = 1;
-	player->message = GOTARMBONUS;
+	if(chex)
+		player->message = "Picked up slime repellent.";
+	else
+		player->message = GOTARMBONUS;
 	break;
 	
       case SPR_SOUL:
@@ -443,7 +446,10 @@ P_TouchSpecialThing
 	if (player->health > 200)
 	    player->health = 200;
 	player->mo->health = player->health;
-	player->message = GOTSUPER;
+	if(chex)
+		player->message = "Supercharged Breakfast!";
+	else
+		player->message = GOTSUPER;
 	sound = sfx_getpow;
 	break;
 	
@@ -461,7 +467,12 @@ P_TouchSpecialThing
 	// leave cards for everyone
       case SPR_BKEY:
 	if (!player->cards[it_bluecard])
-	    player->message = GOTBLUECARD;
+	{
+		if(chex)
+			player->message = "Picked up a blue key.";
+		else
+			player->message = GOTBLUECARD;
+	}
 	P_GiveCard (player, it_bluecard);
 	if (!netgame)
 	    break;
@@ -469,7 +480,12 @@ P_TouchSpecialThing
 	
       case SPR_YKEY:
 	if (!player->cards[it_yellowcard])
-	    player->message = GOTYELWCARD;
+	{
+		if(chex)
+			player->message = "Picked up a yellow key.";
+		else
+			player->message = GOTYELWCARD;
+	}
 	P_GiveCard (player, it_yellowcard);
 	if (!netgame)
 	    break;
@@ -477,7 +493,12 @@ P_TouchSpecialThing
 	
       case SPR_RKEY:
 	if (!player->cards[it_redcard])
-	    player->message = GOTREDCARD;
+	{
+		if(chex)
+			player->message = "Picked up a red key.";
+		else
+			player->message = GOTREDCARD;
+	}
 	P_GiveCard (player, it_redcard);
 	if (!netgame)
 	    break;
@@ -511,17 +532,30 @@ P_TouchSpecialThing
       case SPR_STIM:
 	if (!P_GiveBody (player, 10))
 	    return;
-	player->message = GOTSTIM;
+	if(chex)
+		player->message = "Picked up a bowl of fruit.";
+	else
+		player->message = GOTSTIM;
 	break;
 	
       case SPR_MEDI:
 	if (!P_GiveBody (player, 25))
 	    return;
 
-	if (player->health < 25)
-	    player->message = GOTMEDINEED;
+	if (player->health < 50)
+	{
+		if(chex)
+			player->message = "Picked up some need vegetables!";
+		else
+			player->message = GOTMEDINEED;
+	}
 	else
-	    player->message = GOTMEDIKIT;
+	{
+		if(chex)
+			player->message = "Picked up a bowl of vegetables.";
+		else
+			player->message = GOTMEDIKIT;
+	}
 	break;
 
 	
@@ -552,7 +586,10 @@ P_TouchSpecialThing
       case SPR_SUIT:
 	if (!P_GivePower (player, pw_ironfeet))
 	    return;
-	player->message = GOTSUIT;
+	if(chex)
+		player->message = "Slimeproof Suit";
+	else
+		player->message = GOTSUIT;
 	sound = sfx_getpow;
 	break;
 	
@@ -582,49 +619,73 @@ P_TouchSpecialThing
 	    if (!P_GiveAmmo (player,am_clip,1))
 		return;
 	}
-	player->message = GOTCLIP;
+	if (chex)
+		player->message = "Picked up a mini zorch recharge.";
+	else
+		player->message = GOTCLIP;
 	break;
 	
       case SPR_AMMO:
 	if (!P_GiveAmmo (player, am_clip,5))
 	    return;
-	player->message = GOTCLIPBOX;
+	if (chex)
+		player->message = "Picked up a mini zorch pack.";
+	else
+		player->message = GOTCLIPBOX;
 	break;
 	
       case SPR_ROCK:
 	if (!P_GiveAmmo (player, am_misl,1))
 	    return;
-	player->message = GOTROCKET;
+	if(chex)
+		player->message = "Picked up a zorch propulsor recharge";
+	else
+		player->message = GOTROCKET;
 	break;
 	
       case SPR_BROK:
 	if (!P_GiveAmmo (player, am_misl,5))
 	    return;
-	player->message = GOTROCKBOX;
+	if(chex)
+                player->message = "Picked up a zorch propulsor pack.";
+	else
+		player->message = GOTROCKBOX;
 	break;
 	
       case SPR_CELL:
 	if (!P_GiveAmmo (player, am_cell,1))
 	    return;
-	player->message = GOTCELL;
+	if(chex)
+		player->message = "Picked up a phasing zorcher recharge.";
+	else
+		player->message = GOTCELL;
 	break;
 	
       case SPR_CELP:
 	if (!P_GiveAmmo (player, am_cell,5))
 	    return;
-	player->message = GOTCELLBOX;
+	if(chex)
+		player->message = "Picked up a phasing zorcher pack.";
+	else
+		player->message = GOTCELLBOX;
 	break;
 	
       case SPR_SHEL:
 	if (!P_GiveAmmo (player, am_shell,1))
 	    return;
-	player->message = GOTSHELLS;
+	if(chex)
+		player->message = "Picked up a large zorcher recharge.";
+	else
+		player->message = GOTSHELLS;
 	break;
 	
       case SPR_SBOX:
 	if (!P_GiveAmmo (player, am_shell,5))
 	    return;
-	player->message = GOTSHELLBOX;
+	if(chex)
+		player->message = "Picked up a large zorcher pack.";
+	else
+		player->message = GOTSHELLBOX;
 	break;
 	
       case SPR_BPAK:
@@ -636,56 +697,80 @@ P_TouchSpecialThing
 	}
 	for (i=0 ; i<NUMAMMO ; i++)
 	    P_GiveAmmo (player, i, 1);
-	player->message = GOTBACKPACK;
+	if(chex)
+		player->message = "Picked up a zorchpak!";
+	else
+		player->message = GOTBACKPACK;
 	break;
 	
 	// weapons
       case SPR_BFUG:
 	if (!P_GiveWeapon (player, wp_bfg, false) )
 	    return;
-	player->message = GOTBFG9000;
+	if(chex)
+		player->message = "You got the LAZ Device!";
+	else
+		player->message = GOTBFG9000;
 	sound = sfx_wpnup;	
 	break;
 	
       case SPR_MGUN:
 	if (!P_GiveWeapon (player, wp_chaingun, special->flags&MF_DROPPED) )
 	    return;
-	player->message = GOTCHAINGUN;
+	if(chex)
+		player->message = "You got the Rapid Zorcher!";
+	else
+		player->message = GOTCHAINGUN;
 	sound = sfx_wpnup;	
 	break;
 	
       case SPR_CSAW:
 	if (!P_GiveWeapon (player, wp_chainsaw, false) )
 	    return;
-	player->message = GOTCHAINSAW;
+	if(chex)
+		player->message = "You got the Super Bootspork!";
+	else
+		player->message = GOTCHAINSAW;
 	sound = sfx_wpnup;	
 	break;
 	
       case SPR_LAUN:
 	if (!P_GiveWeapon (player, wp_missile, false) )
 	    return;
-	player->message = GOTLAUNCHER;
+	if(chex)
+		player->message = "You got the Zorch Propulsor!";
+	else
+		player->message = GOTLAUNCHER;
 	sound = sfx_wpnup;	
 	break;
 	
       case SPR_PLAS:
 	if (!P_GiveWeapon (player, wp_plasma, false) )
 	    return;
-	player->message = GOTPLASMA;
+	if(chex)
+		player->message = "You got the Phasing Zorcher!";
+	else
+		player->message = GOTPLASMA;
 	sound = sfx_wpnup;	
 	break;
 	
       case SPR_SHOT:
 	if (!P_GiveWeapon (player, wp_shotgun, special->flags&MF_DROPPED ) )
 	    return;
-	player->message = GOTSHOTGUN;
+	if(chex)
+		player->message = "You got the Large Zorcher!";
+	else
+		player->message = GOTSHOTGUN;
 	sound = sfx_wpnup;	
 	break;
 		
       case SPR_SGN2:
 	if (!P_GiveWeapon (player, wp_supershotgun, special->flags&MF_DROPPED ) )
 	    return;
-	player->message = GOTSHOTGUN2;
+	if(chex)
+		player->message = "You got the Super Large Zorcher!";
+	else
+		player->message = GOTSHOTGUN2;
 	sound = sfx_wpnup;	
 	break;
 		
@@ -705,97 +790,95 @@ P_TouchSpecialThing
 //
 // KillMobj
 //
-void
-P_KillMobj
-( mobj_t*	source,
-  mobj_t*	target )
+void P_KillMobj( mobj_t* source, mobj_t* target )
 {
-    mobjtype_t	item;
-    mobj_t*	mo;
+	mobjtype_t	item;
+	mobj_t*	mo;
 	
-    target->flags &= ~(MF_SHOOTABLE|MF_FLOAT|MF_SKULLFLY);
+	target->flags &= ~(MF_SHOOTABLE|MF_FLOAT|MF_SKULLFLY);
 
-    if (target->type != MT_SKULL)
-	target->flags &= ~MF_NOGRAVITY;
+	if (target->type != MT_SKULL)
+		target->flags &= ~MF_NOGRAVITY;
+	if(chex) // FS: Don't drop stuff in Chex Quest
+		target->flags |= MF_CORPSE;
+	else
+		target->flags |= MF_CORPSE|MF_DROPOFF;
+	target->height >>= 2;
 
-    target->flags |= MF_CORPSE|MF_DROPOFF;
-    target->height >>= 2;
-
-    if (source && source->player)
-    {
-	// count for intermission
-	if (target->flags & MF_COUNTKILL)
-	    source->player->killcount++;	
-
-	if (target->player)
-	    source->player->frags[target->player-players]++;
-    }
-    else if (!netgame && (target->flags & MF_COUNTKILL) )
-    {
-	// count all monster deaths,
-	// even those caused by other monsters
-	players[0].killcount++;
-    }
-    
-    if (target->player)
-    {
-	// count environment kills against you
-	if (!source)	
-	    target->player->frags[target->player-players]++;
-			
-	target->flags &= ~MF_SOLID;
-	target->player->playerstate = PST_DEAD;
-	P_DropWeapon (target->player);
-
-	if (target->player == &players[consoleplayer]
-	    && automapactive)
+	if (source && source->player)
 	{
-	    // don't die in auto map,
-	    // switch view prior to dying
-	    AM_Stop ();
+		// count for intermission
+		if (target->flags & MF_COUNTKILL)
+			source->player->killcount++;	
+
+		if (target->player)
+			source->player->frags[target->player-players]++;
 	}
-	
-    }
+	else if (!netgame && (target->flags & MF_COUNTKILL) )
+	{
+		// count all monster deaths,
+		// even those caused by other monsters
+		players[0].killcount++;
+	}
+    
+	if (target->player)
+	{
+		// count environment kills against you
+		if (!source)	
+			target->player->frags[target->player-players]++;
+			
+		target->flags &= ~MF_SOLID;
+		target->player->playerstate = PST_DEAD;
+		P_DropWeapon (target->player);
 
-    if (target->health < -target->info->spawnhealth 
-	&& target->info->xdeathstate)
-    {
-	P_SetMobjState (target, target->info->xdeathstate);
-    }
-    else
-	P_SetMobjState (target, target->info->deathstate);
-    target->tics -= P_Random()&3;
+		if (target->player == &players[consoleplayer] && automapactive)
+		{
+			// don't die in auto map,
+			// switch view prior to dying
+			AM_Stop ();
+		}
+	}
 
-    if (target->tics < 1)
-	target->tics = 1;
+	if (target->health < -target->info->spawnhealth && target->info->xdeathstate)
+	{
+		P_SetMobjState (target, target->info->xdeathstate);
+	}
+	else
+		P_SetMobjState (target, target->info->deathstate);
+	target->tics -= P_Random()&3;
+
+	if (target->tics < 1)
+		target->tics = 1;
 		
-    //	I_StartSound (&actor->r, actor->info->deathsound);
+    //I_StartSound (&actor->r, actor->info->deathsound);
 
+	if(chex) // FS: Don't drop items in Chex Quest
+		return;
 
-    // Drop stuff.
-    // This determines the kind of object spawned
-    // during the death frame of a thing.
-    switch (target->type)
-    {
-      case MT_WOLFSS:
-      case MT_POSSESSED:
-	item = MT_CLIP;
-	break;
-	
-      case MT_SHOTGUY:
-	item = MT_SHOTGUN;
-	break;
-	
-      case MT_CHAINGUY:
-	item = MT_CHAINGUN;
-	break;
-	
-      default:
-	return;
-    }
+	// Drop stuff.
+	// This determines the kind of object spawned
+	// during the death frame of a thing.
+	switch (target->type)
+	{
+		case MT_WOLFSS:
+		case MT_POSSESSED:
+			item = MT_CLIP;
+			break;
 
-    mo = P_SpawnMobj (target->x,target->y,ONFLOORZ, item);
-    mo->flags |= MF_DROPPED;	// special versions of items
+		case MT_SHOTGUY:
+			item = MT_SHOTGUN;
+			break;
+
+		case MT_CHAINGUY:
+			item = MT_CHAINGUN;
+			break;
+
+		default:
+			return;
+	}
+
+	mo = P_SpawnMobj (target->x,target->y,ONFLOORZ, item);
+	mo->flags |= MF_DROPPED;	// special versions of items
 }
 
 
@@ -812,151 +895,128 @@ P_KillMobj
 // Source can be NULL for slime, barrel explosions
 // and other environmental stuff.
 //
-void
-P_DamageMobj
-( mobj_t*	target,
-  mobj_t*	inflictor,
-  mobj_t*	source,
-  int 		damage )
+void P_DamageMobj ( mobj_t* target, mobj_t* inflictor, mobj_t* source, int damage )
 {
-    unsigned	ang;
-    int		saved;
-    player_t*	player;
-    fixed_t	thrust;
-    int		temp;
-	
-    if ( !(target->flags & MF_SHOOTABLE) )
-	return;	// shouldn't happen...
-		
-    if (target->health <= 0)
-	return;
+	unsigned	ang;
+	int		saved;
+	player_t*	player;
+	fixed_t	thrust;
+	int		temp;
 
-    if ( target->flags & MF_SKULLFLY )
-    {
-	target->momx = target->momy = target->momz = 0;
-    }
-	
-    player = target->player;
-    if (player && gameskill == sk_baby)
-	damage >>= 1; 	// take half damage in trainer mode
-		
+	if ( !(target->flags & MF_SHOOTABLE) )
+		return;	// shouldn't happen...
 
-    // Some close combat weapons should not
-    // inflict thrust and push the victim out of reach,
-    // thus kick away unless using the chainsaw.
-    if (inflictor
-	&& !(target->flags & MF_NOCLIP)
-	&& (!source
-	    || !source->player
-	    || source->player->readyweapon != wp_chainsaw))
-    {
-	ang = R_PointToAngle2 ( inflictor->x,
-				inflictor->y,
-				target->x,
-				target->y);
-		
-	thrust = damage*(FRACUNIT>>3)*100/target->info->mass;
+	if (target->health <= 0)
+		return;
 
-	// make fall forwards sometimes
-	if ( damage < 40
-	     && damage > target->health
-	     && target->z - inflictor->z > 64*FRACUNIT
-	     && (P_Random ()&1) )
+	if ( target->flags & MF_SKULLFLY )
 	{
-	    ang += ANG180;
-	    thrust *= 4;
+		target->momx = target->momy = target->momz = 0;
 	}
-		
-	ang >>= ANGLETOFINESHIFT;
-	target->momx += FixedMul (thrust, finecosine[ang]);
-	target->momy += FixedMul (thrust, finesine[ang]);
-    }
-    
-    // player specific
-    if (player)
-    {
-	// end of game hell hack
-	if (target->subsector->sector->special == 11
-	    && damage >= target->health)
+
+	player = target->player;
+	if (player && gameskill == sk_baby)
+		damage >>= 1; 	// take half damage in trainer mode
+
+
+	// Some close combat weapons should not
+	// inflict thrust and push the victim out of reach,
+	// thus kick away unless using the chainsaw.
+	if (inflictor && !(target->flags & MF_NOCLIP) && (!source || !source->player || source->player->readyweapon != wp_chainsaw))
 	{
-	    damage = target->health - 1;
+		ang = R_PointToAngle2 ( inflictor->x, inflictor->y, target->x, target->y);
+		
+		thrust = damage*(FRACUNIT>>3)*100/target->info->mass;
+
+		// make fall forwards sometimes
+		if ( damage < 40 && damage > target->health && target->z - inflictor->z > 64*FRACUNIT && (P_Random ()&1) )
+		{
+			ang += ANG180;
+			thrust *= 4;
+		}
+		
+		ang >>= ANGLETOFINESHIFT;
+		target->momx += FixedMul (thrust, finecosine[ang]);
+		target->momy += FixedMul (thrust, finesine[ang]);
 	}
+
+	// player specific
+	if (player)
+	{
+		// end of game hell hack
+		if (target->subsector->sector->special == 11 && damage >= target->health)
+		{
+			damage = target->health - 1;
+		}
 	
 
-	// Below certain threshold,
-	// ignore damage in GOD mode, or with INVUL power.
-	if ( damage < 1000
-	     && ( (player->cheats&CF_GODMODE)
-		  || player->powers[pw_invulnerability] ) )
-	{
-	    return;
-	}
+		// Below certain threshold,
+		// ignore damage in GOD mode, or with INVUL power.
+		if ( damage < 1000 && ( (player->cheats&CF_GODMODE) || player->powers[pw_invulnerability] ) )
+		{
+			return;
+		}
 	
-	if (player->armortype)
-	{
-	    if (player->armortype == 1)
-		saved = damage/3;
-	    else
-		saved = damage/2;
+		if (player->armortype)
+		{
+			if (player->armortype == 1)
+				saved = damage/3;
+			else
+				saved = damage/2;
 	    
-	    if (player->armorpoints <= saved)
-	    {
-		// armor is used up
-		saved = player->armorpoints;
-		player->armortype = 0;
-	    }
-	    player->armorpoints -= saved;
-	    damage -= saved;
+			if (player->armorpoints <= saved)
+			{
+				// armor is used up
+				saved = player->armorpoints;
+				player->armortype = 0;
+			}
+			player->armorpoints -= saved;
+			damage -= saved;
+		}
+		player->health -= damage; 	// mirror mobj health here for Dave
+		if (player->health < 0)
+			player->health = 0;
+	
+		player->attacker = source;
+		player->damagecount += damage;	// add damage after armor / invuln
+
+		if (player->damagecount > 100)
+			player->damagecount = 100;	// teleport stomp does 10k points...
+	
+		temp = damage < 100 ? damage : 100;
+
+		if (player == &players[consoleplayer]) // FS: For Cyberman
+		{
+			I_Tactile (40,10,40+temp*2);
+		}
 	}
-	player->health -= damage; 	// mirror mobj health here for Dave
-	if (player->health < 0)
-	    player->health = 0;
+
+	    
+	// do the damage	
+	target->health -= damage;
+	if (target->health <= 0)
+	{
+		P_KillMobj (source, target);
+		return;
+	}
+
+	if ( (P_Random () < target->info->painchance) && !(target->flags&MF_SKULLFLY) )
+	{
+		target->flags |= MF_JUSTHIT;	// fight back!
 	
-	player->attacker = source;
-	player->damagecount += damage;	// add damage after armor / invuln
+		P_SetMobjState (target, target->info->painstate);
+	}
 
-	if (player->damagecount > 100)
-	    player->damagecount = 100;	// teleport stomp does 10k points...
-	
-	temp = damage < 100 ? damage : 100;
+	target->reactiontime = 0;		// we're awake now...	
 
-
-	if (player == &players[consoleplayer])
-	    I_Tactile (40,10,40+temp*2);
-
-// FS: For Cyberman
-
-    }
-    
-    // do the damage	
-    target->health -= damage;	
-    if (target->health <= 0)
-    {
-	P_KillMobj (source, target);
-	return;
-    }
-
-    if ( (P_Random () < target->info->painchance)
-	 && !(target->flags&MF_SKULLFLY) )
-    {
-	target->flags |= MF_JUSTHIT;	// fight back!
-	
-	P_SetMobjState (target, target->info->painstate);
-    }
-			
-    target->reactiontime = 0;		// we're awake now...	
-
-    if ( (!target->threshold || target->type == MT_VILE)
-	 && source && source != target
-	 && source->type != MT_VILE)
-    {
-	// if not intent on another player,
-	// chase after this one
-	target->target = source;
-	target->threshold = BASETHRESHOLD;
-	if (target->state == &states[target->info->spawnstate]
-	    && target->info->seestate != S_NULL)
-	    P_SetMobjState (target, target->info->seestate);
-    }
-			
+	if ( (!target->threshold || target->type == MT_VILE) && source && source != target && source->type != MT_VILE)
+	{
+		// if not intent on another player,
+		// chase after this one
+		target->target = source;
+		target->threshold = BASETHRESHOLD;
+		if (target->state == &states[target->info->spawnstate] && target->info->seestate != S_NULL)
+			P_SetMobjState (target, target->info->seestate);
+	}
+		
 }

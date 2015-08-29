@@ -394,6 +394,7 @@ static patch_t*		bp[MAXPLAYERS];
 
  // Name graphics of each level (centered)
 static patch_t**	lnames;
+extern boolean  chex; // FS: Chex Quest specific stuff
 
 //
 // CODE
@@ -465,6 +466,8 @@ WI_drawOnLnode
     int		bottom;
     boolean	fits = false;
 
+    if(chex) // FS: Chex quest doesn't use this
+        return;
     i = 0;
     do
     {
@@ -494,7 +497,7 @@ WI_drawOnLnode
     else
     {
 	// DEBUG
-	printf("Could not place patch on level %d", n+1); 
+        printf("Could not place patch on level %d", n+1);
     }
 }
 

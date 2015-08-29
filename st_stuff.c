@@ -545,8 +545,8 @@ void ST_refreshBackground(void)
 boolean
 ST_Responder (event_t* ev)
 {
-  int		i;
-    
+	int	i;
+	extern boolean	chex; // FS: For Chex Quest
   // Filter automap on/off.
   if (ev->type == ev_keyup
       && ((ev->data1 & 0xffff0000) == AM_MSGHEADER))
@@ -731,27 +731,50 @@ ST_Responder (event_t* ev)
 
       // Catch invalid maps.
       if (epsd < 1)
-	return false;
+	{
+		P_SetMessage(plyr, "Invalid Episode!", true);
+		return false;
+	}
 
       if (map < 1)
-	return false;
-      
+	{
+		P_SetMessage(plyr, "Invalid Map!", true);
+		return false;
+	}      
       // Ohmygod - this is not going to work.
       if ((gamemode == retail)
 	  && ((epsd > 4) || (map > 9)))
-	return false;
+	{
+		P_SetMessage(plyr, "Invalid Selection!", true);
+		return false;
+	}
 
       if ((gamemode == registered)
 	  && ((epsd > 3) || (map > 9)))
-	return false;
+	{
+		P_SetMessage(plyr, "Invalid Selection!", true);
+		return false;
+	}
 
       if ((gamemode == shareware)
 	  && ((epsd > 1) || (map > 9)))
-	return false;
+	{
+		P_SetMessage(plyr, "Invalid Selection!", true);
+		return false;
+	}
+
+	if (chex && ((epsd > 1) || (map > 5))) // FS: Chex Quest only has 5 levels.
+	{
+		P_SetMessage(plyr, "Invalid Selection!", true);
+		return false;
+	}
 
       if ((gamemode == commercial)
 	&& (( epsd > 1) || (map > 34)))
-	return false;
+	{
+		P_SetMessage(plyr, "Invalid Selection!", true);
+		return false;
+	}
 
       // So be it.
       plyr->message = STSTR_CLEV;
@@ -1555,27 +1578,30 @@ void ST_DrawFullScreenAmmo(int x)
 {
 	char namebuf[9];
 
-		if (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] >= 100)
-		{
-			sprintf(namebuf,"STTNUM%d", plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 100);
-			V_DrawPatchDirect(5, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+	if(plyr->readyweapon == wp_fist || plyr->readyweapon == wp_chainsaw) // FS: Don't draw a number for Weapon 1
+		return;
 
-			sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 10) % 10);
+	if (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] >= 100)
+	{
+		sprintf(namebuf,"STTNUM%d", plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 100);
+		V_DrawPatchDirect(5, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+		sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 10) % 10);
+		V_DrawPatchDirect(20, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+
+		sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 1) % 10);
+		V_DrawPatchDirect(35, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+	}
+	else if (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] < 100)
+	{
+		if( (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] /10) % 10 > 0)
+		{
+			sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] /10) % 10);
 			V_DrawPatchDirect(20, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
-
-			sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 1) % 10);
-			V_DrawPatchDirect(35, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
 		}
-		else if (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] < 100)
-		{
-			if( (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] /10) % 10 > 0)
-			{
-				sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] /10) % 10);
-				V_DrawPatchDirect(20, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
-			}
-			sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 1) % 10);
-			V_DrawPatchDirect(35, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
-		}
+		sprintf(namebuf,"STTNUM%d", (plyr->ammo[weaponinfo[plyr->readyweapon].ammo] / 1) % 10);
+		V_DrawPatchDirect(35, 160, 0, W_CacheLumpName(namebuf, PU_CACHE));
+	}
 }
 
 // FS: Draw Ammo in Full Screen

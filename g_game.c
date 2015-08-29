@@ -71,8 +71,8 @@ rcsid[] = "$Id: g_game.c,v 1.8 1997/02/03 22:45:09 b1 Exp $";
 #include "g_game.h"
 
 
-#define SAVEGAMESIZE	0x2c000
-#define SAVESTRINGSIZE	24
+#define SAVEGAMESIZE    0x100000 // FS: Was 0x2c000
+#define SAVESTRINGSIZE  256 // FS: Was 24
 
 
 
@@ -81,7 +81,9 @@ void	G_ReadDemoTiccmd (ticcmd_t* cmd);
 void	G_WriteDemoTiccmd (ticcmd_t* cmd); 
 void	G_PlayerReborn (int player); 
 void	G_InitNew (skill_t skill, int episode, int map); 
- 
+int	savegamesize = 0x100000; // FS: Normally 0x2c000
+int	savestringsize = 256; // FS: Normally 24
+
 void	G_DoReborn (int playernum); 
  
 void	G_DoLoadLevel (void); 
@@ -213,7 +215,7 @@ mobj_t*		bodyque[BODYQUESIZE];
 int		bodyqueslot; 
  
 void*		statcopy;				// for statistics driver
- 
+extern boolean	chex; // FS: For Chex(R) Quest.
  
  
 int G_CmdChecksum (ticcmd_t* cmd) 
@@ -522,45 +524,33 @@ void G_DoLoadLevel (void)
 // 
 boolean G_Responder (event_t* ev) 
 { 
-    // allow spy mode changes even during the demo
-    if (gamestate == GS_LEVEL && ev->type == ev_keydown 
-	&& ev->data1 == KEY_F12 && (singledemo || !deathmatch) )
-    {
-	// spy mode 
-	do 
-	{ 
-	    displayplayer++; 
-	    if (displayplayer == MAXPLAYERS) 
-		displayplayer = 0; 
-	} while (!playeringame[displayplayer] && displayplayer != consoleplayer); 
-	return true; 
-    }
+	// allow spy mode changes even during the demo
+	if (gamestate == GS_LEVEL && ev->type == ev_keydown && ev->data1 == KEY_F12 && (singledemo || !deathmatch) )
+	{
+		// spy mode 
+		do 
+		{ 
+			displayplayer++; 
+			if (displayplayer == MAXPLAYERS) 
+				displayplayer = 0; 
+		}
+		while (!playeringame[displayplayer] && displayplayer != consoleplayer); 
+		return true; 
+	}
     
-    // any other key pops up menu if in demos
-    if (gameaction == ga_nothing && !singledemo && 
-	(demoplayback || gamestate == GS_DEMOSCREEN) 
-	) 
-    { 
-	if (ev->type == ev_keydown ||  
-	    (ev->type == ev_mouse && ev->data1)
-            || (ev->type == ev_joystick && ev->data1)
-            )
+	// any other key pops up menu if in demos
+	if (gameaction == ga_nothing && !singledemo && (demoplayback || gamestate == GS_DEMOSCREEN)) 
 	{ 
-	    M_StartControlPanel (); 
-	    return true; 
+		if (ev->type == ev_keydown || (ev->type == ev_mouse && ev->data1) || (ev->type == ev_joystick && ev->data1))
+		{ 
+			M_StartControlPanel (); 
+			return true; 
+		} 
+		return false; 
 	} 
-	return false; 
-    } 
  
     if (gamestate == GS_LEVEL) 
     { 
-#if 0 
-	if (devparm && ev->type == ev_keydown && ev->data1 == ';') 
-	{ 
-	    G_DeathMatchSpawnPlayer (0); 
-	    return true; 
-	} 
-#endif 
 	if (HU_Responder (ev)) 
 	    return true;	// chat ate the event 
 	if (ST_Responder (ev)) 
@@ -1072,10 +1062,10 @@ int pars[4][10] =
 // DOOM II Par Times
 int cpars[32] =
 {
-    30,90,120,120,90,150,120,120,270,90,	//  1-10
-    210,150,150,150,210,150,420,150,210,150,	// 11-20
-    240,150,180,150,150,300,330,420,300,180,	// 21-30
-    120,30					// 31-32
+	30,90,120,120,90,150,120,120,270,90,	//  1-10
+	210,150,150,150,210,150,420,150,210,150,	// 11-20
+	240,150,180,150,150,300,330,420,300,180,	// 21-30
+	120,30					// 31-32
 };
  
 
@@ -1087,143 +1077,153 @@ extern char*	pagename;
  
 void G_ExitLevel (void) 
 { 
-    secretexit = false; 
-    gameaction = ga_completed; 
+	secretexit = false; 
+	gameaction = ga_completed; 
 } 
 
 // Here's for the german edition.
 void G_SecretExitLevel (void) 
 { 
-    // IF NO WOLF3D LEVELS, NO SECRET EXIT!
-    if ( (gamemode == commercial)
-      && (W_CheckNumForName("map31")<0))
-	secretexit = false;
-    else
-	secretexit = true; 
-    gameaction = ga_completed; 
+	// IF NO WOLF3D LEVELS, NO SECRET EXIT!
+	if ( (gamemode == commercial) && (W_CheckNumForName("map31")<0))
+		secretexit = false;
+	else
+		secretexit = true; 
+	gameaction = ga_completed; 
 } 
  
 void G_DoCompleted (void) 
 { 
-    int             i; 
+	int             i; 
 	 
-    gameaction = ga_nothing; 
+	gameaction = ga_nothing; 
  
-    for (i=0 ; i<MAXPLAYERS ; i++) 
-	if (playeringame[i]) 
-	    G_PlayerFinishLevel (i);        // take away cards and stuff 
+	for (i=0 ; i<MAXPLAYERS ; i++) 
+		if (playeringame[i]) 
+			G_PlayerFinishLevel (i);        // take away cards and stuff 
 	 
-    if (automapactive) 
-	AM_Stop (); 
+	if (automapactive) 
+		AM_Stop (); 
 	
-    if ( gamemode != commercial)
-	switch(gamemap)
-	{
-	  case 8:
-	    gameaction = ga_victory;
-	    return;
-	  case 9: 
-	    for (i=0 ; i<MAXPLAYERS ; i++) 
-		players[i].didsecret = true; 
-	    break;
-	}
+	if ( gamemode != commercial)
+		switch(gamemap)
+		{
+		case 5:
+			if(chex)
+			{
+				gameaction = ga_victory;
+				return;
+			}
+			return;
+		case 8:
+			gameaction = ga_victory;
+			return;
+		case 9: 
+			for (i=0 ; i<MAXPLAYERS ; i++) 
+				players[i].didsecret = true; 
+			break;
+		}
 		
 //#if 0  Hmmm - why?
-    if ( (gamemap == 8)
-	 && (gamemode != commercial) ) 
-    {
-	// victory 
-	gameaction = ga_victory; 
-	return; 
-    } 
+	if ( (gamemap == 8) && (gamemode != commercial) ) 
+	{
+		// victory 
+		gameaction = ga_victory; 
+		return; 
+	} 
 	 
-    if ( (gamemap == 9)
-	 && (gamemode != commercial) ) 
-    {
-	// exit secret level 
-	for (i=0 ; i<MAXPLAYERS ; i++) 
-	    players[i].didsecret = true; 
-    } 
+	if ( (gamemap == 9) && (gamemode != commercial) ) 
+	{
+		// exit secret level 
+		for (i=0 ; i<MAXPLAYERS ; i++) 
+			players[i].didsecret = true; 
+	} 
 //#endif
     
 	 
-    wminfo.didsecret = players[consoleplayer].didsecret; 
-    wminfo.epsd = gameepisode -1; 
-    wminfo.last = gamemap -1;
+	wminfo.didsecret = players[consoleplayer].didsecret; 
+	wminfo.epsd = gameepisode -1; 
+	wminfo.last = gamemap -1;
     
-    // wminfo.next is 0 biased, unlike gamemap
-    if ( gamemode == commercial)
-    {
-	if (secretexit)
-	    switch(gamemap)
-	    {
-	      case 15: wminfo.next = 30; break;
-	      case 31: wminfo.next = 31; break;
-	    }
+	// wminfo.next is 0 biased, unlike gamemap
+	if ( gamemode == commercial)
+	{
+		if (secretexit)
+			switch(gamemap)
+			{
+				case 15:
+					wminfo.next = 30;
+					break;
+				case 31:
+					wminfo.next = 31;
+					break;
+			}
+		else
+			switch(gamemap)
+			{
+				case 31:
+				case 32:
+					wminfo.next = 15;
+					break;
+			      default:
+					wminfo.next = gamemap;
+			}
+	}
 	else
-	    switch(gamemap)
-	    {
-	      case 31:
-	      case 32: wminfo.next = 15; break;
-	      default: wminfo.next = gamemap;
-	    }
-    }
-    else
-    {
-	if (secretexit) 
-	    wminfo.next = 8; 	// go to secret level 
+	{
+		if (secretexit) 
+			wminfo.next = 8; 	// go to secret level 
 	else if (gamemap == 9) 
 	{
-	    // returning from secret level 
-	    switch (gameepisode) 
-	    { 
-	      case 1: 
-		wminfo.next = 3; 
-		break; 
-	      case 2: 
-		wminfo.next = 5; 
-		break; 
-	      case 3: 
-		wminfo.next = 6; 
-		break; 
-	      case 4:
-		wminfo.next = 2;
-		break;
-	    }                
+		// returning from secret level 
+		switch (gameepisode) 
+		{ 
+			case 1: 
+				wminfo.next = 3; 
+				break; 
+			case 2: 
+				wminfo.next = 5; 
+				break; 
+			case 3: 
+				wminfo.next = 6; 
+				break; 
+			case 4:
+				wminfo.next = 2;
+				break;
+		}                
 	} 
 	else 
-	    wminfo.next = gamemap;          // go to next level 
-    }
+		wminfo.next = gamemap;          // go to next level 
+	}
 		 
-    wminfo.maxkills = totalkills; 
-    wminfo.maxitems = totalitems; 
-    wminfo.maxsecret = totalsecret; 
-    wminfo.maxfrags = 0; 
-    if ( gamemode == commercial )
-	wminfo.partime = 35*cpars[gamemap-1]; 
-    else
-	wminfo.partime = 35*pars[gameepisode][gamemap]; 
-    wminfo.pnum = consoleplayer; 
+	wminfo.maxkills = totalkills; 
+	wminfo.maxitems = totalitems; 
+	wminfo.maxsecret = totalsecret; 
+	wminfo.maxfrags = 0; 
+	if ( gamemode == commercial )
+		wminfo.partime = 35*cpars[gamemap-1]; 
+	else
+		wminfo.partime = 35*pars[gameepisode][gamemap]; 
+	wminfo.pnum = consoleplayer; 
  
-    for (i=0 ; i<MAXPLAYERS ; i++) 
-    { 
-	wminfo.plyr[i].in = playeringame[i]; 
-	wminfo.plyr[i].skills = players[i].killcount; 
-	wminfo.plyr[i].sitems = players[i].itemcount; 
-	wminfo.plyr[i].ssecret = players[i].secretcount; 
-	wminfo.plyr[i].stime = leveltime; 
-	memcpy (wminfo.plyr[i].frags, players[i].frags 
-		, sizeof(wminfo.plyr[i].frags)); 
-    } 
+	for (i=0 ; i<MAXPLAYERS ; i++) 
+	{ 
+		wminfo.plyr[i].in = playeringame[i]; 
+		wminfo.plyr[i].skills = players[i].killcount; 
+		wminfo.plyr[i].sitems = players[i].itemcount; 
+		wminfo.plyr[i].ssecret = players[i].secretcount; 
+		wminfo.plyr[i].stime = leveltime; 
+		memcpy (wminfo.plyr[i].frags, players[i].frags, sizeof(wminfo.plyr[i].frags)); 
+	} 
  
-    gamestate = GS_INTERMISSION; 
-    viewactive = false; 
-    automapactive = false; 
+	gamestate = GS_INTERMISSION; 
+	viewactive = false; 
+	automapactive = false; 
  
-    if (statcopy)
-	memcpy (statcopy, &wminfo, sizeof(wminfo));
+	if (statcopy)
+		memcpy (statcopy, &wminfo, sizeof(wminfo));
 	
-    WI_Start (&wminfo); 
+	WI_Start (&wminfo); 
 } 
 
 
@@ -1232,27 +1232,37 @@ void G_DoCompleted (void)
 //
 void G_WorldDone (void) 
 { 
-    gameaction = ga_worlddone; 
+	gameaction = ga_worlddone; 
 
-    if (secretexit) 
-	players[consoleplayer].didsecret = true; 
+	if (secretexit) 
+		players[consoleplayer].didsecret = true; 
 
-    if ( gamemode == commercial )
-    {
-	switch (gamemap)
+	if ( gamemode == commercial )
 	{
-	  case 15:
-	  case 31:
-	    if (!secretexit)
-		break;
-	  case 6:
-	  case 11:
-	  case 20:
-	  case 30:
-	    F_StartFinale ();
-	    break;
+		switch (gamemap)
+		{
+			case 15:
+			case 31:
+				if (!secretexit)
+					break;
+			case 6:
+			case 11:
+			case 20:
+			case 30:
+				F_StartFinale ();
+				break;
+		}
 	}
-    }
+
+	if (chex)
+	{
+		switch(gamemap)
+		{
+			case 5:
+				F_StartFinale();
+				break;
+		}
+	}
 } 
  
 void G_DoWorldDone (void) 
@@ -1294,12 +1304,12 @@ void G_DoLoadGame (void)
     gameaction = ga_nothing; 
 	 
     length = M_ReadFile (savename, &savebuffer); 
-    save_p = savebuffer + SAVESTRINGSIZE;
+    save_p = savebuffer + savestringsize;
     
     // skip the description field 
     memset (vcheck,0,sizeof(vcheck)); 
     sprintf (vcheck,"version %i",VERSION); 
-    if (strcmp ((char *)save_p, vcheck)) // FS: Compiler warning 
+    if ((strcmp ((char *)save_p, vcheck)) && !M_CheckParm("-overridesave")) // FS: Compiler warning 
 	return;				// bad version 
     save_p += VERSIONSIZE; 
 			 
@@ -1369,8 +1379,8 @@ void G_DoSaveGame (void)
 	 
     save_p = savebuffer = screens[1]+0x4000; 
 	 
-    memcpy (save_p, description, SAVESTRINGSIZE); 
-    save_p += SAVESTRINGSIZE; 
+    memcpy (save_p, description, savestringsize); 
+    save_p += savestringsize; 
     memset (name2,0,sizeof(name2)); 
     sprintf (name2,"version %i",VERSION); 
     memcpy (save_p, name2, VERSIONSIZE); 
@@ -1393,7 +1403,7 @@ void G_DoSaveGame (void)
     *save_p++ = 0x1d;		// consistancy marker 
 	 
     length = save_p - savebuffer; 
-    if (length > SAVEGAMESIZE) 
+    if (length > savegamesize) 
 	I_Error ("Savegame buffer overrun"); 
     M_WriteFile (name, savebuffer, length); 
     gameaction = ga_nothing; 
@@ -1551,7 +1561,7 @@ G_InitNew
 	switch (episode) 
 	{ 
 	  case 1: 
-	    skytexture = R_TextureNumForName ("SKY1"); 
+		skytexture = R_TextureNumForName ("SKY1"); 
 	    break; 
 	  case 2: 
 	    skytexture = R_TextureNumForName ("SKY2"); 

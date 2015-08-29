@@ -69,6 +69,7 @@ extern patch_t*		hu_font[HU_FONTSIZE];
 extern boolean		message_dontfuckwithme;
 
 extern boolean		chat_on;		// in heads-up code
+extern boolean 	chex; // FS: For Chex Quest
 
 //
 // defaulted values
@@ -230,7 +231,7 @@ void M_StartMessage(char *string,void *routine,boolean input);
 void M_StopMessage(void);
 void M_ClearMenus (void);
 
-
+void M_DeleteSaveResponse(int ch); // FS: Delete Save Games
 
 
 //
@@ -687,6 +688,18 @@ void M_QuickSaveResponse(int ch)
     }
 }
 
+void M_DeleteSaveResponse(int ch) // FS: Ask if we want to delete the save game
+{
+	char savename[20];
+
+	if (ch == 'y')
+	{
+		sprintf(savename,SAVEGAMENAME"%d.dsg",itemOn);
+		remove(savename);
+		S_StartSound(NULL,sfx_swtchx);
+	}
+}
+
 void M_QuickSave(void)
 {
     if (!usergame)
@@ -780,12 +793,12 @@ void M_DrawReadThis2(void)
     {
       case retail:
       case commercial:
-	// This hack keeps us from having to change menus.
-	V_DrawPatchDirect (0,0,0,W_CacheLumpName("CREDIT",PU_CACHE));
+		// This hack keeps us from having to change menus.
+		V_DrawPatchDirect (0,0,0,W_CacheLumpName("CREDIT",PU_CACHE));
 	break;
       case shareware:
       case registered:
-	V_DrawPatchDirect (0,0,0,W_CacheLumpName("HELP2",PU_CACHE));
+		V_DrawPatchDirect (0,0,0,W_CacheLumpName("HELP2",PU_CACHE));
 	break;
       default:
 	break;
@@ -878,7 +891,7 @@ void M_NewGame(int choice)
 	return;
     }
 	
-    if ( gamemode == commercial )
+    if ( gamemode == commercial || chex) // FS: Chex Quest doesn't have an Episode screen.
 	M_SetupNextMenu(&NewDef);
     else
 	M_SetupNextMenu(&EpiDef);
@@ -1100,15 +1113,12 @@ void M_QuitResponse(int ch)
 void M_QuitDOOM(int choice)
 {
 	// FS: Fixed this mess
-	if (language != english )
-		sprintf(endstring,"%s\n\n"DOSY, endmsg[0] );
+	if(chex) // FS: For Chex Quest Quit MSG
+		sprintf(endstring,"%s\n\n"DOSY, endmsgchex[gametic%2]);
+	else if(gamemode == commercial)
+		sprintf(endstring,"%s\n\n"DOSY, endmsg2[gametic%NUM_QUITMESSAGES]);
 	else
-	{
-		if(gamemode == commercial)
-			sprintf(endstring,"%s\n\n"DOSY, endmsg2[ (gametic%(9-2))+1 ]);
-		else
-			sprintf(endstring,"%s\n\n"DOSY, endmsg[ (gametic% (9-2))+1 ]);
-	}
+		sprintf(endstring,"%s\n\n"DOSY, endmsg[gametic%NUM_QUITMESSAGES]);
 	M_StartMessage(endstring,M_QuitResponse,true);
 }
 
@@ -1374,7 +1384,8 @@ boolean M_Responder (event_t* ev)
     static  int     lasty = 0;
     static  int     mousex = 0;
     static  int     lastx = 0;
-	
+	char savename[32]; // FS
+
     ch = -1;
 	
     if (ev->type == ev_joystick && joywait < I_GetTime())
@@ -1490,7 +1501,6 @@ boolean M_Responder (event_t* ev)
 	    if (savegamestrings[saveSlot][0])
 		M_DoSave(saveSlot);
 	    break;
-				
 	  default:
 	    ch = toupper(ch);
 	    if (ch != 32)
@@ -1643,6 +1653,19 @@ boolean M_Responder (event_t* ev)
     // Keys usable within menu
     switch (ch)
     {
+	case (0x80+0x53): // FS: KEY_DEL
+		// FS: Ask us if we want to delete the current save
+		if(currentMenu == &LoadDef || currentMenu == &SaveDef)
+		{
+			sprintf(savename,SAVEGAMENAME"%d.dsg",itemOn);
+			if(!access(savename,0))
+			{
+				sprintf(tempstring,"ARE YOU SURE YOU WANT TO DELETE THIS SAVE?\n\nPRESS Y OR N.");
+    				M_StartMessage(tempstring,M_DeleteSaveResponse,true);
+			}
+		}
+		return true;
+
       case KEY_DOWNARROW:
 	do
 	{
@@ -1702,6 +1725,7 @@ boolean M_Responder (event_t* ev)
       case KEY_ESCAPE:
 	currentMenu->lastOn = itemOn;
 	M_ClearMenus ();
+	readthisfullscreenhack = false; // FS: full screen hack fucking BULLSHIT :)
 	S_StartSound(NULL,sfx_swtchx);
 	return true;
 		
@@ -1765,7 +1789,7 @@ void M_Drawer (void)
     static short	y;
     short		i;
     short		max;
-    char                string[256]; // FS: Was 40?
+    char                string[80]; // FS: Was 40
     int			start;
 
     inhelpscreens = false;
@@ -1781,7 +1805,7 @@ void M_Drawer (void)
 	    for (i = 0;i < strlen(messageString+start);i++)
 		if (*(messageString+start+i) == '\n')
 		{
-                    memset(string,0,256);
+			memset(string,0,sizeof(string)); // FS: Fickst'd
 		    strncpy(string,messageString+start,i);
 		    start += i+1;
 		    break;
@@ -1868,48 +1892,55 @@ void M_Ticker (void)
 //
 void M_Init (void)
 {
-    currentMenu = &MainDef;
-    menuactive = 0;
-    itemOn = currentMenu->lastOn;
-    whichSkull = 0;
-    skullAnimCounter = 10;
-    screenSize = screenblocks - 3;
-    messageToPrint = 0;
-    messageString = NULL;
-    messageLastMenuActive = menuactive;
-    quickSaveSlot = -1;
+	currentMenu = &MainDef;
+	menuactive = 0;
+	itemOn = currentMenu->lastOn;
+	whichSkull = 0;
+	skullAnimCounter = 10;
+	screenSize = screenblocks - 3;
+	messageToPrint = 0;
+	messageString = NULL;
+	messageLastMenuActive = menuactive;
+	quickSaveSlot = -1;
 
-    // Here we could catch other version dependencies,
-    //  like HELP1/2, and four episodes.
+	// Here we could catch other version dependencies,
+	//  like HELP1/2, and four episodes.
+	if(chex) // FS: Chex Quest doesn't have a HELP2 screen.
+	{
+		ReadDef1.routine = M_DrawReadThis1;
+		ReadDef1.x = 330;
+		ReadDef1.y = 165;
+		ReadMenu1[0].routine = M_FinishReadThis;
+	}
 
-  
-    switch ( gamemode )
-    {
-      case commercial:
-	// This is used because DOOM 2 had only one HELP
-        //  page. I use CREDIT as second page now, but
-	//  kept this hack for educational purposes.
-	MainMenu[readthis] = MainMenu[quitdoom];
-	MainDef.numitems--;
-	MainDef.y += 8;
-	NewDef.prevMenu = &MainDef;
-	ReadDef1.routine = M_DrawReadThis1;
-	ReadDef1.x = 330;
-	ReadDef1.y = 165;
-	ReadMenu1[0].routine = M_FinishReadThis;
-	break;
-      case shareware:
-	// Episode 2 and 3 are handled,
-	//  branching to an ad screen.
-      case registered:
-	// We need to remove the fourth episode.
-	EpiDef.numitems--;
-	break;
-      case retail:
-	// We are fine.
-      default:
-	break;
-    }
+
+	switch ( gamemode )
+	{
+		case commercial:
+			// This is used because DOOM 2 had only one HELP
+			//  page. I use CREDIT as second page now, but
+			//  kept this hack for educational purposes.
+			MainMenu[readthis] = MainMenu[quitdoom];
+			MainDef.numitems--;
+			MainDef.y += 8;
+			NewDef.prevMenu = &MainDef;
+			ReadDef1.routine = M_DrawReadThis1;
+			ReadDef1.x = 330;
+			ReadDef1.y = 165;
+			ReadMenu1[0].routine = M_FinishReadThis;
+			break;
+ 	     case shareware:
+			// Episode 2 and 3 are handled,
+			//  branching to an ad screen.
+	      case registered:
+			// We need to remove the fourth episode.
+			EpiDef.numitems--;
+			break;
+		case retail:
+			// We are fine.
+		default:
+			break;
+	}
     
 }
 

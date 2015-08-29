@@ -1,3 +1,21 @@
+09-15-13
+ - -oldsave parameter to load older save games (i.e. not the 1MB and 256 string
+    size games).
+ - -overridesave parameter to attempt forcing incorrect save game versions.
+    Will likely crash, no guarantees.
+ - Fixed readthisfullscreenhack boolean to work with KEY_ESCAPE. (whoops!)
+ - Preliminary support for Chex Quest.  Some text needs to be changed.
+   The coop intermission screen is kind of funky because the text is different 
+   sizes compared to the original Doom.  I may just remove the coop intermission 
+   screen entirely.
+ - devparm was not being read properly from -shdev, -regdev, -comdev.
+   It's fairly useless as F12 already allows screen shots now.
+ - Music wasn't pausing from S_SetMusicVolume if it was set to 0.
+   Still buggy with intermission and intro.  Basically, S_ChangeMusic.
+ - Fixed the math for endmsg.  Was skipping over the "are you sure you want to
+   quit this great game?" message.  Code from Chocolate Doom.
+ - Now shows the "Picked up a healthkit that you really need!" message.
+
 09-14-13
  - Added Fullscreen Ammo, Armor, Health, and Keycards.
  - Imported the Cyberman/Tactile stuff from Heretic.
@@ -18,6 +36,13 @@
    * Hold down ESC during startup to abort execution of the game.
  - Checks for unnaturally high volume levels.
  - Fixed Plutonia and TNT (Final Doom) intermission text.
+ - Fixed drawing a number for Fist and Chainsaw in Fullscreen.
+ - Delete save games from Load and Save Menu by pressing delete.
+ - Bumped SAVEGAMESIZE to ~1MB and SAVESTRINGSIZE from 24 to 256.
+   Not sure if there is any stock Final Doom, etc. maps with a save
+   issue, but can't hurt!
+ - Disabled RANGECHECK ifdef.  Plutonia gave a bomb walking down a
+   dark hallway with it.  I may turn it into a M_CheckParm at some point.
 
 09-13-13
  - Fixed out of control input.
@@ -41,6 +66,7 @@
 
 09-11-13
  - Fixed graphics.
+ - KEY_F12 now produces a screen shot.  No need for -devparm.
 
 09-10-13
  - Sound and graphics.

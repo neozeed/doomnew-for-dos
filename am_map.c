@@ -822,7 +822,7 @@ void AM_Ticker (void)
 	AM_changeWindowLoc();
 
     // Update light level
-    // AM_updateLightLev();
+//     AM_updateLightLev();
 
 }
 

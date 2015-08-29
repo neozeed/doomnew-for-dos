@@ -5,3 +5,6 @@
 - Fix chainsaw pitch.
 - I_NET.C with WATT32
 - Fix Low Detail mode.
+- Finish up Chex Quest text and solution to coop intermission.
+- Fix S_ChangeMusic to pause the music if snd_MusicVolume is 0.
+- Change RANGECHECK to be a parameter.
