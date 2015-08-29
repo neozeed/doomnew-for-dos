@@ -531,6 +531,7 @@ void M_LoadSelect(int choice)
     else
 		DEH_snprintf(name,32,SAVEGAMENAME"%d.dsg",choice);
     G_LoadGame (name);
+	SaveDef.lastOn = choice; // FS: Keep slots consistent
     M_ClearMenus ();
 }
 
@@ -577,6 +578,7 @@ void M_DrawSave(void)
 void M_DoSave(int slot)
 {
     G_SaveGame (slot,savegamestrings[slot]);
+    LoadDef.lastOn = slot; // FS: Keep slots consistent
     M_ClearMenus ();
 
     // PICK QUICKSAVE SLOT YET?

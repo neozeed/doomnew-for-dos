@@ -1,3 +1,12 @@
+10-16-13
+ - Save and Load slots consistent with each other.
+ - Raised limits to wHeretic limits.
+ - HHSCOTT cheat will now automatically skip to the secret levels.
+
+10-15-13
+ - If you use -file DOOMNEW will automatically look for an internal
+   DEHACKED.DEH.
+
 10-14-13
  - Fixed a potential crash with EXTEND.CFG loading if extra
    strings were in there.

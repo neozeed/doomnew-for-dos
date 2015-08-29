@@ -841,7 +841,7 @@ void IdentifyVersion (void)
 
 	if ( !access (doomwad,0) )
 	{
-		if (W_CheckNumForName("e4m1")<0) // FS: If Episode 4 exists, then we assume it's Ultimate Doom
+		if (W_CheckNumForName("e4m1") != -1) // FS: If Episode 4 exists, then we assume it's Ultimate Doom
 			gamemode = retail;
 		else
 			gamemode = registered;
@@ -941,58 +941,6 @@ void FindResponseFile (void)
 		}
 }
 
-// Copyright message banners
-// Some dehacked mods replace these.  These are only displayed if they are 
-// replaced by dehacked.
-
-static char *copyright_banners[] =
-{
-    "===========================================================================\n"
-    "ATTENTION:  This version of DOOM has been modified.  If you would like to\n"
-    "get a copy of the original game, call 1-800-IDGAMES or see the readme file.\n"
-    "        You will not receive technical support for modified games.\n"
-    "                      press enter to continue\n"
-    "===========================================================================\n",
-
-    "===========================================================================\n"
-    "                 Commercial product - do not distribute!\n"
-    "         Please report software piracy to the SPA: 1-800-388-PIR8\n"
-    "===========================================================================\n",
-
-    "===========================================================================\n"
-    "                                Shareware!\n"
-    "===========================================================================\n"
-};
-
-// Prints a message only if it has been modified by dehacked.
-
-void PrintDehackedBanners(void)
-{
-    size_t i;
-
-    for (i=0; i<arrlen(copyright_banners); ++i)
-    {
-        char *deh_s;
-
-        deh_s = DEH_String(copyright_banners[i]);
-
-        if (deh_s != copyright_banners[i])
-        {
-            printf("%s", deh_s);
-
-            // Make sure the modified banner always ends in a newline character.
-            // If it doesn't, add a newline.  This fixes av.wad.
-
-            if (deh_s[strlen(deh_s) - 1] != '\n')
-            {
-                printf("\n");
-            }
-        }
-    }
-}
-
-
-
 //
 // D_DoomMain
 //
@@ -1005,6 +953,7 @@ void D_DoomMain (void)
 	FILE *fp;
 	boolean devMap;
 	char *bannerbuffer; // FS
+	int	lumpnum; // FS
 	
 	FindResponseFile ();
 
@@ -1166,19 +1115,10 @@ void D_DoomMain (void)
 		// or another - preceded parm
 		while(++p != myargc && myargv[p][0] != '-')
 		{
+			modifiedgame = true;
 			D_AddFile(myargv[p]);
 		}
 	}
-
-/*
-	if (M_CheckParm("-gus")) // FS: GUS1M patches
-	{
-		if(gamemode == commercial)
-			D_AddFile("GUS1MIID.WAD");
-		else
-			D_AddFile("GUS1M.WAD");
-	}
-*/
 
 	// turbo option
 	if ( (p=M_CheckParm ("-turbo")) )
@@ -1288,9 +1228,24 @@ void D_DoomMain (void)
     DEH_Init();
 #endif
 
+	if(modifiedgame) // FS: Look for an internal DEHacked file if it's a modified game.
+	{
+		lumpnum = 0;
+		mprintf("	looking for internal DEHacked file...");
+		lumpnum = W_CheckNumForName("dehacked.deh");
+		if(lumpnum != -1)
+		{
+			mprintf(" found!\n");
+			DEH_LoadLumpByName("dehacked.deh");
+		}
+		else
+			mprintf(" not found!\n");
+	}
+	
 	if(hacx) // FS: Load HACX internal DEH
 		DEH_LoadLumpByName("dehacked.deh");
 
+/*
 	// Check for -file in shareware
 	if (modifiedgame)
 	{
@@ -1333,6 +1288,7 @@ void D_DoomMain (void)
 		getchar ();
 #endif
 	}
+*/
 
 //
 // check which version

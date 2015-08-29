@@ -577,9 +577,66 @@ ST_Responder (event_t* ev)
 		{
 			if (cht_CheckCheat(&cheat_finishmap, ev->data1)) // FS: Finish map instantly cheat
 			{
-				G_ExitLevel();
+				P_SetMessage(plyr, "INSTA-FINISH!", false);
+				if (gamemode == commercial)
+				{
+					switch(gamemap)
+					{
+						case 15:
+							G_SecretExitLevel();
+							break;
+						case 31:
+							G_SecretExitLevel();
+							break;
+						default:
+							G_ExitLevel();
+							break;
+					}
+				}
+				else if(chex)
+				{
+					G_ExitLevel();
+				}
+				else
+				{
+					switch (gamemap)
+					{
+						case 2:
+							if(gamemode == retail)
+							{
+								if(gameepisode == 4)
+									G_SecretExitLevel();
+								else
+									G_ExitLevel();									
+							}
+							else
+								G_ExitLevel();
+							break;
+						case 3:
+							if(gameepisode == 1)
+								G_SecretExitLevel();
+							else
+								G_ExitLevel();
+							break;
+						case 5:
+							if(gameepisode == 2)
+								G_SecretExitLevel();
+							else
+								G_ExitLevel();
+							break;
+						case 6:
+							if(gameepisode == 3)
+								G_SecretExitLevel();
+							else
+								G_ExitLevel();
+							break;
+						default:
+							G_ExitLevel();
+							break;
+						}
+					}
 			}
-			if (cht_CheckCheat(&cheat_massacre, ev->data1)) // FS: Finish map instantly cheat
+			if (cht_CheckCheat(&cheat_massacre, ev->data1)) // FS: Massacre cheat from Heretic
 			{
 				P_SetMessage(plyr,"MASSACRE!", true);
 				P_Massacre();
