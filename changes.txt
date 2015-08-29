@@ -1,8 +1,13 @@
+09-06-13
+ - Warning to use -oldsave.
+ - "Sector type 17 is disabled after loading a save game" bug fixed.  This causes
+   the flickering strobe lights to be restored after loading a save.
+   See more at:
+   http://doomwiki.org/wiki/Sector_type_17_is_disabled_after_loading_a_saved_game
+
 09-15-13
  - -oldsave parameter to load older save games (i.e. not the 1MB and 256 string
     size games).
- - -overridesave parameter to attempt forcing incorrect save game versions.
-    Will likely crash, no guarantees.
  - Fixed readthisfullscreenhack boolean to work with KEY_ESCAPE. (whoops!)
  - Preliminary support for Chex Quest.  Some text needs to be changed.
    The coop intermission screen is kind of funky because the text is different 

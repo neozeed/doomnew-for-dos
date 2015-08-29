@@ -8,3 +8,4 @@
 - Finish up Chex Quest text and solution to coop intermission.
 - Fix S_ChangeMusic to pause the music if snd_MusicVolume is 0.
 - Change RANGECHECK to be a parameter.
+- Import DEHACKED parsing from Chocolate Doom.

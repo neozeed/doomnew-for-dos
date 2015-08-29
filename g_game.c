@@ -242,7 +242,9 @@ int G_CmdChecksum (ticcmd_t* cmd)
 // If recording a demo, write it out 
 // 
 extern int	isCyberPresent; // FS: From Heretic
-void I_ReadCyberCmd(ticcmd_t *cmd); // FS: From Heretic
+extern void P_ArchiveSpecialsOld (void);
+extern void P_UnArchiveSpecialsOld (void);
+
 void G_BuildTiccmd (ticcmd_t* cmd) 
 { 
     int		i; 
@@ -1325,56 +1327,66 @@ void G_LoadGame (char* name)
 
 void G_DoLoadGame (void) 
 { 
-    int		length; 
-    int		i; 
-    int		a,b,c; 
-    char	vcheck[VERSIONSIZE]; 
-	 
-    gameaction = ga_nothing; 
-	 
-    length = M_ReadFile (savename, &savebuffer); 
-    save_p = savebuffer + savestringsize;
-    
-    // skip the description field 
-    memset (vcheck,0,sizeof(vcheck)); 
-    sprintf (vcheck,"version %i",VERSION); 
-    if ((strcmp ((char *)save_p, vcheck)) && !M_CheckParm("-overridesave")) // FS: Compiler warning 
-	return;				// bad version 
-    save_p += VERSIONSIZE; 
-			 
-    gameskill = *save_p++; 
-    gameepisode = *save_p++; 
-    gamemap = *save_p++; 
-    for (i=0 ; i<MAXPLAYERS ; i++) 
-	playeringame[i] = *save_p++; 
+	int		length; 
+	int		i; 
+	int		a,b,c; 
+	char		vcheck[VERSIONSIZE]; 
 
-    // load a base level 
-    G_InitNew (gameskill, gameepisode, gamemap); 
+	gameaction = ga_nothing; 
+
+	length = M_ReadFile (savename, &savebuffer); 
+	save_p = savebuffer + savestringsize;
+
+	// skip the description field 
+	memset (vcheck,0,sizeof(vcheck)); 
+	sprintf (vcheck,"version %i",VERSION); 
+	if ((strcmp ((char *)save_p, vcheck))) // FS: Compiler warning
+	{
+		if(M_CheckParm("-oldsave"))
+			P_SetMessage(&players[consoleplayer], "Wrong version.  Try loading without -oldsave!", true);
+		else
+			P_SetMessage(&players[consoleplayer], "Old version! Use -oldsave to load it!", true); // FS: Warn us
+		return;				// bad version
+	}
+	save_p += VERSIONSIZE; 
+
+	gameskill = *save_p++; 
+	gameepisode = *save_p++; 
+	gamemap = *save_p++; 
+	for (i=0 ; i<MAXPLAYERS ; i++) 
+		playeringame[i] = *save_p++; 
+
+	// load a base level 
+	G_InitNew (gameskill, gameepisode, gamemap); 
+
+	// get the times 
+	a = *save_p++; 
+	b = *save_p++; 
+	c = *save_p++; 
+	leveltime = (a<<16) + (b<<8) + c; 
+
+	// dearchive all the modifications
+	P_UnArchivePlayers (); 
+	P_UnArchiveWorld (); 
+	P_UnArchiveThinkers ();
+
+	if(M_CheckParm("-oldsave")) // FS: Use old stuff
+		P_UnArchiveSpecialsOld();
+	else
+		P_UnArchiveSpecials (); 
  
-    // get the times 
-    a = *save_p++; 
-    b = *save_p++; 
-    c = *save_p++; 
-    leveltime = (a<<16) + (b<<8) + c; 
-	 
-    // dearchive all the modifications
-    P_UnArchivePlayers (); 
-    P_UnArchiveWorld (); 
-    P_UnArchiveThinkers (); 
-    P_UnArchiveSpecials (); 
- 
-    if (*save_p != 0x1d) 
-	I_Error ("Bad savegame");
-    
-    // done 
-    Z_Free (savebuffer); 
- 
-    if (setsizeneeded)
-	R_ExecuteSetViewSize ();
-    
-    // draw the pattern into the back screen
-    R_FillBackScreen ();   
-} 
+	if (*save_p != 0x1d) 
+		I_Error ("Bad savegame");
+
+	// done 
+	Z_Free (savebuffer); 
+
+	if (setsizeneeded)
+		R_ExecuteSetViewSize ();
+
+	// draw the pattern into the back screen
+	R_FillBackScreen ();   
+}
  
 
 //
@@ -1382,67 +1394,67 @@ void G_DoLoadGame (void)
 // Called by the menu task.
 // Description is a 24 byte text string 
 //
-void
-G_SaveGame
-( int	slot,
-  char*	description ) 
-{ 
-    savegameslot = slot; 
-    strcpy (savedescription, description); 
-    sendsave = true; 
-} 
- 
+void G_SaveGame (int slot, char* description) 
+{
+	savegameslot = slot;
+	strcpy (savedescription, description);
+	sendsave = true;
+}
+
 void G_DoSaveGame (void) 
-{ 
-    char	name[100]; 
-    char	name2[VERSIONSIZE]; 
-    char*	description; 
-    int		length; 
-    int		i; 
-	
-    if (M_CheckParm("-cdrom"))
-	sprintf(name,"c:\\doomdata\\"SAVEGAMENAME"%d.dsg",savegameslot);
-    else
-	sprintf (name,SAVEGAMENAME"%d.dsg",savegameslot); 
-    description = savedescription; 
-	 
-    save_p = savebuffer = screens[1]+0x4000; 
-	 
-    memcpy (save_p, description, savestringsize); 
-    save_p += savestringsize; 
-    memset (name2,0,sizeof(name2)); 
-    sprintf (name2,"version %i",VERSION); 
-    memcpy (save_p, name2, VERSIONSIZE); 
-    save_p += VERSIONSIZE; 
-	 
-    *save_p++ = gameskill; 
-    *save_p++ = gameepisode; 
-    *save_p++ = gamemap; 
-    for (i=0 ; i<MAXPLAYERS ; i++) 
-	*save_p++ = playeringame[i]; 
-    *save_p++ = leveltime>>16; 
-    *save_p++ = leveltime>>8; 
-    *save_p++ = leveltime; 
+{
+	char		name[100];
+	char		name2[VERSIONSIZE];
+	char*		description;
+	int		length;
+	int		i;
+
+	if (M_CheckParm("-cdrom"))
+		sprintf(name,"c:\\doomdata\\"SAVEGAMENAME"%d.dsg",savegameslot);
+	else
+		sprintf (name,SAVEGAMENAME"%d.dsg",savegameslot);
+	description = savedescription;
+
+	save_p = savebuffer = screens[1]+0x4000;
+
+	memcpy (save_p, description, savestringsize);
+	save_p += savestringsize;
+    memset (name2,0,sizeof(name2));
+    sprintf (name2,"version %i",VERSION);
+    memcpy (save_p, name2, VERSIONSIZE);
+    save_p += VERSIONSIZE;
+
+    *save_p++ = gameskill;
+    *save_p++ = gameepisode;
+    *save_p++ = gamemap;
+    for (i=0 ; i<MAXPLAYERS ; i++)
+	*save_p++ = playeringame[i];
+    *save_p++ = leveltime>>16;
+    *save_p++ = leveltime>>8;
+    *save_p++ = leveltime;
  
-    P_ArchivePlayers (); 
-    P_ArchiveWorld (); 
-    P_ArchiveThinkers (); 
-    P_ArchiveSpecials (); 
-	 
-    *save_p++ = 0x1d;		// consistancy marker 
-	 
-    length = save_p - savebuffer; 
-    if (length > savegamesize) 
-	I_Error ("Savegame buffer overrun"); 
-    M_WriteFile (name, savebuffer, length); 
-    gameaction = ga_nothing; 
-    savedescription[0] = 0;		 
-	 
-    players[consoleplayer].message = GGSAVED; 
+    P_ArchivePlayers ();
+    P_ArchiveWorld ();
+    P_ArchiveThinkers ();
+	if(M_CheckParm("-oldsave")) // FS: Use old stuff
+		P_ArchiveSpecialsOld();
+	else
+		P_ArchiveSpecials ();
+
+    *save_p++ = 0x1d;		// consistancy marker
+
+    length = save_p - savebuffer;
+    if (length > savegamesize)
+	I_Error ("Savegame buffer overrun");
+    M_WriteFile (name, savebuffer, length);
+    gameaction = ga_nothing;
+    savedescription[0] = 0;
+
+    players[consoleplayer].message = GGSAVED;
 
     // draw the pattern into the back screen
-    R_FillBackScreen ();	
-} 
+    R_FillBackScreen ();
+}
  
 
 //

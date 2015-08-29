@@ -328,14 +328,15 @@ void P_UnArchiveThinkers (void)
 //
 enum
 {
-    tc_ceiling,
-    tc_door,
-    tc_floor,
-    tc_plat,
-    tc_flash,
-    tc_strobe,
-    tc_glow,
-    tc_endspecials
+	tc_ceiling,
+	tc_door,
+	tc_floor,
+	tc_plat,
+	tc_flash,
+	tc_strobe,
+	tc_flicker, // FS: Flicker restore from Boom/DoomWiki
+	tc_glow,
+	tc_endspecials
 
 } specials_e;	
 
@@ -362,6 +363,7 @@ void P_ArchiveSpecials (void)
     lightflash_t*	flash;
     strobe_t*		strobe;
     glow_t*		glow;
+	fireflicker_t*	flicker; // FS: From Boom/DoomWiki
     int			i;
 	
     // save off the current thinkers
@@ -461,6 +463,16 @@ void P_ArchiveSpecials (void)
 	    glow->sector = (sector_t *)(glow->sector - sectors);
 	    continue;
 	}
+	if (th->function.acp1 == (actionf_p1)T_FireFlicker)
+	{
+	    *save_p++ = tc_flicker;
+	    PADSAVEP();
+	    flicker = (fireflicker_t *)save_p;
+	    memcpy (flicker, th, sizeof(*flicker));
+	    save_p += sizeof(*flicker);
+	    flicker->sector = (sector_t *)(flicker->sector - sectors);
+	    continue;
+	}
     }
 	
     // add a terminating marker
@@ -482,6 +494,7 @@ void P_UnArchiveSpecials (void)
     lightflash_t*	flash;
     strobe_t*		strobe;
     glow_t*		glow;
+	fireflicker_t*	flicker; // FS: From Boom/DoomWiki
 	
 	
     // read in saved thinkers
@@ -574,7 +587,17 @@ void P_UnArchiveSpecials (void)
 	    glow->thinker.function.acp1 = (actionf_p1)T_Glow;
 	    P_AddThinker (&glow->thinker);
 	    break;
-				
+
+	  case tc_flicker: // FS: From Boom/DoomWiki
+	    PADSAVEP();
+	    flicker = Z_Malloc (sizeof(*flicker), PU_LEVEL, NULL);
+	    memcpy (flicker, save_p, sizeof(*flicker));
+	    save_p += sizeof(*flicker);
+	    flicker->sector = &sectors[(int)flicker->sector];
+	    flicker->thinker.function.acp1 = (actionf_p1)T_FireFlicker;
+	    P_AddThinker (&flicker->thinker);
+	    break;
+
 	  default:
 	    I_Error ("P_UnarchiveSpecials:Unknown tclass %i "
 		     "in savegame",tclass);
@@ -583,4 +606,253 @@ void P_UnArchiveSpecials (void)
     }
 
 }
+
+//
+// P_ArchiveSpecials
+//
+enum
+{
+	tc_ceilingold,
+	tc_doorold,
+	tc_floorold,
+	tc_platold,
+	tc_flashold,
+	tc_strobeold,
+	tc_glowold,
+	tc_endspecialsold
+
+} specials_e;
+
+void P_ArchiveSpecialsOld (void)
+{
+    thinker_t*		th;
+    ceiling_t*		ceiling;
+    vldoor_t*		door;
+    floormove_t*	floor;
+    plat_t*		plat;
+    lightflash_t*	flash;
+    strobe_t*		strobe;
+    glow_t*		glow;
+    int			i;
+	
+    // save off the current thinkers
+    for (th = thinkercap.next ; th != &thinkercap ; th=th->next)
+    {
+	if (th->function.acv == (actionf_v)NULL)
+	{
+	    for (i = 0; i < MAXCEILINGS;i++)
+		if (activeceilings[i] == (ceiling_t *)th)
+		    break;
+	    
+	    if (i<MAXCEILINGS)
+	    {
+		*save_p++ = tc_ceilingold;
+		PADSAVEP();
+		ceiling = (ceiling_t *)save_p;
+		memcpy (ceiling, th, sizeof(*ceiling));
+		save_p += sizeof(*ceiling);
+		ceiling->sector = (sector_t *)(ceiling->sector - sectors);
+	    }
+	    continue;
+	}
+			
+	if (th->function.acp1 == (actionf_p1)T_MoveCeiling)
+	{
+	    *save_p++ = tc_ceilingold;
+	    PADSAVEP();
+	    ceiling = (ceiling_t *)save_p;
+	    memcpy (ceiling, th, sizeof(*ceiling));
+	    save_p += sizeof(*ceiling);
+	    ceiling->sector = (sector_t *)(ceiling->sector - sectors);
+	    continue;
+	}
+			
+	if (th->function.acp1 == (actionf_p1)T_VerticalDoor)
+	{
+	    *save_p++ = tc_doorold;
+	    PADSAVEP();
+	    door = (vldoor_t *)save_p;
+	    memcpy (door, th, sizeof(*door));
+	    save_p += sizeof(*door);
+	    door->sector = (sector_t *)(door->sector - sectors);
+	    continue;
+	}
+			
+	if (th->function.acp1 == (actionf_p1)T_MoveFloor)
+	{
+	    *save_p++ = tc_floorold;
+	    PADSAVEP();
+	    floor = (floormove_t *)save_p;
+	    memcpy (floor, th, sizeof(*floor));
+	    save_p += sizeof(*floor);
+	    floor->sector = (sector_t *)(floor->sector - sectors);
+	    continue;
+	}
+			
+	if (th->function.acp1 == (actionf_p1)T_PlatRaise)
+	{
+	    *save_p++ = tc_platold;
+	    PADSAVEP();
+	    plat = (plat_t *)save_p;
+	    memcpy (plat, th, sizeof(*plat));
+	    save_p += sizeof(*plat);
+	    plat->sector = (sector_t *)(plat->sector - sectors);
+	    continue;
+	}
+			
+	if (th->function.acp1 == (actionf_p1)T_LightFlash)
+	{
+	    *save_p++ = tc_flashold;
+	    PADSAVEP();
+	    flash = (lightflash_t *)save_p;
+	    memcpy (flash, th, sizeof(*flash));
+	    save_p += sizeof(*flash);
+	    flash->sector = (sector_t *)(flash->sector - sectors);
+	    continue;
+	}
+			
+	if (th->function.acp1 == (actionf_p1)T_StrobeFlash)
+	{
+	    *save_p++ = tc_strobeold;
+	    PADSAVEP();
+	    strobe = (strobe_t *)save_p;
+	    memcpy (strobe, th, sizeof(*strobe));
+	    save_p += sizeof(*strobe);
+	    strobe->sector = (sector_t *)(strobe->sector - sectors);
+	    continue;
+	}
+			
+	if (th->function.acp1 == (actionf_p1)T_Glow)
+	{
+	    *save_p++ = tc_glowold;
+	    PADSAVEP();
+	    glow = (glow_t *)save_p;
+	    memcpy (glow, th, sizeof(*glow));
+	    save_p += sizeof(*glow);
+	    glow->sector = (sector_t *)(glow->sector - sectors);
+	    continue;
+	}
+    }
+	
+    // add a terminating marker
+    *save_p++ = tc_endspecialsold;	
+
+}
+
+
+//
+// P_UnArchiveSpecials
+//
+void P_UnArchiveSpecialsOld (void)
+{
+    byte		tclass;
+    ceiling_t*		ceiling;
+    vldoor_t*		door;
+    floormove_t*	floor;
+    plat_t*		plat;
+    lightflash_t*	flash;
+    strobe_t*		strobe;
+    glow_t*		glow;
+	
+	
+    // read in saved thinkers
+    while (1)
+    {
+	tclass = *save_p++;
+	switch (tclass)
+	{
+	  case tc_endspecialsold:
+	    return;	// end of list
+			
+	  case tc_ceilingold:
+	    PADSAVEP();
+	    ceiling = Z_Malloc (sizeof(*ceiling), PU_LEVEL, NULL);
+	    memcpy (ceiling, save_p, sizeof(*ceiling));
+	    save_p += sizeof(*ceiling);
+	    ceiling->sector = &sectors[(int)ceiling->sector];
+	    ceiling->sector->specialdata = ceiling;
+
+	    if (ceiling->thinker.function.acp1)
+		ceiling->thinker.function.acp1 = (actionf_p1)T_MoveCeiling;
+
+	    P_AddThinker (&ceiling->thinker);
+	    P_AddActiveCeiling(ceiling);
+	    break;
+				
+	  case tc_doorold:
+	    PADSAVEP();
+	    door = Z_Malloc (sizeof(*door), PU_LEVEL, NULL);
+	    memcpy (door, save_p, sizeof(*door));
+	    save_p += sizeof(*door);
+	    door->sector = &sectors[(int)door->sector];
+	    door->sector->specialdata = door;
+	    door->thinker.function.acp1 = (actionf_p1)T_VerticalDoor;
+	    P_AddThinker (&door->thinker);
+	    break;
+				
+	  case tc_floorold:
+	    PADSAVEP();
+	    floor = Z_Malloc (sizeof(*floor), PU_LEVEL, NULL);
+	    memcpy (floor, save_p, sizeof(*floor));
+	    save_p += sizeof(*floor);
+	    floor->sector = &sectors[(int)floor->sector];
+	    floor->sector->specialdata = floor;
+	    floor->thinker.function.acp1 = (actionf_p1)T_MoveFloor;
+	    P_AddThinker (&floor->thinker);
+	    break;
+				
+	  case tc_platold:
+	    PADSAVEP();
+	    plat = Z_Malloc (sizeof(*plat), PU_LEVEL, NULL);
+	    memcpy (plat, save_p, sizeof(*plat));
+	    save_p += sizeof(*plat);
+	    plat->sector = &sectors[(int)plat->sector];
+	    plat->sector->specialdata = plat;
+
+	    if (plat->thinker.function.acp1)
+		plat->thinker.function.acp1 = (actionf_p1)T_PlatRaise;
+
+	    P_AddThinker (&plat->thinker);
+	    P_AddActivePlat(plat);
+	    break;
+				
+	  case tc_flashold:
+	    PADSAVEP();
+	    flash = Z_Malloc (sizeof(*flash), PU_LEVEL, NULL);
+	    memcpy (flash, save_p, sizeof(*flash));
+	    save_p += sizeof(*flash);
+	    flash->sector = &sectors[(int)flash->sector];
+	    flash->thinker.function.acp1 = (actionf_p1)T_LightFlash;
+	    P_AddThinker (&flash->thinker);
+	    break;
+				
+	  case tc_strobeold:
+	    PADSAVEP();
+	    strobe = Z_Malloc (sizeof(*strobe), PU_LEVEL, NULL);
+	    memcpy (strobe, save_p, sizeof(*strobe));
+	    save_p += sizeof(*strobe);
+	    strobe->sector = &sectors[(int)strobe->sector];
+	    strobe->thinker.function.acp1 = (actionf_p1)T_StrobeFlash;
+	    P_AddThinker (&strobe->thinker);
+	    break;
+				
+          case tc_glowold:
+	    PADSAVEP();
+	    glow = Z_Malloc (sizeof(*glow), PU_LEVEL, NULL);
+	    memcpy (glow, save_p, sizeof(*glow));
+	    save_p += sizeof(*glow);
+	    glow->sector = &sectors[(int)glow->sector];
+	    glow->thinker.function.acp1 = (actionf_p1)T_Glow;
+	    P_AddThinker (&glow->thinker);
+	    break;
+		
+	  default:
+	    I_Error ("P_UnarchiveSpecialsOld:Unknown tclass %i "
+		     "in savegame",tclass);
+	}
+	
+    }
+
+}
+
 
