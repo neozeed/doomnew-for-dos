@@ -1654,16 +1654,6 @@ void WI_loadData(void)
      // "secret"
     sp_secret = W_CacheLumpName("WISCRT2", PU_STATIC);
 
-    // Yuck. 
-/*    if (french)
-    {
-	// "items"
-	if (netgame && !deathmatch)
-	    items = W_CacheLumpName("WIOBJ", PU_STATIC);    
-  	else
-	    items = W_CacheLumpName("WIOSTI", PU_STATIC);
-    } else
-*/
 	items = W_CacheLumpName("WIOSTI", PU_STATIC);
 
     // "frgs"

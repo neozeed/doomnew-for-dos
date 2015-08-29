@@ -1262,8 +1262,6 @@ int I_ResetMouse (void)
 ================
 */
 
-void I_StartupCyberMan(void); // FS: From Heretic
-
 void I_StartupMouse (void)
 {
    int  (far *function)();

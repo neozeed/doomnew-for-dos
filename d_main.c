@@ -815,17 +815,6 @@ void IdentifyVersion (void)
 		return;
 	}
 
-    if ( !access (doom2fwad,0) )
-    {
-	gamemode = commercial;
-	// C'est ridicule!
-	// Let's handle languages in config files, okay?
-	language = french;
-	printf("French version\n");
-	D_AddFile (doom2fwad);
-	return;
-    }
-
     if ( !access (doom2wad,0) )
     {
 	gamemode = commercial;

@@ -168,8 +168,13 @@ int             joybstrafe;
 int             joybuse; 
 int             joybspeed; 
  
- 
- 
+// FS: For custom weapon binds
+int	use_wpnbinds;
+int	wpn_shotgun;
+int	wpn_chaingun;
+int	wpn_rocket;
+int	wpn_plasma; 
+
 #define MAXPLMOVE		(forwardmove[1]) 
  
 #define TURBOTHRESHOLD	0x32
@@ -355,6 +360,30 @@ void G_BuildTiccmd (ticcmd_t* cmd)
 	// clear double clicks if hit use button 
 	dclicks = 0;                   
     } 
+
+	if(use_wpnbinds) // FS: Custom weapon keys
+	{
+		if(gamekeydown[wpn_shotgun])
+		{
+				cmd->buttons |= BT_CHANGE;
+				cmd->buttons |= 2<<BT_WEAPONSHIFT;
+		}
+		if(gamekeydown[wpn_chaingun])
+		{
+				cmd->buttons |= BT_CHANGE;
+				cmd->buttons |= 3<<BT_WEAPONSHIFT;
+		}
+		if(gamekeydown[wpn_plasma])
+		{
+				cmd->buttons |= BT_CHANGE;
+				cmd->buttons |= 5<<BT_WEAPONSHIFT;
+		}
+		if(gamekeydown[wpn_rocket])
+		{
+				cmd->buttons |= BT_CHANGE;
+				cmd->buttons |= 4<<BT_WEAPONSHIFT;
+		}
+	}
 
     // chainsaw overrides 
     for (i=0 ; i<NUMWEAPONS-1 ; i++)        

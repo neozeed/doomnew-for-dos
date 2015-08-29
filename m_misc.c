@@ -204,6 +204,12 @@ extern int	mouseSensitivity;
 extern int	showMessages;
 int headBob; // FS: Head bob toggle
 
+extern int	use_wpnbinds; // FS: Custom weapon keys
+extern int	wpn_shotgun; // FS: Custom weapon keys
+extern int	wpn_chaingun; // FS: Custom weapon keys
+extern int	wpn_rocket; // FS: Custom weapon keys
+extern int	wpn_plasma; // FS: Custom weapon keys
+
 extern int	detailLevel;
 
 extern int	screenblocks;
@@ -300,6 +306,13 @@ default_t defaults[] =
 	{ "usePalFlash", &usePalFlash, 1 }, // FS: Palette Flashing
 	{ "headBob", &headBob, 1 }, // FS: Head bob
 
+	// FS: Use custom weapon binds
+	{ "use_wpnbinds", &use_wpnbinds, 0},
+	{ "wpn_shotgun", &wpn_shotgun, 44, 1 }, // FS: Z
+	{ "wpn_chaingun", &wpn_chaingun, 45, 1 }, // FS: X
+	{ "wpn_rocket", &wpn_rocket, 16, 1 }, // FS: Q
+	{ "wpn_plasma", &wpn_plasma, 46, 1 }, // FS: C
+ 
     {"chatmacro0", (int *) &chat_macros[0], (int) HUSTR_CHATMACRO0 },
     {"chatmacro1", (int *) &chat_macros[1], (int) HUSTR_CHATMACRO1 },
     {"chatmacro2", (int *) &chat_macros[2], (int) HUSTR_CHATMACRO2 },

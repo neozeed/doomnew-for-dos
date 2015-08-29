@@ -67,11 +67,7 @@ typedef enum
 // Identify language to use, software localization.
 typedef enum
 {
-  english,
-  french,
-  german,
-  unknown
-
+  english
 } Language_t;
 
 

@@ -393,6 +393,7 @@ static int	keyboxes[3];
 static int	st_randomnumber;  
 
 boolean usePalFlash; // FS: No Palette Flashing
+extern boolean	chex; // FS: For Chex Quest
 
 // Massive bunches of cheat shit
 //  to keep it from being easy to figure them out.
@@ -546,7 +547,6 @@ boolean
 ST_Responder (event_t* ev)
 {
 	int	i;
-	extern boolean	chex; // FS: For Chex Quest
   // Filter automap on/off.
   if (ev->type == ev_keyup
       && ((ev->data1 & 0xffff0000) == AM_MSGHEADER))
@@ -1102,16 +1102,26 @@ void ST_doPaletteStuff(void)
     else
 	palette = 0;
 
+	// FS: For Chex Quest from Choclate doom
+	// In Chex Quest, the player never sees red.  Instead, the
+	// radiation suit palette is used to tint the screen green,
+	// as though the player is being covered in goo by an
+	// attacking flemoid.
+
+	if (chex && palette >= STARTREDPALS && palette < STARTREDPALS + NUMREDPALS)
+	{
+		palette = RADIATIONPAL;
+	}
+
 	if (usePalFlash == false)
 		palette = 0; // FS: No Palette Flashing
 
-    if (palette != st_palette)
-    {
-	st_palette = palette;
-	pal = (byte *) W_CacheLumpNum (lu_palette, PU_CACHE)+palette*768;
-	I_SetPalette (pal);
-    }
-
+	if (palette != st_palette)
+	{
+		st_palette = palette;
+		pal = (byte *) W_CacheLumpNum (lu_palette, PU_CACHE)+palette*768;
+		I_SetPalette (pal);
+	}
 }
 
 void ST_drawWidgets(boolean refresh)

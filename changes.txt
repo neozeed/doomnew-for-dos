@@ -15,6 +15,13 @@
  - Fixed the math for endmsg.  Was skipping over the "are you sure you want to
    quit this great game?" message.  Code from Chocolate Doom.
  - Now shows the "Picked up a healthkit that you really need!" message.
+ - use_wpnbinds in DEFAULT.CFG.  If set to 1, the following defaults are used:
+   * 'Q' for Rocket Launcher
+   * 'Z' for Shotgun
+   * 'X' for Chaingun
+   * 'C' for Plasma
+   These binds can be customized via the DEFAULT.CFG.  However, you must know
+   the appropriate scancode.
 
 09-14-13
  - Added Fullscreen Ammo, Armor, Health, and Keycards.
