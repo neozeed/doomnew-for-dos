@@ -92,6 +92,8 @@ boolean	plutonia = false; // FS
 boolean	tnt = false; // FS
 boolean	chex = false; // FS: For Chex(R) Quest
 boolean	chex2 = false; // FS: For Chex Quest 2
+boolean perdgate = false; // FS: For Perdition's Gate
+boolean hacx = false; // FS: For HACX TC
 
 char	wadfile[1024];		// primary wad file
 char	mapdir[1024];		   // directory of development maps
@@ -645,6 +647,7 @@ void IdentifyVersion (void)
 	char	tntwad[8] = "tnt.wad";
 	char	chexwad[9] = "chex.wad"; // FS: Chex Quest 1
 	char	chex2wad[10] = "chex2.wad"; // FS: Chex Quest 2
+	char	hacxwad[9] = "hacx.wad"; // FS: For HACX
 
 	sprintf(basedefault, "default.cfg");
 
@@ -752,7 +755,17 @@ void IdentifyVersion (void)
 		D_AddFile("pgdemo19.WAD");
 		return;
 	}
+	if (M_CheckParm ("-hacx"))
+	{
+		gamemode = commercial;
+		devparm = false;
+		hacx = true;
 
+		strcpy(basedefault, "default.cfg");
+		D_AddFile("hacx.wad");
+		return;
+	}
+	
 	if (M_CheckParm ("-doomu"))
 	{
 		gamemode = retail;
@@ -1275,6 +1288,9 @@ void D_DoomMain (void)
     DEH_Init();
 #endif
 
+	if(hacx) // FS: Load HACX internal DEH
+		DEH_LoadLumpByName("dehacked.deh");
+
 	// Check for -file in shareware
 	if (modifiedgame)
 	{
@@ -1419,9 +1435,9 @@ void D_DoomMain (void)
 	if (p && p < myargc-1)
 	{
 		if (M_CheckParm("-cdrom"))
-			sprintf(file, "c:\\doomdata\\"SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
+			DEH_snprintf(file, 32, "c:\\doomdata\\"SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
 		else
-			sprintf(file, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
+			DEH_snprintf(file, 32, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
 		LoadDef.lastOn = SaveDef.lastOn = atoi(myargv[p+1]); // FS: set the slot
 		G_LoadGame (file);
 	}

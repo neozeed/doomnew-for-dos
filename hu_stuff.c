@@ -572,14 +572,14 @@ void HU_Start(void)
 // FS: Draw the SECRETS FOUND text on the Automap
 void HU_SetupSecretsText(void)
 {
-	char	*secrets;
+	char	*secrets = "SECRETS FOUND: 999/999"; // FS: Hacky shit because I forget proper string formatting
 	
 	HUlib_clearTextLine(&w_secret); // FS: Clear the old string
 	
 	sprintf(secrets, "SECRETS FOUND: %i/%i", players[consoleplayer].secretcount, totalsecret);
-	while (*secrets)
 
-	HUlib_addCharToTextLine(&w_secret, *(secrets++)); // FS: Add it all in...
+	while (*secrets)
+		HUlib_addCharToTextLine(&w_secret, *(secrets++)); // FS: Add it all in...
 	HUlib_drawTextLine(&w_secret, false); // FS: Now draw it!
 }
 
@@ -603,9 +603,9 @@ void HU_SetupTimeText(void)
 	HUlib_clearTextLine(&w_time); // FS: Clear the old string
 	
 	sprintf(sttime, "%s", st);
-	while (*sttime)
 
-	HUlib_addCharToTextLine(&w_time, *(sttime++)); // FS: Add it all in...
+	while (*sttime)
+		HUlib_addCharToTextLine(&w_time, *(sttime++)); // FS: Add it all in...
 	HUlib_drawTextLine(&w_time, false); // FS: Now draw it!
 }
 

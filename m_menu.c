@@ -464,9 +464,9 @@ void M_ReadSaveStrings(void)
     for (i = 0;i < load_end;i++)
     {
 	if (M_CheckParm("-cdrom"))
-	    sprintf(name,"c:\\doomdata\\"SAVEGAMENAME"%d.dsg",i);
+	    DEH_snprintf(name,32,"c:\\doomdata\\"SAVEGAMENAME"%d.dsg",i);
 	else
-	    sprintf(name,SAVEGAMENAME"%d.dsg",i);
+	    DEH_snprintf(name,32,SAVEGAMENAME"%d.dsg",i);
 
 	handle = open (name, O_RDONLY | 0, 0666);
 	if (handle == -1)
@@ -527,9 +527,9 @@ void M_LoadSelect(int choice)
     char    name[256];
 	
     if (M_CheckParm("-cdrom"))
-	sprintf(name,"c:\\doomdata\\"SAVEGAMENAME"%d.dsg",choice);
+		DEH_snprintf(name,32,"c:\\doomdata\\"SAVEGAMENAME"%d.dsg",choice);
     else
-	sprintf(name,SAVEGAMENAME"%d.dsg",choice);
+		DEH_snprintf(name,32,SAVEGAMENAME"%d.dsg",choice);
     G_LoadGame (name);
     M_ClearMenus ();
 }
@@ -626,20 +626,20 @@ char    tempstring[80];
 
 void M_QuickSaveResponse(int ch)
 {
-    if (ch == 'y')
-    {
-	M_DoSave(quickSaveSlot);
-	S_StartSound(NULL,sfx_swtchx);
-    }
+	if (ch == 'y' || ch == KEY_ENTER) // FS
+	{
+		M_DoSave(quickSaveSlot);
+		S_StartSound(NULL,sfx_swtchx);
+	}
 }
 
 void M_DeleteSaveResponse(int ch) // FS: Ask if we want to delete the save game
 {
 	char savename[20];
 
-	if (ch == 'y')
+	if (ch == 'y' || ch == KEY_ENTER)
 	{
-		sprintf(savename,SAVEGAMENAME"%d.dsg",itemOn);
+		DEH_snprintf(savename,32,SAVEGAMENAME"%d.dsg",itemOn);
 		remove(savename);
 		S_StartSound(NULL,sfx_swtchx);
 		M_ReadSaveStrings();
@@ -676,11 +676,11 @@ void M_QuickSave(void)
 //
 void M_QuickLoadResponse(int ch)
 {
-    if (ch == 'y')
-    {
-	M_LoadSelect(quickSaveSlot);
-	S_StartSound(NULL,sfx_swtchx);
-    }
+	if (ch == 'y' || ch == KEY_ENTER)
+	{
+		M_LoadSelect(quickSaveSlot);
+		S_StartSound(NULL,sfx_swtchx);
+	}
 }
 
 
@@ -865,11 +865,13 @@ void M_DrawEpisode(void)
 
 void M_VerifyNightmare(int ch)
 {
-    if (ch != 'y')
-	return;
-		
-    G_DeferedInitNew(nightmare,epi+1,1);
-    M_ClearMenus ();
+    if (ch == 'y' || ch == KEY_ENTER)
+	{
+		G_DeferedInitNew(nightmare,epi+1,1);
+		M_ClearMenus ();
+	}
+    else
+		return;
 }
 
 void M_ChooseSkill(int choice)
@@ -948,16 +950,16 @@ void M_Options(int choice)
 //
 void M_ChangeMessages(int choice)
 {
-    // warning: unused parameter `int choice'
-    choice = 0;
-    showMessages = 1 - showMessages;
+	// warning: unused parameter `int choice'
+	choice = 0;
+	showMessages = 1 - showMessages;
 	
-    if (!showMessages)
-	players[consoleplayer].message = DEH_String(MSGOFF);
-    else
-	players[consoleplayer].message = DEH_String(MSGON);
+	if (!showMessages)
+		players[consoleplayer].message = DEH_String(MSGOFF);
+	else
+		players[consoleplayer].message = DEH_String(MSGON);
 
-    message_dontfuckwithme = true;
+	message_dontfuckwithme = true;
 }
 
 
@@ -966,12 +968,14 @@ void M_ChangeMessages(int choice)
 //
 void M_EndGameResponse(int ch)
 {
-    if (ch != 'y')
-	return;
-		
-    currentMenu->lastOn = itemOn;
-    M_ClearMenus ();
-    D_StartTitle ();
+	if (ch == 'y' || ch == KEY_ENTER)
+	{
+		currentMenu->lastOn = itemOn;
+		M_ClearMenus ();
+		D_StartTitle ();
+	}
+	else
+		return;
 }
 
 void M_EndGame(int choice)
@@ -979,8 +983,8 @@ void M_EndGame(int choice)
     choice = 0;
     if (!usergame)
     {
-	S_StartSound(NULL,sfx_oof);
-	return;
+		S_StartSound(NULL,sfx_oof);
+		return;
     }
 	
     if (netgame && (NetGetPlayerCount() > 1) )
@@ -1066,17 +1070,20 @@ void M_QuitResponse(int ch)
 {
 	extern int	noquitsound; // FS
 
-	if (ch != 'y')
-		return;
-	if (!netgame && !noquitsound) // FS: Disable quit sounds
+	if (ch == 'y' || ch == KEY_ENTER)
 	{
-		if (gamemode == commercial)
-			S_StartSound(NULL,quitsounds2[(gametic>>2)&7]);
-		else
-			S_StartSound(NULL,quitsounds[(gametic>>2)&7]);
-		I_WaitVBL(105);
+		if (!netgame && !noquitsound) // FS: Disable quit sounds
+		{
+			if (gamemode == commercial)
+				S_StartSound(NULL,quitsounds2[(gametic>>2)&7]);
+			else
+				S_StartSound(NULL,quitsounds[(gametic>>2)&7]);
+			I_WaitVBL(105);
+		}
+		I_Quit ();
 	}
-	I_Quit ();
+	else
+		return;
 }
 
 
@@ -1335,8 +1342,8 @@ M_WriteText
 //
 boolean M_Responder (event_t* ev)
 {
-	int		ch;
-	int		i;
+	int			ch;
+	int			i;
 	static int	joywait = 0;
 	static int	mousewait = 0;
 	static int	mousey = 0;
@@ -1437,53 +1444,49 @@ boolean M_Responder (event_t* ev)
 		return false;
 
     
-    // Save Game string input
-    if (saveStringEnter)
-    {
-	switch(ch)
+	// Save Game string input
+	if (saveStringEnter)
 	{
-	  case KEY_BACKSPACE:
-	    if (saveCharIndex > 0)
-	    {
-		saveCharIndex--;
-		savegamestrings[saveSlot][saveCharIndex] = 0;
-	    }
-	    break;
+		switch(ch)
+		{
+			case KEY_BACKSPACE:
+				if (saveCharIndex > 0)
+				{
+					saveCharIndex--;
+					savegamestrings[saveSlot][saveCharIndex] = 0;
+				}
+				break;
 				
-	  case KEY_ESCAPE:
-	    saveStringEnter = 0;
-	    strcpy(&savegamestrings[saveSlot][0],saveOldString);
-	    break;
+			case KEY_ESCAPE:
+				saveStringEnter = 0;
+				strcpy(&savegamestrings[saveSlot][0],saveOldString);
+				break;
 				
-	  case KEY_ENTER:
-	    saveStringEnter = 0;
-	    if (savegamestrings[saveSlot][0])
-		M_DoSave(saveSlot);
-	    break;
-	  default:
-	    ch = toupper(ch);
-	    if (ch != 32)
-		if (ch-HU_FONTSTART < 0 || ch-HU_FONTSTART >= HU_FONTSIZE)
-		    break;
-	    if (ch >= 32 && ch <= 127 &&
-		saveCharIndex < SAVESTRINGSIZE-1 &&
-		M_StringWidth(savegamestrings[saveSlot]) <
-		(SAVESTRINGSIZE-2)*8)
-	    {
-		savegamestrings[saveSlot][saveCharIndex++] = ch;
-		savegamestrings[saveSlot][saveCharIndex] = 0;
-	    }
-	    break;
+			case KEY_ENTER:
+				saveStringEnter = 0;
+				if (savegamestrings[saveSlot][0])
+					M_DoSave(saveSlot);
+				break;
+			default:
+				ch = toupper(ch);
+				if (ch != 32)
+					if (ch-HU_FONTSTART < 0 || ch-HU_FONTSTART >= HU_FONTSIZE)
+						break;
+				if (ch >= 32 && ch <= 127 && saveCharIndex < SAVESTRINGSIZE-1 && M_StringWidth(savegamestrings[saveSlot]) < (SAVESTRINGSIZE-2)*8)
+				{
+					savegamestrings[saveSlot][saveCharIndex++] = ch;
+					savegamestrings[saveSlot][saveCharIndex] = 0;
+				}
+				break;
+		}
+		return true;
 	}
-	return true;
-    }
     
     // Take care of any messages that need input
     if (messageToPrint)
     {
-		if (messageNeedsInput == true &&
-		    !(ch == ' ' || ch == 'n' || ch == 'y' || ch == KEY_ESCAPE))
-		    return false;
+		if (messageNeedsInput == true && !(ch == ' ' || ch == 'n' || ch == 'y' || ch == KEY_ESCAPE || ch == KEY_ENTER)) // FS: Enter for 'y'
+			return false;
 		
 		menuactive = messageLastMenuActive;
 		messageToPrint = 0;
@@ -1495,230 +1498,230 @@ boolean M_Responder (event_t* ev)
 		return true;
     }
 	
-    if (devparm && ch == KEY_F1)
-    {
-	G_ScreenShot ();
-	return true;
-    }
+	if (devparm && ch == KEY_F1)
+	{
+		G_ScreenShot ();
+		return true;
+	}
 		
     
     // F-Keys
-    if (!menuactive)
-	switch(ch)
-	{
-	  case KEY_MINUS:         // Screen size down
-	    if (automapactive || chat_on)
-		return false;
-	    M_SizeDisplay(0);
-	    S_StartSound(NULL,sfx_stnmov);
-	    return true;
-				
-	  case KEY_EQUALS:        // Screen size up
-	    if (automapactive || chat_on)
-		return false;
-	    M_SizeDisplay(1);
-	    S_StartSound(NULL,sfx_stnmov);
-	    return true;
-				
-	  case KEY_F1:            // Help key
-	    M_StartControlPanel ();
-
-
-//	    if ( gamemode == retail )
-//	      currentMenu = &ReadDef2;
-//	    else
-	      currentMenu = &ReadDef1;
-		readthisfullscreenhack = true;
-	    itemOn = 0;
-	    S_StartSound(NULL,sfx_swtchn);
-	    return true;
-				
-	  case KEY_F2:            // Save
-	    M_StartControlPanel();
-	    S_StartSound(NULL,sfx_swtchn);
-	    M_SaveGame(0);
-	    return true;
-				
-	  case KEY_F3:            // Load
-	    M_StartControlPanel();
-	    S_StartSound(NULL,sfx_swtchn);
-	    M_LoadGame(0);
-	    return true;
-				
-	  case KEY_F4:            // Sound Volume
-	    M_StartControlPanel ();
-	    currentMenu = &SoundDef;
-	    itemOn = sfx_vol;
-	    S_StartSound(NULL,sfx_swtchn);
-	    return true;
-				
-	  case KEY_F5:            // FS: Change Palette Flashing  was // Detail toggle
-//	    M_ChangeDetail(0);
-		M_ChangePalFlashes(0);
-	    S_StartSound(NULL,sfx_swtchn);
-	    return true;
-				
-	  case KEY_F6:            // Quicksave
-	    S_StartSound(NULL,sfx_swtchn);
-	    M_QuickSave();
-	    return true;
-				
-	  case KEY_F7:            // End game
-	    S_StartSound(NULL,sfx_swtchn);
-	    M_EndGame(0);
-	    return true;
-				
-	  case KEY_F8:            // Toggle messages
-	    M_ChangeMessages(0);
-	    S_StartSound(NULL,sfx_swtchn);
-	    return true;
-				
-	  case KEY_F9:            // Quickload
-	    S_StartSound(NULL,sfx_swtchn);
-	    M_QuickLoad();
-	    return true;
-				
-	  case KEY_F10:           // Quit DOOM
-	    S_StartSound(NULL,sfx_swtchn);
-	    M_QuitDOOM(0);
-	    return true;
-				
-	  case KEY_F11:           // gamma toggle
-	    usegamma++;
-	    if (usegamma > 4)
-		usegamma = 0;
-	    players[consoleplayer].message = DEH_String(gammamsg[usegamma]);
-	    I_SetPalette (W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
-	    return true;
-		case KEY_F12: // FS
-		G_ScreenShot();
-		return true;
-				
-	}
-
-    
-    // Pop-up menu?
-    if (!menuactive)
-    {
-	if (ch == KEY_ESCAPE)
-	{
-	    M_StartControlPanel ();
-	    S_StartSound(NULL,sfx_swtchn);
-	    return true;
-	}
-	return false;
-    }
-
-    
-    // Keys usable within menu
-    switch (ch)
-    {
-	case (0x80+0x53): // FS: KEY_DEL
-		// FS: Ask us if we want to delete the current save
-		if(currentMenu == &LoadDef || currentMenu == &SaveDef)
+	if (!menuactive)
+		switch(ch)
 		{
-			sprintf(savename,SAVEGAMENAME"%d.dsg",itemOn);
-			if(!access(savename,0))
-			{
-				sprintf(tempstring,"ARE YOU SURE YOU WANT TO DELETE THIS SAVE?\n\nPRESS Y OR N.");
-    			M_StartMessage(tempstring,M_DeleteSaveResponse,true,true);
-			}
+			case KEY_MINUS:         // Screen size down
+				if (automapactive || chat_on)
+					return false;
+				M_SizeDisplay(0);
+				S_StartSound(NULL,sfx_stnmov);
+				return true;
+				
+			case KEY_EQUALS:        // Screen size up
+				if (automapactive || chat_on)
+					return false;
+				M_SizeDisplay(1);
+				S_StartSound(NULL,sfx_stnmov);
+				return true;
+				
+			case KEY_F1:            // Help key
+				M_StartControlPanel ();
+
+				// if ( gamemode == retail )
+					// currentMenu = &ReadDef2;
+				// else
+					currentMenu = &ReadDef1;
+				readthisfullscreenhack = true;
+				itemOn = 0;
+				S_StartSound(NULL,sfx_swtchn);
+				return true;
+				
+			case KEY_F2:            // Save
+				M_StartControlPanel();
+				S_StartSound(NULL,sfx_swtchn);
+				M_SaveGame(0);
+				return true;
+				
+			case KEY_F3:            // Load
+				M_StartControlPanel();
+				S_StartSound(NULL,sfx_swtchn);
+				M_LoadGame(0);
+				return true;
+				
+			case KEY_F4:            // Sound Volume
+				M_StartControlPanel ();
+				currentMenu = &SoundDef;
+				itemOn = sfx_vol;
+				S_StartSound(NULL,sfx_swtchn);
+				return true;
+				
+			case KEY_F5:            // FS: Change Palette Flashing  was // Detail toggle
+				// M_ChangeDetail(0);
+				M_ChangePalFlashes(0);
+				S_StartSound(NULL,sfx_swtchn);
+				return true;
+				
+			case KEY_F6:            // Quicksave
+				S_StartSound(NULL,sfx_swtchn);
+				M_QuickSave();
+				return true;
+				
+			case KEY_F7:            // End game
+				S_StartSound(NULL,sfx_swtchn);
+				M_EndGame(0);
+				return true;
+				
+			case KEY_F8:            // Toggle messages
+				M_ChangeMessages(0);
+				S_StartSound(NULL,sfx_swtchn);
+				return true;
+				
+			case KEY_F9:            // Quickload
+				S_StartSound(NULL,sfx_swtchn);
+				M_QuickLoad();
+				return true;
+				
+			case KEY_F10:           // Quit DOOM
+				S_StartSound(NULL,sfx_swtchn);
+				M_QuitDOOM(0);
+				return true;
+				
+			case KEY_F11:           // gamma toggle
+				usegamma++;
+				if (usegamma > 4)
+					usegamma = 0;
+				players[consoleplayer].message = DEH_String(gammamsg[usegamma]);
+				I_SetPalette (W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
+				return true;
+			case KEY_F12: // FS
+				G_ScreenShot();
+				return true;
+				
 		}
-		return true;
 
-      case KEY_DOWNARROW:
-	do
-	{
-	    if (itemOn+1 > currentMenu->numitems-1)
-		itemOn = 0;
-	    else itemOn++;
-	    S_StartSound(NULL,sfx_pstop);
-	} while(currentMenu->menuitems[itemOn].status==-1);
-	return true;
-		
-      case KEY_UPARROW:
-	do
-	{
-	    if (!itemOn)
-		itemOn = currentMenu->numitems-1;
-	    else itemOn--;
-	    S_StartSound(NULL,sfx_pstop);
-	} while(currentMenu->menuitems[itemOn].status==-1);
-	return true;
 
-      case KEY_LEFTARROW:
-	if (currentMenu->menuitems[itemOn].routine &&
-	    currentMenu->menuitems[itemOn].status == 2)
+	// Pop-up menu?
+	if (!menuactive)
 	{
-	    S_StartSound(NULL,sfx_stnmov);
-	    currentMenu->menuitems[itemOn].routine(0);
+		if (ch == KEY_ESCAPE)
+		{
+			M_StartControlPanel ();
+			S_StartSound(NULL,sfx_swtchn);
+			return true;
+		}
+		return false;
 	}
-	return true;
-		
-      case KEY_RIGHTARROW:
-	if (currentMenu->menuitems[itemOn].routine &&
-	    currentMenu->menuitems[itemOn].status == 2)
-	{
-	    S_StartSound(NULL,sfx_stnmov);
-	    currentMenu->menuitems[itemOn].routine(1);
-	}
-	return true;
 
-      case KEY_ENTER:
-	if (currentMenu->menuitems[itemOn].routine &&
-	    currentMenu->menuitems[itemOn].status)
+
+	// Keys usable within menu
+	switch (ch)
 	{
-	    currentMenu->lastOn = itemOn;
-	    if (currentMenu->menuitems[itemOn].status == 2)
-	    {
-		currentMenu->menuitems[itemOn].routine(1);      // right arrow
-		S_StartSound(NULL,sfx_stnmov);
-	    }
-	    else
-	    {
-		currentMenu->menuitems[itemOn].routine(itemOn);
-		S_StartSound(NULL,sfx_pistol);
-	    }
-	}
-	return true;
+		case (0x80+0x53): // FS: KEY_DEL
+			// FS: Ask us if we want to delete the current save
+			if(currentMenu == &LoadDef || currentMenu == &SaveDef)
+			{
+				DEH_snprintf(savename,32,SAVEGAMENAME"%d.dsg",itemOn);
+				if(!access(savename,0))
+				{
+					sprintf(tempstring,"ARE YOU SURE YOU WANT TO DELETE THIS SAVE?\n\nPRESS Y OR N.");
+					M_StartMessage(tempstring,M_DeleteSaveResponse,true,true);
+				}
+			}
+			return true;
+
+		case KEY_DOWNARROW:
+			do
+			{
+				if (itemOn+1 > currentMenu->numitems-1)
+					itemOn = 0;
+				else
+					itemOn++;
+				S_StartSound(NULL,sfx_pstop);
+			}
+			while(currentMenu->menuitems[itemOn].status==-1);
+			return true;
 		
-      case KEY_ESCAPE:
-	currentMenu->lastOn = itemOn;
-	M_ClearMenus ();
-	readthisfullscreenhack = false; // FS: full screen hack fucking BULLSHIT :)
-	S_StartSound(NULL,sfx_swtchx);
-	return true;
+		case KEY_UPARROW:
+			do
+			{
+				if (!itemOn)
+					itemOn = currentMenu->numitems-1;
+				else
+					itemOn--;
+				S_StartSound(NULL,sfx_pstop);
+			}
+			while(currentMenu->menuitems[itemOn].status==-1);
+			return true;
+
+		case KEY_LEFTARROW:
+			if (currentMenu->menuitems[itemOn].routine && currentMenu->menuitems[itemOn].status == 2)
+			{
+				S_StartSound(NULL,sfx_stnmov);
+				currentMenu->menuitems[itemOn].routine(0);
+			}
+			return true;
 		
-      case KEY_BACKSPACE:
-	currentMenu->lastOn = itemOn;
-	if (currentMenu->prevMenu)
-	{
-	    currentMenu = currentMenu->prevMenu;
-	    itemOn = currentMenu->lastOn;
-	    S_StartSound(NULL,sfx_swtchn);
-	}
-	return true;
+		case KEY_RIGHTARROW:
+			if (currentMenu->menuitems[itemOn].routine && currentMenu->menuitems[itemOn].status == 2)
+			{
+				S_StartSound(NULL,sfx_stnmov);
+				currentMenu->menuitems[itemOn].routine(1);
+			}
+			return true;
+
+		case KEY_ENTER:
+			if (currentMenu->menuitems[itemOn].routine && currentMenu->menuitems[itemOn].status)
+			{
+				currentMenu->lastOn = itemOn;
+				if (currentMenu->menuitems[itemOn].status == 2)
+				{
+					currentMenu->menuitems[itemOn].routine(1);      // right arrow
+					S_StartSound(NULL,sfx_stnmov);
+				}
+				else
+				{
+					currentMenu->menuitems[itemOn].routine(itemOn);
+					S_StartSound(NULL,sfx_pistol);
+				}
+			}
+			return true;
+		
+		case KEY_ESCAPE:
+			currentMenu->lastOn = itemOn;
+			M_ClearMenus ();
+			readthisfullscreenhack = false; // FS: full screen hack fucking BULLSHIT :)
+			S_StartSound(NULL,sfx_swtchx);
+			return true;
+		
+		case KEY_BACKSPACE:
+			currentMenu->lastOn = itemOn;
+			if (currentMenu->prevMenu)
+			{
+				currentMenu = currentMenu->prevMenu;
+				itemOn = currentMenu->lastOn;
+				S_StartSound(NULL,sfx_swtchn);
+			}
+			return true;
 	
-      default:
-	for (i = itemOn+1;i < currentMenu->numitems;i++)
-	    if (currentMenu->menuitems[i].alphaKey == ch)
-	    {
-		itemOn = i;
-		S_StartSound(NULL,sfx_pstop);
-		return true;
-	    }
-	for (i = 0;i <= itemOn;i++)
-	    if (currentMenu->menuitems[i].alphaKey == ch)
-	    {
-		itemOn = i;
-		S_StartSound(NULL,sfx_pstop);
-		return true;
-	    }
-	break;
+		default:
+			for (i = itemOn+1;i < currentMenu->numitems;i++)
+				if (currentMenu->menuitems[i].alphaKey == ch)
+				{
+					itemOn = i;
+					S_StartSound(NULL,sfx_pstop);
+					return true;
+				}
+			for (i = 0;i <= itemOn;i++)
+				if (currentMenu->menuitems[i].alphaKey == ch)
+				{
+					itemOn = i;
+					S_StartSound(NULL,sfx_pstop);
+					return true;
+				}
+			break;
 	
-    }
+	}
 
-    return false;
+	return false;
 }
 
 

@@ -1,3 +1,9 @@
+10-14-13
+ - Fixed a potential crash with EXTEND.CFG loading if extra
+   strings were in there.
+ - Press enter for 'Y' responses in the menus.  i.e. Press enter
+   to confirm quit.
+
 10-13-13
  - Removed the DEH startup banners as it's causing a hard lock in
    debug compiled builds.
@@ -5,6 +11,10 @@
    Was causing crashes for me in Perdition's Gate.
  - noquitsound in EXTEND.CFG to disable the randomized quit sound.
  - Fixed MASSACRE cheat not killing Lost Souls.
+ - Fixed SECRETS FOUND automap double faulting in debug compiles.
+ - "-hacx" to load HACX.
+ - Experimental internal DEH loading support from WADs.
+   The Z_ChangeTag is not changed, but I haven't found any problems yet.
 
 10-06-13
  - If you're in a fake netgame (i.e. ipxsetup -nodes 1) you can

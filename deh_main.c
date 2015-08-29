@@ -355,7 +355,8 @@ int DEH_LoadFile(char *filename)
 
     if (context == NULL)
     {
-        fprintf(stderr, "DEH_LoadFile: Unable to open %s\n", filename);
+        fprintf(stderr, "DEH_LoadFile: Unable to open %s, attempting to load from WAD\n", filename);
+        DEH_LoadLumpByName(filename);
         return 0;
     }
     

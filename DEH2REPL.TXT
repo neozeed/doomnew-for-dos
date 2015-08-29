@@ -1,6 +1,5 @@
 The following DEHacked strings need to be converted!
 
-d_main.c:        deh_s = DEH_String(copyright_banners[i]);
 d_main.c:	    I_Error(DEH_String("\nYou cannot -file with the shareware "
 d_main.c:		    I_Error(DEH_String("\nThis is not the registered version."));
 m_menu.c:            DEH_String("%s\n\n" DOSY),

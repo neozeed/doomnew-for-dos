@@ -215,6 +215,7 @@ extern int	snd_SBport, snd_SBirq, snd_SBdma;       // sound blaster variables
 extern int	snd_Mport;                              // midi variables
 
 extern boolean usePalFlash; // FS
+extern boolean deh_apply_cheats; // FS
 
 default_t defaults[] =
 {
@@ -309,7 +310,8 @@ default_t	extendeddefaults[] =
 	{ "wpn_chaingun", &wpn_chaingun, 45, 1 }, // FS: X
 	{ "wpn_rocket", &wpn_rocket, 16, 1 }, // FS: Q
 	{ "wpn_plasma", &wpn_plasma, 46, 1 }, // FS: C
-	{ "disk_flash_icon", &grmode, 1 } // FS: Disk Flashing
+	{ "disk_flash_icon", &grmode, 1 }, // FS: Disk Flashing
+	{ "deh_apply_cheats", &deh_apply_cheats, 1} // FS: Apply DEHacked Cheats
 };
 
 int numextendeddefaults; // FS
@@ -507,7 +509,7 @@ void M_LoadExtendedDefaults (void)
 				    sscanf(strparm+2, "%x", &parm);
 				else
 				    sscanf(strparm, "%i", &parm);
-				for (i=0 ; i<numdefaults ; i++)
+				for (i=0 ; i<numextendeddefaults ; i++)
 				    if (!strcmp(def, extendeddefaults[i].name))
 				    {
 						if (!isstring)
@@ -515,11 +517,11 @@ void M_LoadExtendedDefaults (void)
 						else
 						    *extendeddefaults[i].location = (int) newstring;
 						break;
-				    }
-		    }
+					}
+			}          
 		}
 		fclose (f);
-    }
+	}
 
 #ifdef __WATCOMC__
 	for(i = 0; i < numextendeddefaults; i++)
@@ -634,33 +636,29 @@ WritePCXfile
 //
 void M_ScreenShot (void)
 {
-    int		i;
-    byte*	linear;
-    char	lbmname[12];
-    
-    // munge planar buffer to linear
-    linear = screens[2];
-    I_ReadScreen (linear);
-    
+	int		i;
+	byte*	linear;
+	char	lbmname[12];
+
+	// munge planar buffer to linear
+	linear = screens[2];
+	I_ReadScreen (linear);
+
     // find a file name to save it to
-    strcpy(lbmname,"DOOM00.pcx");
+	strcpy(lbmname,DEH_String("DOOM00.pcx"));
 		
-    for (i=0 ; i<=99 ; i++)
-    {
-	lbmname[4] = i/10 + '0';
-	lbmname[5] = i%10 + '0';
-	if (access(lbmname,0) == -1)
-	    break;	// file doesn't exist
-    }
+	for (i=0 ; i<=99 ; i++)
+	{
+		lbmname[4] = i/10 + '0';
+		lbmname[5] = i%10 + '0';
+		if (access(lbmname,0) == -1)
+		    break;	// file doesn't exist
+	}
     if (i==100)
-	I_Error ("M_ScreenShot: Couldn't create a PCX");
-    
-    // save the pcx file
-    WritePCXfile (lbmname, linear,
-		  SCREENWIDTH, SCREENHEIGHT,
-		  W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
-	
-    players[consoleplayer].message = DEH_String("screen shot");
+		I_Error ("M_ScreenShot: Couldn't create a PCX");
+
+	// save the pcx file
+	WritePCXfile (lbmname, linear, SCREENWIDTH, SCREENHEIGHT, W_CacheLumpName (DEH_String("PLAYPAL"),PU_CACHE));
+
+	players[consoleplayer].message = DEH_String("screen shot");
 }
-
-
