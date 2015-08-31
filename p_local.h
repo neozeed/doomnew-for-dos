@@ -128,7 +128,6 @@ void	P_SpawnPlayerMissile (mobj_t* source, mobjtype_t type);
 //
 void P_NoiseAlert (mobj_t* target, mobj_t* emmiter);
 void P_Massacre(void); // FS: From Heretic for massacre cheat
-void P_SetMessage(player_t *player, char *message, boolean ultmsg);  // FS
 
 //
 // P_MAPUTL

@@ -24,7 +24,7 @@
 #define __SOUNDS__
 
 #define MAX_SND_DIST 	1600
-#define MAX_CHANNELS	16
+#define MAX_CHANNELS	16 /* FS: Was 8 */
 
 #include "p_mobj.h"
 //
@@ -131,7 +131,7 @@ typedef	struct
 	int channelCount;
 	int musicVolume;
 	int soundVolume;
-	ChanInfo_t chan[MAX_CHANNELS]; // FS: Was 8
+	ChanInfo_t chan[MAX_CHANNELS];
 } SoundInfo_t;
 
 

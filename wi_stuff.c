@@ -372,8 +372,6 @@ static patch_t*		bp[MAXPLAYERS];
 
  // Name graphics of each level (centered)
 static patch_t**	lnames;
-extern boolean		chex; // FS: Chex Quest specific stuff
-extern boolean		perdgate; // FS
 
 //
 // CODE

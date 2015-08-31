@@ -8,8 +8,6 @@
 #include "doomdef.h"
 #include "doomstat.h"
 
-#include "deh_main.h" // FS: For DEH
-
 #define	NCMD_EXIT		0x80000000
 #define	NCMD_RETRANSMIT	0x40000000
 #define	NCMD_SETUP		0x20000000

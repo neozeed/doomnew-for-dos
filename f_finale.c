@@ -17,13 +17,6 @@
 #include "doomstat.h"
 #include "r_state.h"
 
-// ?
-//#include "doomstat.h"
-//#include "r_local.h"
-//#include "f_finale.h"
-
-#include "deh_main.h" // FS: For DEH
-
 // Stage of animation:
 //  0 = text, 1 = art screen, 2 = character cast
 int		finalestage;
@@ -62,10 +55,6 @@ char*	t6text = T6TEXT;
 
 char*	finaletext;
 char*	finaleflat;
-
-extern boolean	plutonia; // FS: For Plutonia intermission text
-extern boolean	tnt; // FS: For TNT intermission text
-extern boolean	chex; // FS: For Chex Quest finale text
 
 void	F_StartCast (void);
 void	F_CastTicker (void);

@@ -5,36 +5,22 @@
 #include <direct.h>
 #include <fcntl.h>
 #include <stdlib.h>
-
 #include <ctype.h>
 
 
 #include "doomdef.h"
-
 #include "z_zone.h"
-
 #include "m_swap.h"
 #include "m_argv.h"
-
 #include "w_wad.h"
-
 #include "i_system.h"
 #include "i_video.h"
 #include "v_video.h"
-
 #include "sounds.h" // FS
-
 #include "hu_stuff.h"
-
-// State.
-#include "doomstat.h"
-
-// Data.
-#include "dstrings.h"
-
+#include "doomstat.h" // State.
+#include "dstrings.h" // Data.
 #include "m_misc.h"
-
-#include "deh_main.h" // FS: For DEH
 
 //
 // M_DrawText
@@ -170,19 +156,22 @@ extern int	viewheight;
 
 extern int	mouseSensitivity;
 extern int	showMessages;
-int headBob; // FS: Head bob toggle
-extern int	drawTime; // FS: Draw Time on Automap
-int	useIntGus; // FS: Use internal GUS1M WADs
-int novert; // FS: No vertical mouse movement
-int noprecache; // FS: No graphics precaching
-int noquitsound; // FS: No quit sound
-int nowipe; // FS: No Wipes
 
-extern int	use_wpnbinds; // FS: Custom weapon keys
-extern int	wpn_shotgun; // FS: Custom weapon keys
-extern int	wpn_chaingun; // FS: Custom weapon keys
-extern int	wpn_rocket; // FS: Custom weapon keys
-extern int	wpn_plasma; // FS: Custom weapon keys
+/* FS: Extended.cfg stuff */
+boolean headBob;
+int	drawTime; /* FS: Draw Time on Automap */
+boolean	useIntGus; /* FS: Use internal GUS1*.WADs */
+boolean novert; /* FS: No vertical mouse movement */
+boolean noprecache;
+boolean noquitsound;
+boolean nowipe;
+boolean usePalFlash;
+/* FS: For custom weapon binds */
+boolean	use_wpnbinds;
+int	wpn_shotgun;
+int	wpn_chaingun;
+int	wpn_rocket;
+int	wpn_plasma; 
 
 extern int	detailLevel;
 
@@ -212,7 +201,6 @@ extern int	snd_SfxDevice; // current sfx card # (index to dmxCodes)
 extern int	snd_SBport, snd_SBirq, snd_SBdma;       // sound blaster variables
 extern int	snd_Mport;                              // midi variables
 
-extern boolean usePalFlash; // FS
 extern boolean deh_apply_cheats; // FS
 extern boolean deh_internal; // FS
 int	dndebug; // FS

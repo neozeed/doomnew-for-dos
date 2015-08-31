@@ -1,6 +1,6 @@
 // FS: Internal GUS1M.WAD and GUS1MIID.WAD
 
-char *gus1 =
+const char gus1[] =
 {
 	// GUS1M.WAD
 	// # 1024K patch mapping optimized for Doom!
@@ -210,7 +210,7 @@ char *gus1 =
 	"215,128,128,128,128,surdo2\n"
 };
 
-char *gus2 =
+const char gus2[] =
 {
 	// GUS1M.WAD
 	// #

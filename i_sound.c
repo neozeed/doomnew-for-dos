@@ -7,12 +7,10 @@
 #include "i_sound.h"
 #include "z_zone.h"
 #include "w_wad.h"
-#include "doomstat.h" // FS: For Doom 2 DMXGUSC
-#include "m_argv.h" // FS: For external GUS ini files
-#include "deh_main.h" // FS: For DEH
-#include "GUS.H" // FS: Internal GUS
+#include "m_argv.h"
+#include "GUS.H" /* FS: Internal GUS*.WADs */
 
-extern void S_FreeChannels (void); // FS
+extern GameMode_t	gamemode;
 
 /*
 ===============
@@ -42,7 +40,7 @@ void I_StartupTimer (void)
 
 void I_ShutdownTimer (void)
 {
-	dprintf("I_ShutdownTimer()\n"); // FS: DEBUG
+	dprintf("I_ShutdownTimer()\n");
 
 	TSM_DelService(tsm_ID);
 	TSM_Remove();
@@ -195,7 +193,7 @@ int I_GetSfxLumpNum(sfxinfo_t *sound)
 	if (sound->link)
 		sound = sound->link;
 
-	sprintf(namebuf, "d%c%s", snd_prefixen[snd_SfxDevice], DEH_String(sound->name)); // FS
+	sprintf(namebuf, "d%c%s", snd_prefixen[snd_SfxDevice], DEH_String(sound->name));
 	return W_GetNumForName(namebuf);
 }
 
@@ -258,10 +256,10 @@ void I_sndArbitrateCards(void)
 	if (M_CheckParm("-nomusic"))
 		snd_MusicDevice = snd_none;
 		
-	if (M_CheckParm("-usesb")) // FS: Force an SB if you're using a GUS combo
+	if (M_CheckParm("-usesb")) /* FS: Force an SB if you're using a GUS combo */
 	{
 		snd_MusicDevice = snd_SfxDevice = snd_SB;
-		snd_SBport = 220; // FS: Standardish defaults, make this a CheckParm or something, man.
+		snd_SBport = 220; /* FS: Standardish defaults.  TODO: make this a CheckParm or something, man. */
 		snd_SBirq = 5; 
 		snd_SBdma = 1;
 		printf("  Forcing SB detection at A220 I5 D1.\n");		
@@ -284,26 +282,25 @@ void I_sndArbitrateCards(void)
 
 	// initialize whatever i've got
 	//
-	if (gus)
+	if (gus) /* FS: Redone for external GUS INI file support and internal GUS*.WADs */
 	{
-		byte *gusbuffer; // FS: External GUS INI files
-		int	gusfilelength; // FS: External GUS INI files
-		int	p;  // FS: External GUS INI files
-		extern int useIntGus; // FS: Use internal GUS1M WADs
+		byte *gusbuffer;
+		int	gusfilelength;
+		int	p;
 		
 		if (GF1_Detect())
 			printf("Dude.  The GUS ain't responding.\n",1);
 		else
 		{
 			p = M_CheckParm("-usegusini");
-			if (p) // FS: Allow an external ini file
+			if (p) /* FS: Allow an external INI file */
 			{
 				if(p < myargc-1)
 				{
 					char *gusfile = myargv[p+1];
 					gusfilelength = M_ReadFile(gusfile, &gusbuffer);
 					GF1_SetMap((char *)gusbuffer, gusfilelength);
-					Z_Free(gusbuffer); // FS: We're done with it
+					Z_Free(gusbuffer); /* FS: We're done with it */
 				}
 				else
 				{
@@ -312,30 +309,27 @@ void I_sndArbitrateCards(void)
 					exit(1);
 				}
 			}
-			else if(gamemode == commercial) // FS: For Doom 2
+			else if(gamemode == commercial) /* FS: Doom 2 internal GUS WAD */
 			{
 				if (M_CheckParm("-gus") || useIntGus)
 				{
-					extern char *gus2;
 					int length = strlen(gus2);				
 					printf("  using internal GUS1MIID.WAD\n");
-					GF1_SetMap(gus2, length); // FS: Internal GUS
+					GF1_SetMap((char *)gus2, length);
 				}
 				else
 				{
 					dmxlump = W_GetNumForName("dmxgusc");
 					GF1_SetMap(W_CacheLumpNum(dmxlump, PU_CACHE), lumpinfo[dmxlump].size);
 				}
-				// FS: GF1_SetMap (char *entire file, int size of file)
 			}
 			else
 			{
 				if (M_CheckParm("-gus") || useIntGus)
 				{
-					extern char *gus1;
 					int length = strlen(gus1);				
 					printf("  using internal GUS1M.WAD\n");
-					GF1_SetMap(gus1, length); // FS: Internal GUS
+					GF1_SetMap((char *)gus1, length);
 				}
 				else
 				{
@@ -448,8 +442,8 @@ void I_StartupSound (void)
 
 void I_ShutdownSound (void)
 {
-	dprintf("I_ShutdownSound()\n"); // FS: DEBUG
-	S_FreeChannels(); // FS
+	dprintf("I_ShutdownSound()\n");
+	S_FreeChannels();
 
 	DMX_DeInit();
 	I_ShutdownTimer();

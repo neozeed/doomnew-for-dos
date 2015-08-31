@@ -42,7 +42,6 @@ rcsid[] = "$Id: p_mobj.c,v 1.5 1997/02/03 22:45:12 b1 Exp $";
 
 void G_PlayerReborn (int player);
 void P_SpawnMapThing (mapthing_t*	mthing);
-extern boolean	chex; // FS: Chex Quest Hack
 
 //
 // P_SetMobjState

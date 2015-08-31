@@ -1,7 +1,7 @@
 // Hu_stuff.c:	Heads-up displays
 
-
 #include <ctype.h>
+#include <time.h> // FS: For time clock
 
 #include "doomdef.h"
 
@@ -20,9 +20,6 @@
 // Data.
 #include "dstrings.h"
 #include "sounds.h"
-
-#include "deh_main.h" // FS: For DEH
-#include <time.h> // FS: For time clock
 
 //
 // Locally used constants, shortcuts.
@@ -90,7 +87,7 @@ static char		chat_dest[MAXPLAYERS];
 static hu_itext_t w_inputbuffer[MAXPLAYERS];
 
 static boolean		message_on;
-boolean			message_dontfuckwithme;
+boolean				message_dontfuckwithme;
 static boolean		message_nottobefuckedwith;
 
 static hu_stext_t	w_message;
@@ -100,10 +97,6 @@ extern int		showMessages;
 extern boolean		automapactive;
 
 static boolean		headsupactive = false;
-extern boolean		plutonia; // FS: For Plutonia Map Names in Automap
-extern boolean		tnt; // FS: For TNT Map Names in Automap
-
-int	drawTime; // FS: Time clock on automap
 
 //
 // Builtin map names.
@@ -434,21 +427,6 @@ const char english_shiftxform[] =
     '{', '|', '}', '~', 127
 };
 
-
-// FS: From Heretic -- Yeah yeah, should be in P_Inter.c but fuck it.
-void P_SetMessage(player_t *player, char *message, boolean ultmsg)
-{
-	if(!message_on && !ultmsg)
-	{
-		return;
-	}
-	player->message = message;
-	if(ultmsg)
-	{
-		message_dontfuckwithme = true;
-	}
-}
-
 void HU_Init(void)
 {
 
@@ -473,12 +451,24 @@ void HU_Stop(void)
     headsupactive = false;
 }
 
+/* FS: From Heretic */
+void HU_SetMessage(player_t *player, char *message, boolean ultmsg)
+{
+	if(!message_on && !ultmsg)
+	{
+		return;
+	}
+	player->message = message;
+	if(ultmsg)
+	{
+		message_dontfuckwithme = true;
+	}
+}
+
 void HU_Start(void)
 {
 	int			i;
 	char*			s;
-	extern boolean	chex; // FS: For Chex Quest Map Names
-	extern boolean	chex2; // FS: For Chex Quest 2 Map names
 
 	if (headsupactive)
 		HU_Stop();

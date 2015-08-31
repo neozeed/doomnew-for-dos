@@ -33,7 +33,6 @@
 #include "i_sound.h"
 #include "i_video.h"
 
-#include "deh_main.h" // FS: For DEHacked
 #include "g_game.h"
 
 #include "hu_stuff.h"
@@ -88,27 +87,26 @@ boolean	autostart;
 FILE*		debugfile;
 
 boolean	advancedemo;
-boolean	plutonia = false; // FS
-boolean	tnt = false; // FS
-boolean	chex = false; // FS: For Chex(R) Quest
-boolean	chex2 = false; // FS: For Chex Quest 2
-boolean perdgate = false; // FS: For Perdition's Gate
-boolean hacx = false; // FS: For HACX TC
+
+/* FS: For custom WAD stuff */
+boolean	plutonia = false;
+boolean	tnt = false;
+boolean	chex = false; /* FS: Chex(R) Quest */
+boolean	chex2 = false; // FS: Chex Quest 2 */
+boolean perdgate = false; /* FS: Perdition's Gate */
+boolean hacx = false; /* FS: HACX TC */
 
 char	wadfile[1024];		// primary wad file
 char	mapdir[1024];		   // directory of development maps
 char	basedefault[1024];	  // default file
-extern int headBob; // FS: Head bob toggle
-extern int novert; // FS: No vertical mouse movement
-extern boolean usePalFlash; // FS
 
-// FS: For all the Save, Convert, and Load game stuff
-extern int savegamesize; // FS
-extern int savestringsize; // FS
-extern menu_t SaveDef; // FS
-extern menu_t LoadDef; // FS
-int	saveconvertslot; // FS: Convert Save
-boolean	convertsave = false; // FS: Convert Save
+/* FS: For all the Save, Convert, and Load game stuff */
+extern int savegamesize;
+extern int savestringsize;
+extern menu_t SaveDef;
+extern menu_t LoadDef;
+int	saveconvertslot;
+boolean	convertsave = false;
 
 void D_CheckNetGame (void);
 void D_ProcessEvents (void);
@@ -208,7 +206,6 @@ void D_Display (void)
 	int				y;
 	boolean			done;
 	boolean			wipe;
-	extern	int		noWipe; // FS
 	boolean			redrawsbar;
 
 	if (nodrawers)
@@ -233,7 +230,7 @@ void D_Display (void)
 	else
 		wipe = false;
 
-	if(noWipe) // FS: Skip drawing Wipes if we want
+	if(nowipe) // FS: Skip drawing Wipes if we want
 		wipe = false;
 
 	if (gamestate == GS_LEVEL && gametic)
@@ -1416,7 +1413,7 @@ void D_DoomMain (void)
 			sprintf(file, "c:\\doomdata\\"SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
 		else
 			sprintf(file, SAVEGAMENAME"%c.dsg",myargv[p+1][0]);
-			saveconvertslot = atoi(myargv[p+1]); // FS: For save convert slot
+		saveconvertslot = atoi(myargv[p+1]); // FS: For save convert slot
 		LoadDef.lastOn = SaveDef.lastOn = atoi(myargv[p+1]); // FS: set the slot
 		G_LoadGame (file);
 	}
@@ -1424,12 +1421,12 @@ void D_DoomMain (void)
 
 	if (M_CheckParm("-noheadbob")) // FS
 	{
-			headBob = 0;
+		headBob = 0;
 	}
 
 	if (M_CheckParm("-nopalflash")) // FS
 	{
-			usePalFlash = 0;
+		usePalFlash = 0;
 	}
 
 	if (M_CheckParm("-novert")) // FS
@@ -1439,7 +1436,6 @@ void D_DoomMain (void)
 
 	if (M_CheckParm("-noprecache")) // FS
 	{
-		extern int noprecache;
 		noprecache = 1;
 	}
 

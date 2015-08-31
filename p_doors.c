@@ -30,7 +30,6 @@ rcsid[] = "$Id: p_doors.c,v 1.4 1997/02/03 16:47:53 b1 Exp $";
 
 #include "s_sound.h"
 
-
 // State.
 #include "doomstat.h"
 #include "r_state.h"
@@ -38,8 +37,6 @@ rcsid[] = "$Id: p_doors.c,v 1.4 1997/02/03 16:47:53 b1 Exp $";
 // Data.
 #include "dstrings.h"
 #include "sounds.h"
-
-#include "deh_main.h" // FS: For DEH
 
 #if 0
 //

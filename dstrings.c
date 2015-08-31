@@ -31,7 +31,7 @@ char *endmsg2[] = // FS: For Doom 2
 	"you're lucky i don't smack\nyou for thinking about leaving."
 };
 
-char *endmsgchex[2] = // FS: For Chex Quest
+char *endmsgchex[] = // FS: For Chex Quest
 {
 	"please don't leave, we\nneed your help!",
 	"Don't give up now...do\nyou still wish to quit?"

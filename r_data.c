@@ -16,8 +16,6 @@
 
 #include "r_data.h"
 
-#include "deh_main.h" // FS: For DEH
-
 //
 // Graphics.
 // DOOM graphics for walls and sprites

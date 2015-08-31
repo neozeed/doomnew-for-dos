@@ -36,8 +36,6 @@
 #include "dstrings.h"
 #include "sounds.h"
 
-#include "deh_main.h" // FS: For DEH
-
 //
 // STATUS BAR DATA
 //
@@ -369,8 +367,6 @@ static int	keyboxes[3];
 // a random number per tick
 static int	st_randomnumber;  
 
-boolean usePalFlash; // FS: No Palette Flashing
-extern boolean	chex; // FS: For Chex Quest
 extern boolean 	readthisfullscreenhack; // FS: Hack for Read This!/Credits so DrawFullScreenStuff doesn't draw over it.
 
 // Massive bunches of cheat shit
@@ -638,7 +634,7 @@ ST_Responder (event_t* ev)
 			}
 			if (cht_CheckCheat(&cheat_massacre, ev->data1)) // FS: Massacre cheat from Heretic
 			{
-				P_SetMessage(plyr,"MASSACRE!", true);
+				HU_SetMessage(plyr,"MASSACRE!", true);
 				P_Massacre();
 			}
 		      // 'dqd' cheat for toggleable god mode
@@ -781,43 +777,43 @@ ST_Responder (event_t* ev)
 			// Catch invalid maps.
 			if (epsd < 1)
 			{
-				P_SetMessage(plyr, "Invalid Episode!", true);
+				HU_SetMessage(plyr, "Invalid Episode!", true);
 				return false;
 			}
 
 			if (map < 1)
 			{
-				P_SetMessage(plyr, "Invalid Map!", true);
+				HU_SetMessage(plyr, "Invalid Map!", true);
 				return false;
 			}
 			// Ohmygod - this is not going to work.
 			if ((gamemode == retail) && ((epsd > 4) || (map > 9)))
 			{
-				P_SetMessage(plyr, "Invalid Selection!", true);
+				HU_SetMessage(plyr, "Invalid Selection!", true);
 				return false;
 			}
 
 			if ((gamemode == registered) && ((epsd > 3) || (map > 9)))
 			{
-				P_SetMessage(plyr, "Invalid Selection!", true);
+				HU_SetMessage(plyr, "Invalid Selection!", true);
 				return false;
 			}
 
 			if ((gamemode == shareware) && ((epsd > 1) || (map > 9)))
 			{
-				P_SetMessage(plyr, "Invalid Selection!", true);
+				HU_SetMessage(plyr, "Invalid Selection!", true);
 				return false;
 			}
 
 			if (chex && ((epsd > 1) || (map > 5))) // FS: Chex Quest only has 5 levels.
 			{
-				P_SetMessage(plyr, "Invalid Selection!", true);
+				HU_SetMessage(plyr, "Invalid Selection!", true);
 				return false;
 			}
 
 			if ((gamemode == commercial) && (( epsd > 1) || (map > 34)))
 			{
-				P_SetMessage(plyr, "Invalid Selection!", true);
+				HU_SetMessage(plyr, "Invalid Selection!", true);
 				return false;
 			}
 

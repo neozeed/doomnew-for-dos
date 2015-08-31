@@ -42,8 +42,6 @@ rcsid[] = "$Id: r_draw.c,v 1.4 1997/02/03 16:47:55 b1 Exp $";
 // State.
 #include "doomstat.h"
 
-#include "deh_main.h" // FS: For DEH
-
 // ?
 #define MAXWIDTH			1120
 #define MAXHEIGHT			832

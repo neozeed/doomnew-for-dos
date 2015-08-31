@@ -41,7 +41,7 @@ fixed_t FixedMul	(fixed_t a, fixed_t b);
 fixed_t FixedDiv	(fixed_t a, fixed_t b);
 fixed_t FixedDiv2	(fixed_t a, fixed_t b);
 
-#ifdef __WATCOMC__ // FS
+#ifdef __WATCOMC__ /* FS: Heretic Merge */
 #pragma aux FixedMul =	\
 	"imul ebx",			\
 	"shrd eax,edx,16"	\

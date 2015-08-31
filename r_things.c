@@ -41,8 +41,6 @@ rcsid[] = "$Id: r_things.c,v 1.5 1997/02/03 16:47:56 b1 Exp $";
 
 #include "doomstat.h"
 
-#include "deh_main.h" // FS: For DEH
-
 #define MINZ				(FRACUNIT*4)
 #define BASEYCENTER			100
 

@@ -587,7 +587,6 @@ P_SetupLevel
     int		i;
     char	lumpname[9];
     int		lumpnum;
-	extern int	noprecache; // FS: No graphics precaching
 
     totalkills = totalitems = totalsecret = wminfo.maxfrags = 0;
     wminfo.partime = 180;

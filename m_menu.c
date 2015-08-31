@@ -39,14 +39,11 @@
 
 #include "m_menu.h"
 
-#include "deh_main.h" // FS: For DEH
-
 
 extern patch_t*		hu_font[HU_FONTSIZE];
 extern boolean		message_dontfuckwithme;
 
 extern boolean		chat_on;		// in heads-up code
-extern boolean		chex; // FS: For Chex Quest
 
 //
 // defaulted values
@@ -1068,8 +1065,6 @@ int     quitsounds2[8] =
 
 void M_QuitResponse(int ch)
 {
-	extern int	noquitsound; // FS
-
 	if (ch == 'y' || ch == KEY_ENTER)
 	{
 		if (!netgame && !noquitsound) // FS: Disable quit sounds
@@ -1128,7 +1123,7 @@ void M_ChangeDetail(int choice)
 //    detailLevel = 1 - detailLevel;
 	detailLevel = 0;
 	// FS: FIXME - moron fucked this up too...
-	P_SetMessage(&players[consoleplayer], "low detail mode disabled in this build!",true);
+	HU_SetMessage(&players[consoleplayer], "low detail mode disabled in this build!",true);
 
 	return;
 
@@ -1142,15 +1137,14 @@ void M_ChangeDetail(int choice)
 
 void M_ChangePalFlashes(int choice) // FS: Palette Flashes Toggle
 {
-	extern boolean usePalFlash;
 	usePalFlash ^= 1;
 	if(usePalFlash)
 	{
-		P_SetMessage(&players[consoleplayer], "PALETTE FLASHES ON", true);
+		HU_SetMessage(&players[consoleplayer], "PALETTE FLASHES ON", true);
 	}
 	else
 	{
-		P_SetMessage(&players[consoleplayer], "PALETTE FLASHES OFF", true);
+		HU_SetMessage(&players[consoleplayer], "PALETTE FLASHES OFF", true);
 	}
 }
 

@@ -19,7 +19,6 @@
 
 #include "doomstat.h"
 
-#include "deh_main.h" // FS: For DEH
 #include "oldnew.h" // FS
 
 #define S_MAX_VOLUME		127

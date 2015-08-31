@@ -30,6 +30,8 @@
 // Some global defines, that configure the game.
 #include "doomdef.h"
 
+#include "deh_main.h" /* FS: For DEH */
+#include "cfg_ext.h" /* FS: Extended.cfg */
 
 
 //
@@ -209,11 +211,13 @@ typedef struct
     short		options;
 } mapthing_t;
 
-
-
-
-byte *I_AllocLow (int length); // FS
-
+/* FS: For custom WAD stuff */
+extern boolean plutonia;
+extern boolean tnt;
+extern boolean chex; /* FS: Chex(R) Quest */
+extern boolean chex2; // FS: Chex Quest 2 */
+extern boolean perdgate; /* FS: Perdition's Gate */
+extern boolean hacx ; /* FS: HACX TC */
 
 #endif			// __DOOMDATA__
 //-----------------------------------------------------------------------------

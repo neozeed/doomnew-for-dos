@@ -6,10 +6,11 @@
 #include <stdarg.h>
 #include <graph.h>
 
-#include "Doomdata.h"
+#include "doomdata.h"
 #include "R_local.h"
 #include "sounds.h"
 #include "i_sound.h"
+#include "i_system.h"
 #include "dmx.h"
 #include "z_zone.h"
 #include "w_wad.h"
@@ -17,10 +18,8 @@
 #include "doomstat.h"
 #include "v_video.h"
 #include "d_event.h"
-#include "doomdef.h" // FS ?
+#include "doomdef.h"
 #include "oldnew.h" // FS: For toggling old code
-
-#include "deh_main.h" // FS: For DEH
 
 // Macros
 

@@ -198,7 +198,7 @@ EV_LightTurnOn
   int		bright );
 
 void    T_Glow(glow_t* g);
-void		T_FireFlicker (fireflicker_t*	flick); // FS: From Boom/DoomWiki
+void	T_FireFlicker (fireflicker_t* flick); /* FS: From Boom/DoomWiki */
 void    P_SpawnGlowingLight(sector_t* sector);
 
 

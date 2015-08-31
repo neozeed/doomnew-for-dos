@@ -8,16 +8,19 @@
 #include <string.h>
 #include <malloc.h> // FS
 
-#define strncasecmp strnicmp // FS
-
 //
 // Global parameters/defines.
 //
 // DOOM version
 enum { VERSION =  109 };
 
-
+#ifndef strcasecmp
 #define strcasecmp strcmpi // FS
+#endif
+
+#ifndef strncasecmp
+#define strncasecmp strnicmp // FS
+#endif
 
 // Game mode handling - identify IWAD version
 //  to handle IWAD dependend animations etc.
@@ -31,7 +34,6 @@ typedef enum
   indetermined	// Well, no IWAD found.
   
 } GameMode_t;
-
 
 // Identify language to use, software localization.
 typedef enum

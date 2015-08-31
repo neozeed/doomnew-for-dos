@@ -24,7 +24,6 @@
 
 #include "am_map.h"
 #include "m_cheat.h" // FS: For DEH
-#include "deh_main.h" // FS: For DEH
 
 vertex_t CardPoints[NUMCARDS]; // FS: From Heretic, Show Keycard in Easy mode
 // For use if I do walls with outsides/insides

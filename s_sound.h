@@ -54,5 +54,7 @@ void S_UpdateSounds(void* listener);
 void S_SetMusicVolume(int volume);
 void S_SetSfxVolume(int volume);
 
+void S_FreeChannels (void);
+
 
 #endif

@@ -15,7 +15,6 @@
 #include "p_local.h"
 
 #include "s_sound.h"
-#include "deh_main.h" // FS: For DEH
 
 #ifdef __GNUG__
 #pragma implementation "p_inter.h"
@@ -26,14 +25,11 @@
 #define BONUSADD	6
 
 
-
-
 // a weapon is found with two clip loads,
 // a big item has five clip loads
 int	maxammo[NUMAMMO] = {200, 50, 300, 50};
 int	clipammo[NUMAMMO] = {10, 4, 20, 1};
 
-extern boolean	chex; // FS: For Chex(R) Quest.  Hacky, needs to be redone.
 extern boolean	coop;
 //extern vertex_t CardPoints[]; // FS: From Heretic, Show Keycard in Easy mode
 
@@ -297,22 +293,22 @@ void P_GiveCardCoop (player_t* player, card_t card)
 		switch(card)
 		{
 			case it_bluecard:
-				P_SetMessage(player, "EVERYONE HAS THE BLUE KEYCARD!", true);
+				HU_SetMessage(player, "EVERYONE HAS THE BLUE KEYCARD!", true);
 				break;
 			case it_yellowcard:
-				P_SetMessage(player, "EVERYONE HAS THE YELLOW KEYCARD!", true);
+				HU_SetMessage(player, "EVERYONE HAS THE YELLOW KEYCARD!", true);
 				break;
 			case it_redcard:
-				P_SetMessage(player, "EVERYONE HAS THE RED KEYCARD!", true);
+				HU_SetMessage(player, "EVERYONE HAS THE RED KEYCARD!", true);
 				break;
 			case it_blueskull:
-				P_SetMessage(player, "EVERYONE HAS THE BLUE SKULL KEY!", true);
+				HU_SetMessage(player, "EVERYONE HAS THE BLUE SKULL KEY!", true);
 				break;
 			case it_yellowskull:
-				P_SetMessage(player, "EVERYONE HAS THE YELLOW SKULL KEY!", true);
+				HU_SetMessage(player, "EVERYONE HAS THE YELLOW SKULL KEY!", true);
 				break;
 			case it_redskull:
-				P_SetMessage(player, "EVERYONE HAS THE RED SKULL KEY!", true);
+				HU_SetMessage(player, "EVERYONE HAS THE RED SKULL KEY!", true);
 				break;
 			default:
 				break;
@@ -849,19 +845,19 @@ void P_KillMobj( mobj_t* source, mobj_t* target )
 				switch(playnum)
 				{
 					case 0:
-						P_SetMessage(player, "PLAYER 1 DIED!", true);
+						HU_SetMessage(player, "PLAYER 1 DIED!", true);
 						break;
 					case 1:
-						P_SetMessage(player, "PLAYER 2 DIED!", true);
+						HU_SetMessage(player, "PLAYER 2 DIED!", true);
 						break;
 					case 2:
-						P_SetMessage(player, "PLAYER 3 DIED!", true);
+						HU_SetMessage(player, "PLAYER 3 DIED!", true);
 						break;
 					case 3:
-						P_SetMessage(player, "PLAYER 4 DIED!", true);
+						HU_SetMessage(player, "PLAYER 4 DIED!", true);
 						break;
 					default: // FS: Shouldn't happen... but?
-						P_SetMessage(player, "PLAYER DIED!", true);
+						HU_SetMessage(player, "PLAYER DIED!", true);
 						break;
 				}
 			}

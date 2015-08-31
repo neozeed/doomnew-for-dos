@@ -43,10 +43,7 @@
 #include "r_data.h"
 #include "r_sky.h"
 
-
-
 #include "g_game.h"
-#include "deh_main.h" // FS: For DEH
 
 #define SAVEGAMESIZE    0x100000 // FS: Was 0x2c000
 #define SAVESTRINGSIZE  256 // FS: Was 24
@@ -145,13 +142,6 @@ int             joybstrafe;
 int             joybuse; 
 int             joybspeed; 
  
-// FS: For custom weapon binds
-int	use_wpnbinds;
-int	wpn_shotgun;
-int	wpn_chaingun;
-int	wpn_rocket;
-int	wpn_plasma; 
-
 #define MAXPLMOVE		(forwardmove[1]) 
  
 #define TURBOTHRESHOLD	0x32
@@ -197,7 +187,6 @@ mobj_t*		bodyque[BODYQUESIZE];
 int		bodyqueslot; 
  
 void*		statcopy;				// for statistics driver
-extern boolean	chex; // FS: For Chex(R) Quest.
 extern deh_skip_ga_victory; // FS
  
 int G_CmdChecksum (ticcmd_t* cmd) 
@@ -519,8 +508,6 @@ void G_DoLoadLevel (void)
 // 
 boolean G_Responder (event_t* ev) 
 { 
-	extern int	novert; // FS: No vertical mouse movement
-	
 	// allow spy mode changes even during the demo
 	if (gamestate == GS_LEVEL && ev->type == ev_keydown && ev->data1 == KEY_F12 && (singledemo || !deathmatch) )
 	{
@@ -1356,9 +1343,9 @@ void G_DoLoadGame (void)
 		Z_Free(savebuffer); // FS: Free the savebuffer
 
 		if(M_CheckParm("-oldsave"))
-			P_SetMessage(&players[consoleplayer], "WRONG VERSION. TRY LOADING WITHOUT -OLDSAVE!", true);
+			HU_SetMessage(&players[consoleplayer], "WRONG VERSION. TRY LOADING WITHOUT -OLDSAVE!", true);
 		else
-			P_SetMessage(&players[consoleplayer], "OLD VERSION! USE -OLDSAVE TO LOAD IT!", true); // FS: Warn us
+			HU_SetMessage(&players[consoleplayer], "OLD VERSION! USE -OLDSAVE TO LOAD IT!", true); // FS: Warn us
 		return;				// bad version
 	}
 
@@ -1482,7 +1469,7 @@ void G_DoSaveGame (void)
 
 	if(convertsave)
 	{
-		P_SetMessage(&players[consoleplayer], "SAVE CONVERTED!", true);
+		HU_SetMessage(&players[consoleplayer], "SAVE CONVERTED!", true);
 		convertsave = false;
 	}
 	else

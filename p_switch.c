@@ -41,8 +41,6 @@ rcsid[] = "$Id: p_switch.c,v 1.3 1997/01/28 22:08:29 b1 Exp $";
 #include "doomstat.h"
 #include "r_state.h"
 
-#include "deh_main.h" // FS: For DEH
-
 
 //
 // CHANGE THE TEXTURE OF A WALL SWITCH TO ITS OPPOSITE
@@ -359,7 +357,7 @@ P_UseSpecialLine
 		// Exit level
 		if (netgame && M_CheckParm("-noexit")) // FS: No Exit!
 		{
-			P_SetMessage(&players[consoleplayer], "EXITS DISABLED!", true);
+			HU_SetMessage(&players[consoleplayer], "EXITS DISABLED!", true);
 			break;
 		}
 		P_ChangeSwitchTexture(line,0);
@@ -435,7 +433,7 @@ P_UseSpecialLine
       case 51:
 		if (netgame && M_CheckParm("-noexit")) // FS: No Exit!
 		{
-			P_SetMessage(&players[consoleplayer], "EXITS DISABLED!", true);
+			HU_SetMessage(&players[consoleplayer], "EXITS DISABLED!", true);
 			break;
 		}
 		// Secret EXIT
