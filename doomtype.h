@@ -46,8 +46,6 @@ typedef unsigned char byte;
 #endif
 
 #define arrlen(array) (sizeof(array) / sizeof(*array)) // FS: For DEH
-extern boolean debugmode; // checkparam of -debug
-
 
 //#endif
 //-----------------------------------------------------------------------------
