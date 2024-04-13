@@ -1,0 +1,24 @@
+api\*.c
+api\*.asm
+api\*.h
+api\*.inc
+api\*.bat
+api\*.mif
+api\*.ini
+api\makefile
+api\*.lib
+api\*.mak
+inc\*.h
+inc\*.inc
+lib\*.lib
+bin\wav2dsp.exe
+bin\midi2mus.exe
+bin\instedit.exe
+bin\*.bat
+example\*.*
+utils\makefile
+utils\wav2dsp.c
+midi2mus\midi2mus.c
+midi2mus\makefile
+# wav\*.wav
+# midi\*.mid

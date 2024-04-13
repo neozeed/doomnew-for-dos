@@ -1,0 +1,10 @@
+extern void gf1ChangeVoice(int );
+extern unsigned short gf1CalcFC(unsigned int ,long ,long );
+extern void gf1MidiWaitVoice(int );
+extern void gf1MidiChannelSustain(int ,int );
+extern void GF1_SetMap(unsigned char *,int );
+extern int gf1Atoi(unsigned char **,int );
+extern int gf1GetUltraCfg(struct _no_name_ *);
+extern int GF1_Detect(void );
+extern void gf1BlockReady(unsigned char *,unsigned short ,unsigned short );
+extern void gf1StartPCM(int ,unsigned short );

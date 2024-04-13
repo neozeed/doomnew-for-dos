@@ -1,0 +1,237 @@
+AL_Detect.............fm3812            AL_SetCard............fm3812
+awe32BaseAddx.........awevar            AWE32CHANNELPRESSURE.midieng
+AWE32CONTROLLER......midieng            AWE32DETECT.........hardware
+awe32DramSize.........awevar            AWE32FREESOUNDFONT...sbkload
+awe32GChannel........midivar            AWE32INITHARDWARE...hardware
+AWE32INITMIDI........midieng            awe32lastGChannel....midivar
+AWE32LOADSOUNDFONTFILE.......................................sbkload
+AWE32LOADSOUNDFONTMEM........................................sbkload
+awe32MIDIChannel.....midivar            AWE32NOTEOFF.........midieng
+AWE32NOTEON..........midieng            awe32NumG.............awevar
+AWE32PITCHBEND.......midieng            AWE32POLYKEYPRESSURE.midieng
+AWE32PROGRAMCHANGE...midieng            AWE32REGDW..........register
+AWE32REGRDW.........register            AWE32REGRW..........register
+AWE32REGW...........register            awe32Scratch.........midivar
+awe32SFont...........midivar            awe32SPad1...........midivar
+awe32SPad1Obj..........embed            awe32SPad2...........midivar
+awe32SPad2Obj..........embed            awe32SPad3...........midivar
+awe32SPad3Obj..........embed            awe32SPad4...........midivar
+awe32SPad4Obj..........embed            awe32SPad5...........midivar
+awe32SPad5Obj..........embed            awe32SPad6...........midivar
+awe32SPad6Obj..........embed            awe32SPad7...........midivar
+awe32SPad7Obj..........embed            AWE32SYSEX...........midieng
+AweEnterBusy...........awe32            AweLeave...............awe32
+AweMus.................awe32            AWE_Detect.............awe32
+AWE_SetCard............awe32            clCallBack.............clabs
+clDeInit...............clabs            clGetBlasterEnv........clabs
+clGetPlayCounter.......clabs            clInit.................clabs
+clPlayMode.............clabs            clReadMixer............clabs
+clSetHWParam...........clabs            clStop.................clabs
+clWav..................clabs            clWriteMixer...........clabs
+DISKREAD..............misc32            DmxCloseFile.........dmxdisk
+DmxDebug..............dmxapi            DmxOpenFile..........dmxdisk
+DmxReadFile..........dmxdisk            DmxTrace..............dmxapi
+DMX_DeInit............dmxapi            DMX_Init..............dmxapi
+DosMemAlloc............pcdma            DosMemFree.............pcdma
+dspAdvPlayPatch.......dspapi            dspAdvSetOrigin.......dspapi
+dspCalcPanPosVol......dspapi            dspDeInit.............dspapi
+dspGetDmaBuffer.......dspapi            dspGetDmaSize.........dspapi
+dspGetPageSize........dspapi            dspInit...............dspapi
+dspIsPlaying..........dspapi            dspNextPage...........dspapi
+dspPlayPatch..........dspapi            dspSetOrigin..........dspapi
+dspStopPatch..........dspapi            FmEnterBusy...........fm3812
+FmLeave...............fm3812            FmMus.................fm3812
+FmProgInst............fm3812            gf1Atoi...............gravis
+gf1CalcFC.............gravis            gf1ChannelPitchBend...gravis
+gf1Delay..............gravis            gf1DetectCard.........gravis
+gf1DispatchInt........gravis            gf1DmaDeInit..........gravis
+gf1Enter..............gravis            gf1EnterBusy..........gravis
+gf1GetUltraCfg........gravis            gf1Leave..............gravis
+gf1LoadOS.............gravis            gf1LoadPatches........gravis
+gf1MidiAllNotesOff....gravis            gf1MidiChangeProgram..gravis
+gf1MidiChangeVolume...gravis            gf1MidiChannelSustain.gravis
+gf1MidiMasterVolume...gravis            gf1MidiNoteOff........gravis
+gf1MidiNoteOn.........gravis            gf1MidiParameter......gravis
+gf1MidiPitchBend......gravis            gf1MidiSetBalance.....gravis
+gf1MidiSetVibrato.....gravis            gf1MidiStopVoice......gravis
+gf1MidiWaitVoice......gravis            Gf1Mus................gravis
+gf1OutDelay...........gravis            gf1Poke...............gravis
+Gf1StartPCM...........gravis            gf1StopDigital........gravis
+gf1StopDma............gravis            gf1UnloadOS...........gravis
+gf1WaitDma............gravis            Gf1Wav................gravis
+gf1Yield..............gravis            GF1_Detect............gravis
+GF1_SetMap............gravis            gPrevColor............dmxapi
+GSS_DeInit............gssapi            GSS_Init..............gssapi
+GSS_Play..............gssapi            GSS_Playing...........gssapi
+GSS_SetOrigin.........gssapi            GSS_Stop..............gssapi
+LSEEK.................misc32            MpuEnterBusy..........mpu401
+MpuLeave..............mpu401            MpuMus................mpu401
+MPU_Detect............mpu401            MPU_SetCard...........mpu401
+MUS_ChainSong.........musapi            MUS_DeInit............musapi
+MUS_FadeInSong........musapi            MUS_FadeOutSong.......musapi
+MUS_FadeToNextSong....musapi            MUS_GetMasterVolume...musapi
+MUS_Init..............musapi            MUS_PauseSong.........musapi
+MUS_PlaySong..........musapi            MUS_QrySongPlaying....musapi
+MUS_RampVolume........musapi            MUS_RegisterSong......musapi
+MUS_ResumeSong........musapi            MUS_SetMasterVolume...musapi
+MUS_StopSong..........musapi            MUS_UnregisterSong....musapi
+mvDeInit.................pas            mvGetPlayCounter.........pas
+mvWav....................pas            MV_Detect................pas
+PCS_DeInit............pcsapi            PCS_Init..............pcsapi
+PCS_Play..............pcsapi            PCS_Playing...........pcsapi
+PCS_Stop..............pcsapi            PC_AllocDMABuffer......pcdma
+PC_DelISR..............pcint            PC_FreeDMABuffer.......pcdma
+PC_GetDMA2Offset.......pcdma            PC_GetDmaCount.........pcdma
+PC_GetDMAOffset........pcdma            PC_GetDMAPage..........pcdma
+PC_NewISR..............pcint            PC_PgmDMA..............pcdma
+PC_SendEOI.............pcint            PC_StopDMA.............pcdma
+PC_WatchDog............pcint            PlrStartSong..........musapi
+rmEnd................realint            rmFixup..............realint
+rmInt................realint            SB_Detect..............clabs
+SB_SetCard.............clabs            ServiceFader..........musapi
+ServicePlayer.........musapi            SFX_Playing...........sfxapi
+SFX_PlayPatch.........sfxapi            SFX_SetOrigin.........sfxapi
+SFX_StopPatch.........sfxapi            TSM_Clock.............tsmapi
+TSM_Delay.............tsmapi            TSM_DelService........tsmapi
+TSM_Install...........tsmapi            TSM_NewService........tsmapi
+TSM_PauseService......tsmapi            TSM_Remove............tsmapi
+TSM_ResetCount........tsmapi            TSM_ResumeService.....tsmapi
+TSM_SyncService.......tsmapi            vol_table.............gravis
+WAV_AdvPlayPatch......wavapi            WAV_AdvSetOrigin......wavapi
+WAV_DeInit............wavapi            WAV_Init..............wavapi
+WAV_LoadPatch.........wavapi            WAV_Playing...........wavapi
+WAV_PlayMode..........wavapi            WAV_PlayPatch.........wavapi
+WAV_SetOrigin.........wavapi            WAV_StopPatch.........wavapi
+_dmx16to8bit..........mixers            _dmxMix8bitMono.......mixers
+_dmxMix8bitStereo.....mixers            _dpmi_dosalloc.......dpmiapi
+_dpmi_dosfree........dpmiapi            _dpmi_getvect........dpmiapi
+_dpmi_lockregion.....dpmiapi            _dpmi_setvect........dpmiapi
+_dpmi_unlockregion...dpmiapi            
+
+misc32        Offset=00000010H
+  DISKREAD          LSEEK           
+
+sbkload       Offset=000000e0H
+  AWE32FREESOUNDFONT                  AWE32LOADSOUNDFONTFILE            
+  AWE32LOADSOUNDFONTMEM             
+
+register      Offset=00001ef0H
+  AWE32REGDW        AWE32REGRDW       AWE32REGRW        AWE32REGW       
+
+hardware      Offset=000022d0H
+  AWE32DETECT       AWE32INITHARDWARE                 
+
+midivar       Offset=00003700H
+  awe32GChannel     awe32lastGChannel                   awe32MIDIChannel 
+  awe32Scratch      awe32SFont        awe32SPad1        awe32SPad2      
+  awe32SPad3        awe32SPad4        awe32SPad5        awe32SPad6      
+  awe32SPad7      
+
+midieng       Offset=00003a10H
+  AWE32CHANNELPRESSURE                AWE32CONTROLLER   AWE32INITMIDI   
+  AWE32NOTEOFF      AWE32NOTEON       AWE32PITCHBEND  
+  AWE32POLYKEYPRESSURE                AWE32PROGRAMCHANGE                
+  AWE32SYSEX      
+
+embed         Offset=000063c0H
+  awe32SPad1Obj     awe32SPad2Obj     awe32SPad3Obj     awe32SPad4Obj   
+  awe32SPad5Obj     awe32SPad6Obj     awe32SPad7Obj   
+
+awevar        Offset=0000ad70H
+  awe32BaseAddx     awe32DramSize     awe32NumG       
+
+awe32         Offset=0000af30H
+  AweEnterBusy      AweLeave          AweMus            AWE_Detect      
+  AWE_SetCard     
+
+gravis        Offset=0000c790H
+  gf1Atoi           gf1CalcFC         gf1ChannelPitchBend               
+  gf1Delay          gf1DetectCard     gf1DispatchInt    gf1DmaDeInit    
+  gf1Enter          gf1EnterBusy      gf1GetUltraCfg    gf1Leave        
+  gf1LoadOS         gf1LoadPatches    gf1MidiAllNotesOff                
+  gf1MidiChangeProgram                gf1MidiChangeVolume               
+  gf1MidiChannelSustain               gf1MidiMasterVolume               
+  gf1MidiNoteOff    gf1MidiNoteOn     gf1MidiParameter   gf1MidiPitchBend 
+  gf1MidiSetBalance                   gf1MidiSetVibrato                 
+  gf1MidiStopVoice   gf1MidiWaitVoice   Gf1Mus            gf1OutDelay     
+  gf1Poke           Gf1StartPCM       gf1StopDigital    gf1StopDma      
+  gf1UnloadOS       gf1WaitDma        Gf1Wav            gf1Yield        
+  GF1_Detect        GF1_SetMap        vol_table       
+
+realint       Offset=0001c050H
+  rmEnd             rmFixup           rmInt           
+
+mpu401        Offset=0001c250H
+  MpuEnterBusy      MpuLeave          MpuMus            MPU_Detect      
+  MPU_SetCard     
+
+pas           Offset=0001e590H
+  mvDeInit          mvGetPlayCounter   mvWav             MV_Detect       
+
+clabs         Offset=00020ae0H
+  clCallBack        clDeInit          clGetBlasterEnv   clGetPlayCounter 
+  clInit            clPlayMode        clReadMixer       clSetHWParam    
+  clStop            clWav             clWriteMixer      SB_Detect       
+  SB_SetCard      
+
+fm3812        Offset=000244f0H
+  AL_Detect         AL_SetCard        FmEnterBusy       FmLeave         
+  FmMus             FmProgInst      
+
+pcint         Offset=00028ad0H
+  PC_DelISR         PC_NewISR         PC_SendEOI        PC_WatchDog     
+
+pcdma         Offset=0002a250H
+  DosMemAlloc       DosMemFree        PC_AllocDMABuffer                 
+  PC_FreeDMABuffer   PC_GetDMA2Offset   PC_GetDmaCount    PC_GetDMAOffset 
+  PC_GetDMAPage     PC_PgmDMA         PC_StopDMA      
+
+mixers        Offset=0002b6e0H
+  _dmx16to8bit      _dmxMix8bitMono   _dmxMix8bitStereo                 
+
+dpmiapi       Offset=0002cbb0H
+  _dpmi_dosalloc    _dpmi_dosfree     _dpmi_getvect     _dpmi_lockregion 
+  _dpmi_setvect     _dpmi_unlockregion                
+
+dspapi        Offset=0002d5c0H
+  dspAdvPlayPatch   dspAdvSetOrigin   dspCalcPanPosVol   dspDeInit       
+  dspGetDmaBuffer   dspGetDmaSize     dspGetPageSize    dspInit         
+  dspIsPlaying      dspNextPage       dspPlayPatch      dspSetOrigin    
+  dspStopPatch    
+
+tsmapi        Offset=000307b0H
+  TSM_Clock         TSM_Delay         TSM_DelService    TSM_Install     
+  TSM_NewService    TSM_PauseService   TSM_Remove        TSM_ResetCount  
+  TSM_ResumeService                   TSM_SyncService 
+
+sfxapi        Offset=00032960H
+  SFX_Playing       SFX_PlayPatch     SFX_SetOrigin     SFX_StopPatch   
+
+gssapi        Offset=00033330H
+  GSS_DeInit        GSS_Init          GSS_Play          GSS_Playing     
+  GSS_SetOrigin     GSS_Stop        
+
+pcsapi        Offset=00034da0H
+  PCS_DeInit        PCS_Init          PCS_Play          PCS_Playing     
+  PCS_Stop        
+
+wavapi        Offset=00035ca0H
+  WAV_AdvPlayPatch   WAV_AdvSetOrigin   WAV_DeInit        WAV_Init        
+  WAV_LoadPatch     WAV_Playing       WAV_PlayMode      WAV_PlayPatch   
+  WAV_SetOrigin     WAV_StopPatch   
+
+musapi        Offset=00036bf0H
+  MUS_ChainSong     MUS_DeInit        MUS_FadeInSong    MUS_FadeOutSong 
+  MUS_FadeToNextSong                  MUS_GetMasterVolume               
+  MUS_Init          MUS_PauseSong     MUS_PlaySong    
+  MUS_QrySongPlaying                  MUS_RampVolume    MUS_RegisterSong 
+  MUS_ResumeSong    MUS_SetMasterVolume                 MUS_StopSong    
+  MUS_UnregisterSong                  PlrStartSong      ServiceFader    
+  ServicePlayer   
+
+dmxdisk       Offset=0003b400H
+  DmxCloseFile      DmxOpenFile       DmxReadFile     
+
+dmxapi        Offset=0003bd80H
+  DmxDebug          DmxTrace          DMX_DeInit        DMX_Init        
+  gPrevColor      

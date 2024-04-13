@@ -1,0 +1,8 @@
+NAME test
+OPT STACK=8192
+OPT CASEEXACT
+DEBUG all
+SYSTEM dos4g
+FILE test.obj
+FILE joystick.obj
+LIBRARY ..\lib\dmx.lib

@@ -1,0 +1,6 @@
+extern void GSS_Stop(int );
+extern int GSS_Play(void *,int ,int ,int ,int );
+extern void GSS_SetOrigin(int ,int ,int );
+extern int GSS_Playing(int );
+extern int GSS_Init(struct _no_name_ *);
+extern void GSS_DeInit(void );

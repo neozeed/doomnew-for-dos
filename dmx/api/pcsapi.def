@@ -1,0 +1,5 @@
+extern void PCS_Stop(int );
+extern int PCS_Play(void *,int );
+extern int PCS_Playing(int );
+extern int PCS_Init(void );
+extern void PCS_DeInit(void );

@@ -1,0 +1,7 @@
+DLL_ENTRY_1_....DLL_ENTRY_1_            DLL_ENTRY_2_....DLL_ENTRY_2_
+
+DLL_ENTRY_1_  Offset=00000010H
+  DLL_ENTRY_1_    
+
+DLL_ENTRY_2_  Offset=00000050H
+  DLL_ENTRY_2_    

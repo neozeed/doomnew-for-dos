@@ -1,0 +1,12 @@
+extern void clWriteMixer(unsigned char ,unsigned char );
+extern unsigned char clReadMixer(unsigned char );
+extern int clGetBlasterEnv(unsigned char );
+extern void clSetHWParam(void );
+extern void __interrupt __far clCallBack(void );
+extern void clStop(void );
+extern void clDeInit(void );
+extern unsigned short clGetPlayCounter(unsigned short );
+extern void clPlayMode(int ,unsigned short );
+extern int clInit(void );
+extern void SB_SetCard(int ,int ,int );
+extern int SB_Detect(int *,int *,int *,unsigned short *);

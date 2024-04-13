@@ -1,0 +1,5 @@
+extern void FmProgInst(unsigned short ,struct _no_name_ *);
+extern int FmEnterBusy(void );
+extern void FmLeave(void );
+extern void AL_SetCard(int ,void *);
+extern int AL_Detect(int *,int *);

@@ -1,0 +1,6 @@
+NAME playmus
+OPT STACK=8192
+DEBUG all
+SYSTEM dos4g
+FILE playmus.obj
+LIBRARY ..\lib\dmx.lib

@@ -1,0 +1,3 @@
+extern unsigned short mvGetPlayCounter(unsigned short );
+extern void mvDeInit(void );
+extern int MV_Detect(void );

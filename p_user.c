@@ -23,7 +23,7 @@
 #define MAXBOB	0x100000	
 
 boolean		onground;
-extern int headBob; // FS: Head bob toggle
+extern boolean headBob; // FS: Head bob toggle
 
 //
 // P_Thrust

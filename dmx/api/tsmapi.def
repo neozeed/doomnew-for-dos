@@ -1,0 +1,11 @@
+extern void TSM_ResumeService(int );
+extern void TSM_PauseService(int );
+extern int TSM_NewService(void (*)(void ),unsigned int ,int ,int );
+extern void TSM_DelService(int );
+extern void TSM_ResetCount(int );
+extern void TSM_SyncService(int );
+extern int TSM_Install(unsigned int );
+extern void TSM_Delay(unsigned long );
+extern unsigned long TSM_Clock(void );
+extern void TSM_Remove(void );
+extern int TSM_TimeVR(int );

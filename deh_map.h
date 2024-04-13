@@ -82,7 +82,7 @@ struct deh_mapping_s
 
 boolean DEH_SetMapping(deh_context_t *context, deh_mapping_t *mapping, 
                        void *structptr, char *name, int value);
-void DEH_StructMD5Sum(void *context, deh_mapping_t *mapping,
+void DEH_StructMD5Sum(struct md5_context_s *context, deh_mapping_t *mapping,
                       void *structptr);
 
 #endif /* #ifndef DEH_MAPPING_H */

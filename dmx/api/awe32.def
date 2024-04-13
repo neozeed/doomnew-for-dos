@@ -1,0 +1,4 @@
+extern int AweEnterBusy(void );
+extern void AweLeave(void );
+extern void AWE_SetCard(int );
+extern int AWE_Detect(int *);

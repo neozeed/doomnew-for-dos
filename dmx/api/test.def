@@ -1,0 +1,8 @@
+extern unsigned char *LoadFile(unsigned char *,long *);
+extern int kbread(void );
+extern void CheckArgs(int ,unsigned char **);
+extern int FileExists(unsigned char *,unsigned char *,unsigned char *);
+extern int Strobe(void );
+extern void GrabMem(void );
+extern void CheckRam(unsigned char *,unsigned char ,unsigned long );
+extern void main(int ,unsigned char **);

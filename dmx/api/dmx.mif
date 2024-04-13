@@ -1,0 +1,21 @@
+objs = &
+	mixers.obj &
+	realint.obj &
+	dmxapi.obj &
+	dmxdisk.obj &
+	musapi.obj &
+	wavapi.obj &
+	pcsapi.obj &
+	gssapi.obj &
+	sfxapi.obj &
+	tsmapi.obj &
+        dspapi.obj &
+	pcdma.obj &
+	pcints.obj &
+	fmopl2.obj &
+	clabs.obj &
+	pas.obj &
+	mpu401.obj &
+	gravis.obj &
+	dpmiapi.obj &
+	awe32.obj

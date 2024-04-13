@@ -23,8 +23,8 @@
 #
 # --------------------------------------------------------------------------
 
-CCOPTS = $(EXTERNOPT) /omaxet /zp1 /4r /ei /j /zq /i=dmx
-#CCOPTS = /d2 /odam /zp1 /4r /ei /j /zq /i=dmx
+CCOPTS = $(EXTERNOPT) /omaxet /zp1 /4r /j /zq /i=apodmx
+#CCOPTS = /d2 /odam /zp1 /4r /j /zq /i=dmx\inc
 
 LOCOBJS = &
  doomdef.obj &
@@ -47,7 +47,6 @@ LOCOBJS = &
  m_misc.obj	 &
  m_argv.obj   &
  m_bbox.obj	 &
- m_fixed.obj &
  m_swap.obj	 &
  m_cheat.obj &
  m_random.obj &
@@ -89,6 +88,7 @@ LOCOBJS = &
  s_sound.obj &
  z_zone.obj	 &
  md5.obj	 &
+ m_fixed.obj	&
  info.obj		 &
  deh_ammo.obj		 &
  deh_cht.obj		 &
@@ -109,13 +109,13 @@ d.exe : $(LOCOBJS) i_ibm.obj
  copy d.exe stripd.exe
  wstrip stripd.exe
  4gwbind 4gwpro.exe stripd.exe doomnew.exe -V 
- copy /y doomnew.exe D:\PROJ\doom\doom
- copy /y CHANGES.TXT D:\proj\doom\doom
- copy /y TODO.TXT D:\proj\doom\doom
+# copy /y doomnew.exe D:\PROJ\doom\doom
+# copy /y CHANGES.TXT D:\proj\doom\doom
+# copy /y TODO.TXT D:\proj\doom\doom
 # sb /R /O doomnew.exe #Uncomment this to use DOS32/a
 
 i_ibm.obj:
- wcc386 /zp1 /4r /zq /ei /j i_ibm.c
+ wcc386 /zp1 /4r /zq /j /i=dmx\inc i_ibm.c
 
 .c.obj :
  wcc386 $(CCOPTS) $[*

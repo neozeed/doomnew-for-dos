@@ -1,0 +1,10 @@
+extern unsigned char PC_GetDMAPage(unsigned char *);
+extern unsigned short PC_GetDMAOffset(unsigned char *);
+extern unsigned short PC_GetDMA2Offset(unsigned char *);
+extern int DosMemAlloc(unsigned short ,unsigned int *);
+extern void DosMemFree(unsigned int );
+extern void PC_FreeDMABuffer(unsigned char *);
+extern unsigned char *PC_AllocDMABuffer(unsigned short );
+extern void PC_StopDMA(unsigned char );
+extern unsigned short PC_GetDmaCount(unsigned char );
+extern void PC_PgmDMA(unsigned char ,unsigned char *,unsigned short ,int ,int );

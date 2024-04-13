@@ -1,0 +1,2199 @@
+
+Module: F:\DMX\API\musapi.c
+Group: 'DGROUP' CONST,CONST2,_DATA,_BSS
+
+Segment: _TEXT  PARA USE32  00001367 bytes  
+ 0000                    PlrResetCounters_:
+ 0000  53                                push    ebx
+ 0001  51                                push    ecx
+ 0002  52                                push    edx
+ 0003  56                                push    esi
+ 0004  57                                push    edi
+ 0005  55                                push    ebp
+ 0006  89 e5                             mov     ebp,esp
+ 0008  83 ec 08                          sub     esp,00000008H
+ 000b  89 c1                             mov     ecx,eax
+ 000d  8b 18                             mov     ebx,[eax]
+ 000f  66 8b 5b 06                       mov     bx,+6H[ebx]
+ 0013  c7 40 08 00 00 00 
+       00                                mov     dword ptr +8H[eax],00000000H
+ 001a  81 e3 ff ff 00 00                 and     ebx,0000ffffH
+ 0020  c7 40 0c 00 00 00 
+       00                                mov     dword ptr +0cH[eax],00000000H
+ 0027  89 58 04                          mov     +4H[eax],ebx
+ 002a  8a 60 1a                          mov     ah,+1aH[eax]
+ 002d  80 cc 01                          or      ah,01H
+ 0030  88 e2                             mov     dl,ah
+ 0032  88 61 1a                          mov     +1aH[ecx],ah
+ 0035  80 e2 8f                          and     dl,8fH
+ 0038  8b 59 1c                          mov     ebx,+1cH[ecx]
+ 003b  88 51 1a                          mov     +1aH[ecx],dl
+ 003e  c1 fb 10                          sar     ebx,10H
+ 0041  3b 1d 00 00 00 00                 cmp     ebx,_MasterVolume
+ 0047  7e 0b                             jle     L1
+ 0049  66 8b 1d 00 00 00 
+       00                                mov     bx,_MasterVolume
+ 0050  66 89 59 1e                       mov     +1eH[ecx],bx
+ 0054  31 d2             L1              xor     edx,edx
+ 0056  89 55 fc                          mov     -4H[ebp],edx
+ 0059  66 83 7d fc 0f                    cmp     word ptr -4H[ebp],000fH
+ 005e  76 09                             jbe     L2
+ 0060  89 ec                             mov     esp,ebp
+ 0062  5d                                pop     ebp
+ 0063  5f                                pop     edi
+ 0064  5e                                pop     esi
+ 0065  5a                                pop     edx
+ 0066  59                                pop     ecx
+ 0067  5b                                pop     ebx
+ 0068  c3                                ret     
+ 0069  8b 5d fc          L2              mov     ebx,-4H[ebp]
+ 006c  66 3b 59 10                       cmp     bx,+10H[ecx]
+ 0070  75 07                             jne     L3
+ 0072  c7 45 fc 0f 00 00 
+       00                                mov     dword ptr -4H[ebp],0000000fH
+ 0079  31 db             L3              xor     ebx,ebx
+ 007b  66 8b 5d fc                       mov     bx,-4H[ebp]
+ 007f  8d 71 2a                          lea     esi,+2aH[ecx]
+ 0082  c1 e3 04                          shl     ebx,04H
+ 0085  66 8b 41 12                       mov     ax,+12H[ecx]
+ 0089  01 de                             add     esi,ebx
+ 008b  8b 5d fc                          mov     ebx,-4H[ebp]
+ 008e  66 39 c3                          cmp     bx,ax
+ 0091  72 0d                             jb      L4
+ 0093  66 83 fb 0f                       cmp     bx,000fH
+ 0097  75 45                             jne     L5
+ 0099  66 83 79 14 00                    cmp     word ptr +14H[ecx],0000H
+ 009e  75 3e                             jne     L5
+ 00a0  8b 5d fc          L4              mov     ebx,-4H[ebp]
+ 00a3  66 03 59 14                       add     bx,+14H[ecx]
+ 00a7  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 00ad  81 e3 ff ff 00 00                 and     ebx,0000ffffH
+ 00b3  ba 0e 00 00 00                    mov     edx,0000000eH
+ 00b8  89 5d f8                          mov     -8H[ebp],ebx
+ 00bb  89 d8                             mov     eax,ebx
+ 00bd  31 db                             xor     ebx,ebx
+ 00bf  ff 57 14                          call    dword ptr +14H[edi]
+ 00c2  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 00c8  8a 59 1e                          mov     bl,+1eH[ecx]
+ 00cb  30 ff                             xor     bh,bh
+ 00cd  8b 45 f8                          mov     eax,-8H[ebp]
+ 00d0  ba 03 00 00 00                    mov     edx,00000003H
+ 00d5  81 e3 ff ff 00 00                 and     ebx,0000ffffH
+ 00db  ff 57 14                          call    dword ptr +14H[edi]
+ 00de  c6 46 0f 7f       L5              mov     byte ptr +0fH[esi],7fH
+ 00e2  c6 46 03 7f                       mov     byte ptr +3H[esi],7fH
+ 00e6  c6 06 00                          mov     byte ptr [esi],00H
+ 00e9  c6 46 02 00                       mov     byte ptr +2H[esi],00H
+ 00ed  c6 46 04 40                       mov     byte ptr +4H[esi],40H
+ 00f1  c6 46 05 00                       mov     byte ptr +5H[esi],00H
+ 00f5  c6 46 06 28                       mov     byte ptr +6H[esi],28H
+ 00f9  c6 46 07 00                       mov     byte ptr +7H[esi],00H
+ 00fd  c6 46 08 00                       mov     byte ptr +8H[esi],00H
+ 0101  8b 45 fc                          mov     eax,-4H[ebp]
+ 0104  c6 46 09 00                       mov     byte ptr +9H[esi],00H
+ 0108  40                                inc     eax
+ 0109  c6 46 0c 80                       mov     byte ptr +0cH[esi],80H
+ 010d  89 45 fc                          mov     -4H[ebp],eax
+ 0110  66 83 7d fc 0f                    cmp     word ptr -4H[ebp],000fH
+ 0115  0f 86 4e ff ff ff                 jbe     L2
+ 011b  89 ec                             mov     esp,ebp
+ 011d  5d                                pop     ebp
+ 011e  5f                                pop     edi
+ 011f  5e                                pop     esi
+ 0120  5a                                pop     edx
+ 0121  59                                pop     ecx
+ 0122  5b                                pop     ebx
+ 0123  c3                                ret     
+ 0124  53                PlrStartSong_   push    ebx
+ 0125  52                                push    edx
+ 0126  57                                push    edi
+ 0127  55                                push    ebp
+ 0128  89 e5                             mov     ebp,esp
+ 012a  89 c2                             mov     edx,eax
+ 012c  31 c0                             xor     eax,eax
+ 012e  66 89 d0                          mov     ax,dx
+ 0131  69 c0 2a 01 00 00                 imul    eax,0000012aH
+ 0137  66 8b 1d 00 00 00 
+       00                                mov     bx,_SongsActive
+ 013e  05 00 00 00 00                    add     eax,offset _SongStatus
+ 0143  66 85 db                          test    bx,bx
+ 0146  74 51                             je      L10
+ 0148  66 85 d2                          test    dx,dx
+ 014b  0f 94 c2                          sete    dl
+ 014e  81 e2 ff 00 00 00                 and     edx,000000ffH
+ 0154  69 d2 2a 01 00 00                 imul    edx,0000012aH
+ 015a  81 c2 00 00 00 00                 add     edx,offset _SongStatus
+ 0160  66 83 7a 12 07                    cmp     word ptr +12H[edx],0007H
+ 0165  76 06                             jbe     L6
+ 0167  66 c7 42 12 07 00                 mov     word ptr +12H[edx],0007H
+ 016d  66 83 7a 14 00    L6              cmp     word ptr +14H[edx],0000H
+ 0172  75 07                             jne     L7
+ 0174  ba 07 00 00 00                    mov     edx,00000007H
+ 0179  eb 02                             jmp     L8
+ 017b  31 d2             L7              xor     edx,edx
+ 017d  66 8b 78 10       L8              mov     di,+10H[eax]
+ 0181  66 89 50 14                       mov     +14H[eax],dx
+ 0185  66 83 ff 07                       cmp     di,0007H
+ 0189  73 07                             jae     L9
+ 018b  31 d2                             xor     edx,edx
+ 018d  66 89 fa                          mov     dx,di
+ 0190  eb 0f                             jmp     L11
+ 0192  ba 07 00 00 00    L9              mov     edx,00000007H
+ 0197  eb 08                             jmp     L11
+ 0199  66 8b 50 10       L10             mov     dx,+10H[eax]
+ 019d  66 89 58 14                       mov     +14H[eax],bx
+ 01a1  66 89 50 12       L11             mov     +12H[eax],dx
+ 01a5  66 ff 05 00 00 00 
+       00                                inc     word ptr _SongsActive
+ 01ac  e8 00 00 00 00                    call    PlrResetCounters_
+ 01b1  5d                                pop     ebp
+ 01b2  5f                                pop     edi
+ 01b3  5a                                pop     edx
+ 01b4  5b                                pop     ebx
+ 01b5  c3                                ret     
+ 01b6  8b c0                             mov     eax,eax
+ 01b8  53                PlrSilenceSong_ push    ebx
+ 01b9  51                                push    ecx
+ 01ba  52                                push    edx
+ 01bb  56                                push    esi
+ 01bc  57                                push    edi
+ 01bd  55                                push    ebp
+ 01be  89 e5                             mov     ebp,esp
+ 01c0  83 ec 08                          sub     esp,00000008H
+ 01c3  89 45 f8                          mov     -8H[ebp],eax
+ 01c6  66 8b 48 12                       mov     cx,+12H[eax]
+ 01ca  89 4d fc                          mov     -4H[ebp],ecx
+ 01cd  31 c9                             xor     ecx,ecx
+ 01cf  66 83 f9 0f                       cmp     cx,000fH
+ 01d3  76 09                             jbe     L12
+ 01d5  89 ec                             mov     esp,ebp
+ 01d7  5d                                pop     ebp
+ 01d8  5f                                pop     edi
+ 01d9  5e                                pop     esi
+ 01da  5a                                pop     edx
+ 01db  59                                pop     ecx
+ 01dc  5b                                pop     ebx
+ 01dd  c3                                ret     
+ 01de  66 3b 4d fc       L12             cmp     cx,-4H[ebp]
+ 01e2  75 09                             jne     L13
+ 01e4  b9 0f 00 00 00                    mov     ecx,0000000fH
+ 01e9  89 ce                             mov     esi,ecx
+ 01eb  eb 27                             jmp     L16
+ 01ed  8b 75 f8          L13             mov     esi,-8H[ebp]
+ 01f0  66 8b 5e 14                       mov     bx,+14H[esi]
+ 01f4  66 85 db                          test    bx,bx
+ 01f7  75 04                             jne     L14
+ 01f9  89 ce                             mov     esi,ecx
+ 01fb  eb 17                             jmp     L16
+ 01fd  01 d9             L14             add     ecx,ebx
+ 01ff  66 83 f9 0e                       cmp     cx,000eH
+ 0203  72 0a                             jb      L15
+ 0205  31 f6                             xor     esi,esi
+ 0207  66 89 ce                          mov     si,cx
+ 020a  83 ee 0e                          sub     esi,0000000eH
+ 020d  eb 05                             jmp     L16
+ 020f  31 f6             L15             xor     esi,esi
+ 0211  66 89 ce                          mov     si,cx
+ 0214  8b 3d 00 00 00 00 L16             mov     edi,_Mus
+ 021a  ba 0b 00 00 00                    mov     edx,0000000bH
+ 021f  81 e6 ff ff 00 00                 and     esi,0000ffffH
+ 0225  31 db                             xor     ebx,ebx
+ 0227  89 f0                             mov     eax,esi
+ 0229  ff 57 14                          call    dword ptr +14H[edi]
+ 022c  ba 0a 00 00 00                    mov     edx,0000000aH
+ 0231  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 0237  89 f0                             mov     eax,esi
+ 0239  31 db                             xor     ebx,ebx
+ 023b  41                                inc     ecx
+ 023c  ff 57 14                          call    dword ptr +14H[edi]
+ 023f  66 83 f9 0f                       cmp     cx,000fH
+ 0243  76 99                             jbe     L12
+ 0245  89 ec                             mov     esp,ebp
+ 0247  5d                                pop     ebp
+ 0248  5f                                pop     edi
+ 0249  5e                                pop     esi
+ 024a  5a                                pop     edx
+ 024b  59                                pop     ecx
+ 024c  5b                                pop     ebx
+ 024d  c3                                ret     
+ 024e  8b c0                             mov     eax,eax
+ 0250  53                PlrPauseSong_   push    ebx
+ 0251  52                                push    edx
+ 0252  55                                push    ebp
+ 0253  89 e5                             mov     ebp,esp
+ 0255  31 d2                             xor     edx,edx
+ 0257  66 89 c2                          mov     dx,ax
+ 025a  69 d2 2a 01 00 00                 imul    edx,0000012aH
+ 0260  81 c2 00 00 00 00                 add     edx,offset _SongStatus
+ 0266  f6 42 1a 04                       test    byte ptr +1aH[edx],04H
+ 026a  74 18                             je      L17
+ 026c  89 d0                             mov     eax,edx
+ 026e  e8 00 00 00 00                    call    PlrSilenceSong_
+ 0273  8a 5a 1a                          mov     bl,+1aH[edx]
+ 0276  80 e3 f3                          and     bl,0f3H
+ 0279  88 df                             mov     bh,bl
+ 027b  88 5a 1a                          mov     +1aH[edx],bl
+ 027e  80 cf 08                          or      bh,08H
+ 0281  88 7a 1a                          mov     +1aH[edx],bh
+ 0284  5d                L17             pop     ebp
+ 0285  5a                                pop     edx
+ 0286  5b                                pop     ebx
+ 0287  c3                                ret     
+ 0288  53                PlrKillSong_    push    ebx
+ 0289  51                                push    ecx
+ 028a  52                                push    edx
+ 028b  56                                push    esi
+ 028c  57                                push    edi
+ 028d  55                                push    ebp
+ 028e  89 e5                             mov     ebp,esp
+ 0290  83 ec 08                          sub     esp,00000008H
+ 0293  89 c2                             mov     edx,eax
+ 0295  31 c0                             xor     eax,eax
+ 0297  66 89 d0                          mov     ax,dx
+ 029a  69 c0 2a 01 00 00                 imul    eax,0000012aH
+ 02a0  66 8b 1d 00 00 00 
+       00                                mov     bx,_SongsActive
+ 02a7  05 00 00 00 00                    add     eax,offset _SongStatus
+ 02ac  66 85 db                          test    bx,bx
+ 02af  74 0a                             je      L18
+ 02b1  89 d9                             mov     ecx,ebx
+ 02b3  49                                dec     ecx
+ 02b4  66 89 0d 00 00 00 
+       00                                mov     _SongsActive,cx
+ 02bb  80 60 1a 14       L18             and     byte ptr +1aH[eax],14H
+ 02bf  e8 00 00 00 00                    call    PlrSilenceSong_
+ 02c4  66 83 3d 00 00 00 
+       00 00                             cmp     word ptr _SongsActive,0000H
+ 02cc  0f 84 9c 01 00 00                 je      L22
+ 02d2  66 85 d2                          test    dx,dx
+ 02d5  0f 94 c0                          sete    al
+ 02d8  25 ff 00 00 00                    and     eax,000000ffH
+ 02dd  69 c0 2a 01 00 00                 imul    eax,0000012aH
+ 02e3  ba 00 00 00 00                    mov     edx,offset _SongStatus
+ 02e8  01 c2                             add     edx,eax
+ 02ea  8a 42 14                          mov     al,+14H[edx]
+ 02ed  02 42 12                          add     al,+12H[edx]
+ 02f0  89 55 f8                          mov     -8H[ebp],edx
+ 02f3  88 45 fc                          mov     -4H[ebp],al
+ 02f6  8b 45 f8          L19             mov     eax,-8H[ebp]
+ 02f9  8b 55 f8                          mov     edx,-8H[ebp]
+ 02fc  66 8b 40 12                       mov     ax,+12H[eax]
+ 0300  66 3b 42 10                       cmp     ax,+10H[edx]
+ 0304  0f 83 64 01 00 00                 jae     L22
+ 030a  8a 4d fc                          mov     cl,-4H[ebp]
+ 030d  80 f9 0e                          cmp     cl,0eH
+ 0310  72 08                             jb      L20
+ 0312  88 cd                             mov     ch,cl
+ 0314  80 ed 0e                          sub     ch,0eH
+ 0317  88 6d fc                          mov     -4H[ebp],ch
+ 031a  8b 75 f8          L20             mov     esi,-8H[ebp]
+ 031d  31 c0                             xor     eax,eax
+ 031f  ba 0e 00 00 00                    mov     edx,0000000eH
+ 0324  8a 45 fc                          mov     al,-4H[ebp]
+ 0327  83 c6 2a                          add     esi,0000002aH
+ 032a  c1 e0 04                          shl     eax,04H
+ 032d  31 c9                             xor     ecx,ecx
+ 032f  01 c6                             add     esi,eax
+ 0331  8a 45 fc                          mov     al,-4H[ebp]
+ 0334  30 e4                             xor     ah,ah
+ 0336  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 033c  66 89 c1                          mov     cx,ax
+ 033f  31 db                             xor     ebx,ebx
+ 0341  89 c8                             mov     eax,ecx
+ 0343  ff 57 14                          call    dword ptr +14H[edi]
+ 0346  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 034c  8a 46 01                          mov     al,+1H[esi]
+ 034f  30 e4                             xor     ah,ah
+ 0351  31 db                             xor     ebx,ebx
+ 0353  31 d2                             xor     edx,edx
+ 0355  66 89 c3                          mov     bx,ax
+ 0358  89 c8                             mov     eax,ecx
+ 035a  ff 57 14                          call    dword ptr +14H[edi]
+ 035d  ba 01 00 00 00                    mov     edx,00000001H
+ 0362  8a 06                             mov     al,[esi]
+ 0364  30 e4                             xor     ah,ah
+ 0366  31 db                             xor     ebx,ebx
+ 0368  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 036e  66 89 c3                          mov     bx,ax
+ 0371  89 c8                             mov     eax,ecx
+ 0373  ff 57 14                          call    dword ptr +14H[edi]
+ 0376  ba 02 00 00 00                    mov     edx,00000002H
+ 037b  8a 46 02                          mov     al,+2H[esi]
+ 037e  30 e4                             xor     ah,ah
+ 0380  31 db                             xor     ebx,ebx
+ 0382  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 0388  66 89 c3                          mov     bx,ax
+ 038b  89 c8                             mov     eax,ecx
+ 038d  ff 57 14                          call    dword ptr +14H[edi]
+ 0390  ba 03 00 00 00                    mov     edx,00000003H
+ 0395  8a 46 0f                          mov     al,+0fH[esi]
+ 0398  30 e4                             xor     ah,ah
+ 039a  31 db                             xor     ebx,ebx
+ 039c  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 03a2  66 89 c3                          mov     bx,ax
+ 03a5  89 c8                             mov     eax,ecx
+ 03a7  ff 57 14                          call    dword ptr +14H[edi]
+ 03aa  ba 04 00 00 00                    mov     edx,00000004H
+ 03af  8a 46 04                          mov     al,+4H[esi]
+ 03b2  30 e4                             xor     ah,ah
+ 03b4  31 db                             xor     ebx,ebx
+ 03b6  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 03bc  66 89 c3                          mov     bx,ax
+ 03bf  89 c8                             mov     eax,ecx
+ 03c1  ff 57 14                          call    dword ptr +14H[edi]
+ 03c4  ba 05 00 00 00                    mov     edx,00000005H
+ 03c9  8a 46 05                          mov     al,+5H[esi]
+ 03cc  30 e4                             xor     ah,ah
+ 03ce  31 db                             xor     ebx,ebx
+ 03d0  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 03d6  66 89 c3                          mov     bx,ax
+ 03d9  89 c8                             mov     eax,ecx
+ 03db  ff 57 14                          call    dword ptr +14H[edi]
+ 03de  ba 06 00 00 00                    mov     edx,00000006H
+ 03e3  8a 46 06                          mov     al,+6H[esi]
+ 03e6  30 e4                             xor     ah,ah
+ 03e8  31 db                             xor     ebx,ebx
+ 03ea  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 03f0  66 89 c3                          mov     bx,ax
+ 03f3  89 c8                             mov     eax,ecx
+ 03f5  ff 57 14                          call    dword ptr +14H[edi]
+ 03f8  ba 07 00 00 00                    mov     edx,00000007H
+ 03fd  8a 46 07                          mov     al,+7H[esi]
+ 0400  30 e4                             xor     ah,ah
+ 0402  31 db                             xor     ebx,ebx
+ 0404  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 040a  66 89 c3                          mov     bx,ax
+ 040d  89 c8                             mov     eax,ecx
+ 040f  ff 57 14                          call    dword ptr +14H[edi]
+ 0412  ba 08 00 00 00                    mov     edx,00000008H
+ 0417  8a 46 08                          mov     al,+8H[esi]
+ 041a  30 e4                             xor     ah,ah
+ 041c  31 db                             xor     ebx,ebx
+ 041e  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 0424  66 89 c3                          mov     bx,ax
+ 0427  89 c8                             mov     eax,ecx
+ 0429  ff 57 14                          call    dword ptr +14H[edi]
+ 042c  ba 09 00 00 00                    mov     edx,00000009H
+ 0431  8a 46 09                          mov     al,+9H[esi]
+ 0434  30 e4                             xor     ah,ah
+ 0436  31 db                             xor     ebx,ebx
+ 0438  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 043e  66 89 c3                          mov     bx,ax
+ 0441  89 c8                             mov     eax,ecx
+ 0443  ff 57 14                          call    dword ptr +14H[edi]
+ 0446  8a 46 0c                          mov     al,+0cH[esi]
+ 0449  84 c0                             test    al,al
+ 044b  74 12                             je      L21
+ 044d  30 e4                             xor     ah,ah
+ 044f  31 d2                             xor     edx,edx
+ 0451  8b 1d 00 00 00 00                 mov     ebx,_Mus
+ 0457  66 89 c2                          mov     dx,ax
+ 045a  89 c8                             mov     eax,ecx
+ 045c  ff 53 10                          call    dword ptr +10H[ebx]
+ 045f  fe 45 fc          L21             inc     byte ptr -4H[ebp]
+ 0462  8b 45 f8                          mov     eax,-8H[ebp]
+ 0465  66 ff 40 12                       inc     word ptr +12H[eax]
+ 0469  e9 88 fe ff ff                    jmp     L19
+ 046e  89 ec             L22             mov     esp,ebp
+ 0470  5d                                pop     ebp
+ 0471  5f                                pop     edi
+ 0472  5e                                pop     esi
+ 0473  5a                                pop     edx
+ 0474  59                                pop     ecx
+ 0475  5b                                pop     ebx
+ 0476  c3                                ret     
+ 0477  90                                nop     
+ 0478  56                StartSong_      push    esi
+ 0479  57                                push    edi
+ 047a  55                                push    ebp
+ 047b  89 e5                             mov     ebp,esp
+ 047d  83 ec 0c                          sub     esp,0000000cH
+ 0480  89 c7                             mov     edi,eax
+ 0482  89 55 fc                          mov     -4H[ebp],edx
+ 0485  89 ca                             mov     edx,ecx
+ 0487  8b 0d 00 00 00 00                 mov     ecx,_pid1
+ 048d  83 f9 ff                          cmp     ecx,0ffffffffH
+ 0490  75 07                             jne     L23
+ 0492  89 ca                             mov     edx,ecx
+ 0494  e9 a4 01 00 00                    jmp     L40
+ 0499  83 f8 01          L23             cmp     eax,00000001H
+ 049c  7c 1d                             jl      L24
+ 049e  3b 3d 00 00 00 00                 cmp     edi,_MaxSongs
+ 04a4  7f 15                             jg      L24
+ 04a6  8b 0d 00 00 00 00                 mov     ecx,_Song
+ 04ac  8d 04 fd 00 00 00 
+       00                                lea     eax,+0H[edi*8]
+ 04b3  01 c8                             add     eax,ecx
+ 04b5  83 78 f8 00                       cmp     dword ptr -8H[eax],00000000H
+ 04b9  75 0d                             jne     L25
+ 04bb  ba ff ff ff ff    L24             mov     edx,0ffffffffH
+ 04c0  89 d0                             mov     eax,edx
+ 04c2  89 ec                             mov     esp,ebp
+ 04c4  5d                                pop     ebp
+ 04c5  5f                                pop     edi
+ 04c6  5e                                pop     esi
+ 04c7  c3                                ret     
+ 04c8  31 c0             L25             xor     eax,eax
+ 04ca  89 45 f8                          mov     -8H[ebp],eax
+ 04cd  69 45 f8 2a 01 00 
+       00                L26             imul    eax,-8H[ebp],0000012aH
+ 04d4  66 3b b8 16 00 00 
+       00                                cmp     di,_SongStatus+16H[eax]
+ 04db  75 12                             jne     L27
+ 04dd  f6 80 1a 00 00 00 
+       80                                test    byte ptr _SongStatus+1aH[eax],80H
+ 04e4  74 09                             je      L27
+ 04e6  be 00 00 00 00                    mov     esi,offset _SongStatus
+ 04eb  01 c6                             add     esi,eax
+ 04ed  eb 0c                             jmp     L28
+ 04ef  8b 45 f8          L27             mov     eax,-8H[ebp]
+ 04f2  40                                inc     eax
+ 04f3  89 45 f8                          mov     -8H[ebp],eax
+ 04f6  83 f8 02                          cmp     eax,00000002H
+ 04f9  7c d2                             jl      L26
+ 04fb  83 7d f8 02       L28             cmp     dword ptr -8H[ebp],00000002H
+ 04ff  0f 85 78 00 00 00                 jne     L33
+ 0505  66 83 3d 00 00 00 
+       00 02                             cmp     word ptr _SongsActive,0002H
+ 050d  75 0d                             jne     L29
+ 050f  ba fe ff ff ff                    mov     edx,0fffffffeH
+ 0514  89 d0                             mov     eax,edx
+ 0516  89 ec                             mov     esp,ebp
+ 0518  5d                                pop     ebp
+ 0519  5f                                pop     edi
+ 051a  5e                                pop     esi
+ 051b  c3                                ret     
+ 051c  8b 0d 00 00 00 00 L29             mov     ecx,_Song
+ 0522  31 f6                             xor     esi,esi
+ 0524  8b 4c f9 f8                       mov     ecx,-8H[ecx+edi*8]
+ 0528  69 c6 2a 01 00 00 L30             imul    eax,esi,0000012aH
+ 052e  f6 80 1a 00 00 00 
+       80                                test    byte ptr _SongStatus+1aH[eax],80H
+ 0535  74 06                             je      L31
+ 0537  46                                inc     esi
+ 0538  83 fe 02                          cmp     esi,00000002H
+ 053b  7c eb                             jl      L30
+ 053d  83 fe 02          L31             cmp     esi,00000002H
+ 0540  75 17                             jne     L32
+ 0542  68 00 00 00 00                    push    offset L168
+ 0547  e8 00 00 00 00                    call    printf_
+ 054c  83 c4 04                          add     esp,00000004H
+ 054f  b8 14 00 00 00                    mov     eax,00000014H
+ 0554  e9 00 00 00 00                    jmp     exit_
+ 0559  69 f6 2a 01 00 00 L32             imul    esi,0000012aH
+ 055f  81 c6 00 00 00 00                 add     esi,offset _SongStatus
+ 0565  89 0e                             mov     [esi],ecx
+ 0567  66 89 7e 16                       mov     +16H[esi],di
+ 056b  66 a1 00 00 00 00                 mov     ax,_MasterVolume
+ 0571  66 89 46 1e                       mov     +1eH[esi],ax
+ 0575  66 8b 41 08                       mov     ax,+8H[ecx]
+ 0579  66 89 46 10                       mov     +10H[esi],ax
+ 057d  a1 00 00 00 00    L33             mov     eax,_Song
+ 0582  66 8b 44 f8 fc                    mov     ax,-4H[eax+edi*8]
+ 0587  66 89 46 18                       mov     +18H[esi],ax
+ 058b  66 89 5e 1c                       mov     +1cH[esi],bx
+ 058f  85 d2                             test    edx,edx
+ 0591  0f 84 8e 00 00 00                 je      L37
+ 0597  b9 14 00 00 00                    mov     ecx,00000014H
+ 059c  89 d0                             mov     eax,edx
+ 059e  c1 fa 1f                          sar     edx,1fH
+ 05a1  f7 f9                             idiv    ecx
+ 05a3  8b 55 fc                          mov     edx,-4H[ebp]
+ 05a6  40                                inc     eax
+ 05a7  83 fa ff                          cmp     edx,0ffffffffH
+ 05aa  75 16                             jne     L35
+ 05ac  f6 46 1a 01                       test    byte ptr +1aH[esi],01H
+ 05b0  74 0b                             je      L34
+ 05b2  8b 56 1c                          mov     edx,+1cH[esi]
+ 05b5  c1 fa 10                          sar     edx,10H
+ 05b8  89 55 fc                          mov     -4H[ebp],edx
+ 05bb  eb 05                             jmp     L35
+ 05bd  31 c9             L34             xor     ecx,ecx
+ 05bf  89 4d fc                          mov     -4H[ebp],ecx
+ 05c2  8b 7d fc          L35             mov     edi,-4H[ebp]
+ 05c5  89 d9                             mov     ecx,ebx
+ 05c7  29 f9                             sub     ecx,edi
+ 05c9  66 85 c9                          test    cx,cx
+ 05cc  7d 02                             jge     L36
+ 05ce  f7 d9                             neg     ecx
+ 05d0  66 85 c9          L36             test    cx,cx
+ 05d3  7e 50                             jle     L37
+ 05d5  66 3d 02 00                       cmp     ax,0002H
+ 05d9  7e 4a                             jle     L37
+ 05db  98                                cwde    
+ 05dc  0f bf f9                          movsx   edi,cx
+ 05df  89 45 f4                          mov     -0cH[ebp],eax
+ 05e2  89 fa                             mov     edx,edi
+ 05e4  89 f8                             mov     eax,edi
+ 05e6  c1 fa 1f                          sar     edx,1fH
+ 05e9  f7 7d f4                          idiv    dword ptr -0cH[ebp]
+ 05ec  89 fa                             mov     edx,edi
+ 05ee  66 89 46 24                       mov     +24H[esi],ax
+ 05f2  89 f8                             mov     eax,edi
+ 05f4  c1 fa 1f                          sar     edx,1fH
+ 05f7  f7 7d f4                          idiv    dword ptr -0cH[ebp]
+ 05fa  66 89 56 26                       mov     +26H[esi],dx
+ 05fe  8b 46 24                          mov     eax,+24H[esi]
+ 0601  c1 f8 10                          sar     eax,10H
+ 0604  d1 f8                             sar     eax,1
+ 0606  66 89 4e 22                       mov     +22H[esi],cx
+ 060a  f7 d8                             neg     eax
+ 060c  66 89 46 28                       mov     +28H[esi],ax
+ 0610  8b 45 fc                          mov     eax,-4H[ebp]
+ 0613  66 89 46 1e                       mov     +1eH[esi],ax
+ 0617  8a 46 1a                          mov     al,+1aH[esi]
+ 061a  66 89 5e 20                       mov     +20H[esi],bx
+ 061e  0c 02                             or      al,02H
+ 0620  88 46 1a                          mov     +1aH[esi],al
+ 0623  eb 04                             jmp     L38
+ 0625  66 89 5e 1e       L37             mov     +1eH[esi],bx
+ 0629  66 8b 46 1a       L38             mov     ax,+1aH[esi]
+ 062d  24 01                             and     al,01H
+ 062f  30 e4                             xor     ah,ah
+ 0631  66 3d 01 00                       cmp     ax,0001H
+ 0635  74 04                             je      L39
+ 0637  80 4e 1a 90                       or      byte ptr +1aH[esi],90H
+ 063b  31 d2             L39             xor     edx,edx
+ 063d  89 d0             L40             mov     eax,edx
+ 063f  89 ec                             mov     esp,ebp
+ 0641  5d                                pop     ebp
+ 0642  5f                                pop     edi
+ 0643  5e                                pop     esi
+ 0644  c3                                ret     
+ 0645  8d 40 00                          lea     eax,+0H[eax]
+ 0648  02 07 00 00       L41             DD      L46
+ 064c  8c 07 00 00                       DD      L51
+ 0650  e2 07 00 00                       DD      L55
+ 0654  13 08 00 00                       DD      L57
+ 0658  55 08 00 00                       DD      L61
+ 065c  cd 08 00 00                       DD      L67
+ 0660  da 08 00 00                       DD      L68
+ 0664  53                PlayMus_        push    ebx
+ 0665  51                                push    ecx
+ 0666  52                                push    edx
+ 0667  56                                push    esi
+ 0668  57                                push    edi
+ 0669  55                                push    ebp
+ 066a  89 e5                             mov     ebp,esp
+ 066c  83 ec 24                          sub     esp,00000024H
+ 066f  66 89 45 e0                       mov     -20H[ebp],ax
+ 0673  31 c0                             xor     eax,eax
+ 0675  66 8b 45 e0                       mov     ax,-20H[ebp]
+ 0679  69 c0 2a 01 00 00                 imul    eax,0000012aH
+ 067f  b9 00 00 00 00                    mov     ecx,offset _SongStatus
+ 0684  01 c1                             add     ecx,eax
+ 0686  83 79 08 00       L42             cmp     dword ptr +8H[ecx],00000000H
+ 068a  0f 85 e0 02 00 00                 jne     L72
+ 0690  8b 01                             mov     eax,[ecx]
+ 0692  03 41 04                          add     eax,+4H[ecx]
+ 0695  8a 10                             mov     dl,[eax]
+ 0697  88 d3                             mov     bl,dl
+ 0699  88 55 f8                          mov     -8H[ebp],dl
+ 069c  80 e3 0f                          and     bl,0fH
+ 069f  31 d2                             xor     edx,edx
+ 06a1  88 da                             mov     dl,bl
+ 06a3  8d 79 2a                          lea     edi,+2aH[ecx]
+ 06a6  c1 e2 04                          shl     edx,04H
+ 06a9  01 fa                             add     edx,edi
+ 06ab  0f b6 7d f8                       movzx   edi,byte ptr -8H[ebp]
+ 06af  c1 ff 04                          sar     edi,04H
+ 06b2  89 7d dc                          mov     -24H[ebp],edi
+ 06b5  8a 7d dc                          mov     bh,-24H[ebp]
+ 06b8  be 02 00 00 00                    mov     esi,00000002H
+ 06bd  80 e7 07                          and     bh,07H
+ 06c0  66 8b 79 14                       mov     di,+14H[ecx]
+ 06c4  88 7d f4                          mov     -0cH[ebp],bh
+ 06c7  66 85 ff                          test    di,di
+ 06ca  74 05                             je      L43
+ 06cc  80 fb 0f                          cmp     bl,0fH
+ 06cf  75 05                             jne     L44
+ 06d1  88 5d e8          L43             mov     -18H[ebp],bl
+ 06d4  eb 13                             jmp     L45
+ 06d6  8a 79 14          L44             mov     bh,+14H[ecx]
+ 06d9  00 df                             add     bh,bl
+ 06db  88 7d e8                          mov     -18H[ebp],bh
+ 06de  80 ff 0e                          cmp     bh,0eH
+ 06e1  72 06                             jb      L45
+ 06e3  80 ef 0e                          sub     bh,0eH
+ 06e6  88 7d e8                          mov     -18H[ebp],bh
+ 06e9  8a 7d f4          L45             mov     bh,-0cH[ebp]
+ 06ec  80 ff 06                          cmp     bh,06H
+ 06ef  0f 87 36 00 00 00                 ja      L48
+ 06f5  0f b6 ff                          movzx   edi,bh
+ 06f8  c1 e7 02                          shl     edi,02H
+ 06fb  2e ff a7 48 06 00 
+       00                                jmp     dword ptr cs:L41[edi]
+ 0702  80 fb 0f          L46             cmp     bl,0fH
+ 0705  74 09                             je      L47
+ 0707  3a 59 12                          cmp     bl,+12H[ecx]
+ 070a  0f 83 1b 00 00 00                 jae     L48
+ 0710  8b 1d 00 00 00 00 L47             mov     ebx,_Mus
+ 0716  8a 40 01                          mov     al,+1H[eax]
+ 0719  30 e4                             xor     ah,ah
+ 071b  31 d2                             xor     edx,edx
+ 071d  66 89 c2                          mov     dx,ax
+ 0720  8a 45 e8                          mov     al,-18H[ebp]
+ 0723  25 ff ff 00 00                    and     eax,0000ffffH
+ 0728  ff 53 08                          call    dword ptr +8H[ebx]
+ 072b  31 c0             L48             xor     eax,eax
+ 072d  8b 51 04                          mov     edx,+4H[ecx]
+ 0730  66 89 f0                          mov     ax,si
+ 0733  01 c2                             add     edx,eax
+ 0735  8a 7d f8                          mov     bh,-8H[ebp]
+ 0738  89 51 04                          mov     +4H[ecx],edx
+ 073b  f6 c7 80                          test    bh,80H
+ 073e  0f 84 42 ff ff ff                 je      L42
+ 0744  8b 11                             mov     edx,[ecx]
+ 0746  03 51 04                          add     edx,+4H[ecx]
+ 0749  31 c0                             xor     eax,eax
+ 074b  8a 1a                             mov     bl,[edx]
+ 074d  88 d8                             mov     al,bl
+ 074f  be 01 00 00 00                    mov     esi,00000001H
+ 0754  24 7f                             and     al,7fH
+ 0756  f6 c3 80                          test    bl,80H
+ 0759  74 21                             je      L50
+ 075b  31 ff             L49             xor     edi,edi
+ 075d  66 89 f7                          mov     di,si
+ 0760  8a 1c 3a                          mov     bl,[edx+edi]
+ 0763  88 5d f0                          mov     -10H[ebp],bl
+ 0766  31 db                             xor     ebx,ebx
+ 0768  8a 5d f0                          mov     bl,-10H[ebp]
+ 076b  c1 e0 07                          shl     eax,07H
+ 076e  80 e3 7f                          and     bl,7fH
+ 0771  09 d8                             or      eax,ebx
+ 0773  8a 5d f0                          mov     bl,-10H[ebp]
+ 0776  46                                inc     esi
+ 0777  f6 c3 80                          test    bl,80H
+ 077a  75 df                             jne     L49
+ 077c  89 41 08          L50             mov     +8H[ecx],eax
+ 077f  31 c0                             xor     eax,eax
+ 0781  66 89 f0                          mov     ax,si
+ 0784  01 41 04                          add     +4H[ecx],eax
+ 0787  e9 fa fe ff ff                    jmp     L42
+ 078c  8a 78 01          L51             mov     bh,+1H[eax]
+ 078f  88 7d fc                          mov     -4H[ebp],bh
+ 0792  f6 c7 80                          test    bh,80H
+ 0795  74 11                             je      L52
+ 0797  8a 40 02                          mov     al,+2H[eax]
+ 079a  88 fc                             mov     ah,bh
+ 079c  46                                inc     esi
+ 079d  80 e4 7f                          and     ah,7fH
+ 07a0  88 42 0b                          mov     +0bH[edx],al
+ 07a3  88 65 fc                          mov     -4H[ebp],ah
+ 07a6  eb 03                             jmp     L53
+ 07a8  8a 42 0b          L52             mov     al,+0bH[edx]
+ 07ab  80 fb 0f          L53             cmp     bl,0fH
+ 07ae  74 09                             je      L54
+ 07b0  3a 59 12                          cmp     bl,+12H[ecx]
+ 07b3  0f 83 72 ff ff ff                 jae     L48
+ 07b9  30 e4             L54             xor     ah,ah
+ 07bb  31 db                             xor     ebx,ebx
+ 07bd  31 d2                             xor     edx,edx
+ 07bf  66 89 c3                          mov     bx,ax
+ 07c2  8a 45 fc                          mov     al,-4H[ebp]
+ 07c5  66 89 c2                          mov     dx,ax
+ 07c8  8a 45 e8                          mov     al,-18H[ebp]
+ 07cb  89 45 e4                          mov     -1cH[ebp],eax
+ 07ce  31 c0                             xor     eax,eax
+ 07d0  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 07d6  66 8b 45 e4                       mov     ax,-1cH[ebp]
+ 07da  ff 57 0c                          call    dword ptr +0cH[edi]
+ 07dd  e9 49 ff ff ff                    jmp     L48
+ 07e2  8a 40 01          L55             mov     al,+1H[eax]
+ 07e5  88 42 0c                          mov     +0cH[edx],al
+ 07e8  80 fb 0f                          cmp     bl,0fH
+ 07eb  74 09                             je      L56
+ 07ed  3a 59 12                          cmp     bl,+12H[ecx]
+ 07f0  0f 83 35 ff ff ff                 jae     L48
+ 07f6  30 e4             L56             xor     ah,ah
+ 07f8  31 d2                             xor     edx,edx
+ 07fa  8b 1d 00 00 00 00                 mov     ebx,_Mus
+ 0800  66 89 c2                          mov     dx,ax
+ 0803  8a 45 e8                          mov     al,-18H[ebp]
+ 0806  25 ff ff 00 00                    and     eax,0000ffffH
+ 080b  ff 53 10                          call    dword ptr +10H[ebx]
+ 080e  e9 18 ff ff ff                    jmp     L48
+ 0813  8a 40 01          L57             mov     al,+1H[eax]
+ 0816  3c 0c                             cmp     al,0cH
+ 0818  75 06                             jne     L58
+ 081a  c6 42 0a 01                       mov     byte ptr +0aH[edx],01H
+ 081e  eb 08                             jmp     L59
+ 0820  3c 0d             L58             cmp     al,0dH
+ 0822  75 04                             jne     L59
+ 0824  c6 42 0a 00                       mov     byte ptr +0aH[edx],00H
+ 0828  80 fb 0f          L59             cmp     bl,0fH
+ 082b  74 09                             je      L60
+ 082d  3a 59 12                          cmp     bl,+12H[ecx]
+ 0830  0f 83 f5 fe ff ff                 jae     L48
+ 0836  30 e4             L60             xor     ah,ah
+ 0838  31 d2                             xor     edx,edx
+ 083a  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 0840  66 89 c2                          mov     dx,ax
+ 0843  8a 45 e8                          mov     al,-18H[ebp]
+ 0846  25 ff ff 00 00                    and     eax,0000ffffH
+ 084b  31 db                             xor     ebx,ebx
+ 084d  ff 57 14                          call    dword ptr +14H[edi]
+ 0850  e9 d6 fe ff ff                    jmp     L48
+ 0855  8a 78 01          L61             mov     bh,+1H[eax]
+ 0858  88 7d ec                          mov     -14H[ebp],bh
+ 085b  8a 78 02                          mov     bh,+2H[eax]
+ 085e  8a 45 ec                          mov     al,-14H[ebp]
+ 0861  46                                inc     esi
+ 0862  3c 0a                             cmp     al,0aH
+ 0864  73 08                             jae     L62
+ 0866  31 c0                             xor     eax,eax
+ 0868  8a 45 ec                          mov     al,-14H[ebp]
+ 086b  88 3c 02                          mov     [edx+eax],bh
+ 086e  80 fb 0f          L62             cmp     bl,0fH
+ 0871  74 09                             je      L63
+ 0873  3a 59 12                          cmp     bl,+12H[ecx]
+ 0876  0f 83 af fe ff ff                 jae     L48
+ 087c  80 7d ec 03       L63             cmp     byte ptr -14H[ebp],03H
+ 0880  75 20                             jne     L66
+ 0882  8a 35 00 00 00 00                 mov     dh,_MasterVolume
+ 0888  38 f7                             cmp     bh,dh
+ 088a  76 02                             jbe     L64
+ 088c  88 f7                             mov     bh,dh
+ 088e  8a 41 1e          L64             mov     al,+1eH[ecx]
+ 0891  38 c7                             cmp     bh,al
+ 0893  76 02                             jbe     L65
+ 0895  88 c7                             mov     bh,al
+ 0897  31 c0             L65             xor     eax,eax
+ 0899  88 d8                             mov     al,bl
+ 089b  c1 e0 04                          shl     eax,04H
+ 089e  88 7c 01 39                       mov     +39H[ecx+eax],bh
+ 08a2  88 f8             L66             mov     al,bh
+ 08a4  30 e4                             xor     ah,ah
+ 08a6  31 db                             xor     ebx,ebx
+ 08a8  31 d2                             xor     edx,edx
+ 08aa  66 89 c3                          mov     bx,ax
+ 08ad  8a 45 ec                          mov     al,-14H[ebp]
+ 08b0  66 89 c2                          mov     dx,ax
+ 08b3  8a 45 e8                          mov     al,-18H[ebp]
+ 08b6  89 45 e4                          mov     -1cH[ebp],eax
+ 08b9  31 c0                             xor     eax,eax
+ 08bb  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 08c1  66 8b 45 e4                       mov     ax,-1cH[ebp]
+ 08c5  ff 57 14                          call    dword ptr +14H[edi]
+ 08c8  e9 5e fe ff ff                    jmp     L48
+ 08cd  8b 79 0c          L67             mov     edi,+0cH[ecx]
+ 08d0  47                                inc     edi
+ 08d1  4e                                dec     esi
+ 08d2  89 79 0c                          mov     +0cH[ecx],edi
+ 08d5  e9 51 fe ff ff                    jmp     L48
+ 08da  66 8b 41 18       L68             mov     ax,+18H[ecx]
+ 08de  66 85 c0                          test    ax,ax
+ 08e1  75 10                             jne     L69
+ 08e3  31 c0                             xor     eax,eax
+ 08e5  66 8b 45 e0                       mov     ax,-20H[ebp]
+ 08e9  e8 00 00 00 00                    call    PlrKillSong_
+ 08ee  e9 7d 00 00 00                    jmp     L72
+ 08f3  66 3b 41 16       L69             cmp     ax,+16H[ecx]
+ 08f7  75 0c                             jne     L70
+ 08f9  89 c8                             mov     eax,ecx
+ 08fb  e8 00 00 00 00                    call    PlrResetCounters_
+ 0900  e9 81 fd ff ff                    jmp     L42
+ 0905  31 c0             L70             xor     eax,eax
+ 0907  66 8b 45 e0                       mov     ax,-20H[ebp]
+ 090b  e8 00 00 00 00                    call    PlrKillSong_
+ 0910  8a 65 e0                          mov     ah,-20H[ebp]
+ 0913  80 f4 01                          xor     ah,01H
+ 0916  31 d2                             xor     edx,edx
+ 0918  88 65 e0                          mov     -20H[ebp],ah
+ 091b  66 8b 55 e0                       mov     dx,-20H[ebp]
+ 091f  69 c2 2a 01 00 00                 imul    eax,edx,0000012aH
+ 0925  05 00 00 00 00                    add     eax,offset _SongStatus
+ 092a  f6 40 1a 80                       test    byte ptr +1aH[eax],80H
+ 092e  74 29                             je      L71
+ 0930  66 8b 58 1a                       mov     bx,+1aH[eax]
+ 0934  80 e3 01                          and     bl,01H
+ 0937  30 ff                             xor     bh,bh
+ 0939  66 83 fb 01                       cmp     bx,0001H
+ 093d  74 1a                             je      L71
+ 093f  66 8b 40 16                       mov     ax,+16H[eax]
+ 0943  66 3b 41 18                       cmp     ax,+18H[ecx]
+ 0947  75 10                             jne     L71
+ 0949  89 d0                             mov     eax,edx
+ 094b  e8 00 00 00 00                    call    PlrStartSong_
+ 0950  89 ec                             mov     esp,ebp
+ 0952  5d                                pop     ebp
+ 0953  5f                                pop     edi
+ 0954  5e                                pop     esi
+ 0955  5a                                pop     edx
+ 0956  59                                pop     ecx
+ 0957  5b                                pop     ebx
+ 0958  c3                                ret     
+ 0959  ba ff ff ff ff    L71             mov     edx,0ffffffffH
+ 095e  31 c0                             xor     eax,eax
+ 0960  bb 7f 00 00 00                    mov     ebx,0000007fH
+ 0965  66 8b 41 18                       mov     ax,+18H[ecx]
+ 0969  31 c9                             xor     ecx,ecx
+ 096b  e8 00 00 00 00                    call    StartSong_
+ 0970  89 ec             L72             mov     esp,ebp
+ 0972  5d                                pop     ebp
+ 0973  5f                                pop     edi
+ 0974  5e                                pop     esi
+ 0975  5a                                pop     edx
+ 0976  59                                pop     ecx
+ 0977  5b                                pop     ebx
+ 0978  c3                                ret     
+ 0979  8d 40 00                          lea     eax,+0H[eax]
+ 097c  53                ServicePlayer_  push    ebx
+ 097d  51                                push    ecx
+ 097e  52                                push    edx
+ 097f  56                                push    esi
+ 0980  57                                push    edi
+ 0981  55                                push    ebp
+ 0982  89 e5                             mov     ebp,esp
+ 0984  f6 05 00 00 00 00 
+       80                                test    byte ptr _DmxDebug,80H
+ 098b  74 2a                             je      L73
+ 098d  ba da 03 00 00                    mov     edx,000003daH
+ 0992  29 c0                             sub     eax,eax
+ 0994  ec                                in      al,dx
+ 0995  ba c0 03 00 00                    mov     edx,000003c0H
+ 099a  b0 31                             mov     al,31H
+ 099c  ee                                out     dx,al
+ 099d  ba 88 03 00 00                    mov     edx,00000388H
+ 09a2  29 c0                             sub     eax,eax
+ 09a4  ec                                in      al,dx
+ 09a5  ba c1 03 00 00                    mov     edx,000003c1H
+ 09aa  29 c0                             sub     eax,eax
+ 09ac  ec                                in      al,dx
+ 09ad  ba c0 03 00 00                    mov     edx,000003c0H
+ 09b2  88 c1                             mov     cl,al
+ 09b4  b0 3e                             mov     al,3eH
+ 09b6  ee                                out     dx,al
+ 09b7  a1 00 00 00 00    L73             mov     eax,_Mus
+ 09bc  83 78 18 00                       cmp     dword ptr +18H[eax],00000000H
+ 09c0  74 2d                             je      L75
+ 09c2  ff 50 18                          call    dword ptr +18H[eax]
+ 09c5  85 c0                             test    eax,eax
+ 09c7  74 26                             je      L75
+ 09c9  f6 05 00 00 00 00 
+       80                                test    byte ptr _DmxDebug,80H
+ 09d0  74 13                             je      L74
+ 09d2  ba da 03 00 00                    mov     edx,000003daH
+ 09d7  29 c0                             sub     eax,eax
+ 09d9  ec                                in      al,dx
+ 09da  ba c0 03 00 00                    mov     edx,000003c0H
+ 09df  b0 31                             mov     al,31H
+ 09e1  ee                                out     dx,al
+ 09e2  88 c8                             mov     al,cl
+ 09e4  ee                                out     dx,al
+ 09e5  b8 01 00 00 00    L74             mov     eax,00000001H
+ 09ea  e9 e5 00 00 00                    jmp     L88
+ 09ef  bb 00 00 00 00    L75             mov     ebx,offset _SongStatus
+ 09f4  8a 2d 1a 00 00 00                 mov     ch,_SongStatus+1aH
+ 09fa  8d 93 2a 01 00 00                 lea     edx,+12aH[ebx]
+ 0a00  f6 c5 40                          test    ch,40H
+ 0a03  74 07                             je      L76
+ 0a05  31 c0                             xor     eax,eax
+ 0a07  e8 00 00 00 00                    call    PlrKillSong_
+ 0a0c  f6 42 1a 40       L76             test    byte ptr +1aH[edx],40H
+ 0a10  74 0a                             je      L77
+ 0a12  b8 01 00 00 00                    mov     eax,00000001H
+ 0a17  e8 00 00 00 00                    call    PlrKillSong_
+ 0a1c  f6 43 1a 10       L77             test    byte ptr +1aH[ebx],10H
+ 0a20  74 07                             je      L78
+ 0a22  31 c0                             xor     eax,eax
+ 0a24  e8 00 00 00 00                    call    PlrStartSong_
+ 0a29  f6 42 1a 10       L78             test    byte ptr +1aH[edx],10H
+ 0a2d  74 0a                             je      L79
+ 0a2f  b8 01 00 00 00                    mov     eax,00000001H
+ 0a34  e8 00 00 00 00                    call    PlrStartSong_
+ 0a39  f6 43 1a 04       L79             test    byte ptr +1aH[ebx],04H
+ 0a3d  74 07                             je      L80
+ 0a3f  31 c0                             xor     eax,eax
+ 0a41  e8 00 00 00 00                    call    PlrPauseSong_
+ 0a46  f6 42 1a 04       L80             test    byte ptr +1aH[edx],04H
+ 0a4a  74 0a                             je      L81
+ 0a4c  b8 01 00 00 00                    mov     eax,00000001H
+ 0a51  e8 00 00 00 00                    call    PlrPauseSong_
+ 0a56  66 8b 43 1a       L81             mov     ax,+1aH[ebx]
+ 0a5a  24 09                             and     al,09H
+ 0a5c  30 e4                             xor     ah,ah
+ 0a5e  66 3d 01 00                       cmp     ax,0001H
+ 0a62  75 19                             jne     L83
+ 0a64  8b 73 08                          mov     esi,+8H[ebx]
+ 0a67  85 f6                             test    esi,esi
+ 0a69  7e 06                             jle     L82
+ 0a6b  8d 7e ff                          lea     edi,-1H[esi]
+ 0a6e  89 7b 08                          mov     +8H[ebx],edi
+ 0a71  8b 43 08          L82             mov     eax,+8H[ebx]
+ 0a74  85 c0                             test    eax,eax
+ 0a76  75 05                             jne     L83
+ 0a78  e8 00 00 00 00                    call    PlayMus_
+ 0a7d  66 8b 42 1a       L83             mov     ax,+1aH[edx]
+ 0a81  24 09                             and     al,09H
+ 0a83  30 e4                             xor     ah,ah
+ 0a85  66 3d 01 00                       cmp     ax,0001H
+ 0a89  75 1d                             jne     L85
+ 0a8b  8b 5a 08                          mov     ebx,+8H[edx]
+ 0a8e  85 db                             test    ebx,ebx
+ 0a90  7e 06                             jle     L84
+ 0a92  8d 73 ff                          lea     esi,-1H[ebx]
+ 0a95  89 72 08                          mov     +8H[edx],esi
+ 0a98  83 7a 08 00       L84             cmp     dword ptr +8H[edx],00000000H
+ 0a9c  75 0a                             jne     L85
+ 0a9e  b8 01 00 00 00                    mov     eax,00000001H
+ 0aa3  e8 00 00 00 00                    call    PlayMus_
+ 0aa8  a1 00 00 00 00    L85             mov     eax,_Mus
+ 0aad  83 78 1c 00                       cmp     dword ptr +1cH[eax],00000000H
+ 0ab1  74 03                             je      L86
+ 0ab3  ff 50 1c                          call    dword ptr +1cH[eax]
+ 0ab6  f6 05 00 00 00 00 
+       80                L86             test    byte ptr _DmxDebug,80H
+ 0abd  74 13                             je      L87
+ 0abf  ba da 03 00 00                    mov     edx,000003daH
+ 0ac4  29 c0                             sub     eax,eax
+ 0ac6  ec                                in      al,dx
+ 0ac7  ba c0 03 00 00                    mov     edx,000003c0H
+ 0acc  b0 31                             mov     al,31H
+ 0ace  ee                                out     dx,al
+ 0acf  88 c8                             mov     al,cl
+ 0ad1  ee                                out     dx,al
+ 0ad2  31 c0             L87             xor     eax,eax
+ 0ad4  5d                L88             pop     ebp
+ 0ad5  5f                                pop     edi
+ 0ad6  5e                                pop     esi
+ 0ad7  5a                                pop     edx
+ 0ad8  59                                pop     ecx
+ 0ad9  5b                                pop     ebx
+ 0ada  c3                                ret     
+ 0adb  90                                nop     
+ 0adc  53                PlrTrimVolume_  push    ebx
+ 0add  51                                push    ecx
+ 0ade  52                                push    edx
+ 0adf  56                                push    esi
+ 0ae0  57                                push    edi
+ 0ae1  55                                push    ebp
+ 0ae2  89 e5                             mov     ebp,esp
+ 0ae4  83 ec 08                          sub     esp,00000008H
+ 0ae7  25 ff ff 00 00                    and     eax,0000ffffH
+ 0aec  69 c0 2a 01 00 00                 imul    eax,0000012aH
+ 0af2  b9 00 00 00 00                    mov     ecx,offset _SongStatus
+ 0af7  01 c1                             add     ecx,eax
+ 0af9  8a 41 12                          mov     al,+12H[ecx]
+ 0afc  30 e4                             xor     ah,ah
+ 0afe  31 f6                             xor     esi,esi
+ 0b00  89 45 f8                          mov     -8H[ebp],eax
+ 0b03  66 83 fe 0f                       cmp     si,000fH
+ 0b07  76 09                             jbe     L89
+ 0b09  89 ec                             mov     esp,ebp
+ 0b0b  5d                                pop     ebp
+ 0b0c  5f                                pop     edi
+ 0b0d  5e                                pop     esi
+ 0b0e  5a                                pop     edx
+ 0b0f  59                                pop     ecx
+ 0b10  5b                                pop     ebx
+ 0b11  c3                                ret     
+ 0b12  66 3b 75 f8       L89             cmp     si,-8H[ebp]
+ 0b16  75 0a                             jne     L90
+ 0b18  be 0f 00 00 00                    mov     esi,0000000fH
+ 0b1d  89 75 fc                          mov     -4H[ebp],esi
+ 0b20  eb 28                             jmp     L94
+ 0b22  66 8b 79 14       L90             mov     di,+14H[ecx]
+ 0b26  66 85 ff                          test    di,di
+ 0b29  75 05                             jne     L91
+ 0b2b  89 75 fc                          mov     -4H[ebp],esi
+ 0b2e  eb 1a                             jmp     L94
+ 0b30  01 fe             L91             add     esi,edi
+ 0b32  66 83 fe 0e                       cmp     si,000eH
+ 0b36  72 0a                             jb      L92
+ 0b38  31 db                             xor     ebx,ebx
+ 0b3a  66 89 f3                          mov     bx,si
+ 0b3d  83 eb 0e                          sub     ebx,0000000eH
+ 0b40  eb 05                             jmp     L93
+ 0b42  31 db             L92             xor     ebx,ebx
+ 0b44  66 89 f3                          mov     bx,si
+ 0b47  89 5d fc          L93             mov     -4H[ebp],ebx
+ 0b4a  8a 51 1a          L94             mov     dl,+1aH[ecx]
+ 0b4d  66 a1 00 00 00 00                 mov     ax,_LastMasterVolume
+ 0b53  f6 c2 02                          test    dl,02H
+ 0b56  74 0b                             je      L95
+ 0b58  66 8b 51 1e                       mov     dx,+1eH[ecx]
+ 0b5c  66 39 d0                          cmp     ax,dx
+ 0b5f  76 02                             jbe     L95
+ 0b61  89 d0                             mov     eax,edx
+ 0b63  66 83 fe 0f       L95             cmp     si,000fH
+ 0b67  74 15                             je      L96
+ 0b69  31 d2                             xor     edx,edx
+ 0b6b  66 89 f2                          mov     dx,si
+ 0b6e  c1 e2 04                          shl     edx,04H
+ 0b71  8a 54 11 2d                       mov     dl,+2dH[ecx+edx]
+ 0b75  30 f6                             xor     dh,dh
+ 0b77  66 39 d0                          cmp     ax,dx
+ 0b7a  76 02                             jbe     L96
+ 0b7c  89 d0                             mov     eax,edx
+ 0b7e  31 d2             L96             xor     edx,edx
+ 0b80  66 89 f2                          mov     dx,si
+ 0b83  c1 e2 04                          shl     edx,04H
+ 0b86  31 db                             xor     ebx,ebx
+ 0b88  01 ca                             add     edx,ecx
+ 0b8a  66 89 c3                          mov     bx,ax
+ 0b8d  0f b6 7a 39                       movzx   edi,byte ptr +39H[edx]
+ 0b91  39 fb                             cmp     ebx,edi
+ 0b93  74 17                             je      L97
+ 0b95  88 42 39                          mov     +39H[edx],al
+ 0b98  8b 3d 00 00 00 00                 mov     edi,_Mus
+ 0b9e  31 c0                             xor     eax,eax
+ 0ba0  ba 03 00 00 00                    mov     edx,00000003H
+ 0ba5  66 8b 45 fc                       mov     ax,-4H[ebp]
+ 0ba9  ff 57 14                          call    dword ptr +14H[edi]
+ 0bac  46                L97             inc     esi
+ 0bad  66 83 fe 0f                       cmp     si,000fH
+ 0bb1  0f 86 5b ff ff ff                 jbe     L89
+ 0bb7  89 ec                             mov     esp,ebp
+ 0bb9  5d                                pop     ebp
+ 0bba  5f                                pop     edi
+ 0bbb  5e                                pop     esi
+ 0bbc  5a                                pop     edx
+ 0bbd  59                                pop     ecx
+ 0bbe  5b                                pop     ebx
+ 0bbf  c3                                ret     
+ 0bc0  53                PlrRampVolume_  push    ebx
+ 0bc1  51                                push    ecx
+ 0bc2  52                                push    edx
+ 0bc3  56                                push    esi
+ 0bc4  57                                push    edi
+ 0bc5  55                                push    ebp
+ 0bc6  89 e5                             mov     ebp,esp
+ 0bc8  89 c3                             mov     ebx,eax
+ 0bca  31 d2                             xor     edx,edx
+ 0bcc  66 89 c2                          mov     dx,ax
+ 0bcf  69 d2 2a 01 00 00                 imul    edx,0000012aH
+ 0bd5  81 c2 00 00 00 00                 add     edx,offset _SongStatus
+ 0bdb  66 8b 0d 00 00 00 
+       00                                mov     cx,_LastMasterVolume
+ 0be2  66 3b 4a 1e                       cmp     cx,+1eH[edx]
+ 0be6  7f 16                             jg      L98
+ 0be8  66 3b 4a 20                       cmp     cx,+20H[edx]
+ 0bec  7f 10                             jg      L98
+ 0bee  8a 62 1a                          mov     ah,+1aH[edx]
+ 0bf1  80 e4 fd                          and     ah,0fdH
+ 0bf4  30 c0                             xor     al,al
+ 0bf6  88 62 1a                          mov     +1aH[edx],ah
+ 0bf9  e9 32 01 00 00                    jmp     L109
+ 0bfe  66 8b 4a 26       L98             mov     cx,+26H[edx]
+ 0c02  66 8b 7a 28                       mov     di,+28H[edx]
+ 0c06  66 8b 42 24                       mov     ax,+24H[edx]
+ 0c0a  01 cf                             add     edi,ecx
+ 0c0c  66 8b 72 22                       mov     si,+22H[edx]
+ 0c10  66 89 7a 28                       mov     +28H[edx],di
+ 0c14  66 39 f7                          cmp     di,si
+ 0c17  7c 07                             jl      L99
+ 0c19  29 f7                             sub     edi,esi
+ 0c1b  40                                inc     eax
+ 0c1c  66 89 7a 28                       mov     +28H[edx],di
+ 0c20  66 85 c0          L99             test    ax,ax
+ 0c23  0f 84 05 01 00 00                 je      L108
+ 0c29  66 8b 4a 20                       mov     cx,+20H[edx]
+ 0c2d  66 8b 72 1e                       mov     si,+1eH[edx]
+ 0c31  66 39 f1                          cmp     cx,si
+ 0c34  0f 8d aa 00 00 00                 jge     L105
+ 0c3a  89 f7                             mov     edi,esi
+ 0c3c  29 c7                             sub     edi,eax
+ 0c3e  66 89 7a 1e                       mov     +1eH[edx],di
+ 0c42  66 85 ff                          test    di,di
+ 0c45  7d 06                             jge     L100
+ 0c47  66 c7 42 1e 00 00                 mov     word ptr +1eH[edx],0000H
+ 0c4d  66 8b 4a 1e       L100            mov     cx,+1eH[edx]
+ 0c51  66 85 c9                          test    cx,cx
+ 0c54  0f 85 6d 00 00 00                 jne     L103
+ 0c5a  31 c0                             xor     eax,eax
+ 0c5c  66 89 d8                          mov     ax,bx
+ 0c5f  66 8b 4a 1a                       mov     cx,+1aH[edx]
+ 0c63  e8 00 00 00 00                    call    PlrKillSong_
+ 0c68  f6 c1 20                          test    cl,20H
+ 0c6b  75 51                             jne     L102
+ 0c6d  80 f3 01                          xor     bl,01H
+ 0c70  31 c0                             xor     eax,eax
+ 0c72  66 89 d8                          mov     ax,bx
+ 0c75  69 d8 2a 01 00 00                 imul    ebx,eax,0000012aH
+ 0c7b  81 c3 00 00 00 00                 add     ebx,offset _SongStatus
+ 0c81  f6 43 1a 80                       test    byte ptr +1aH[ebx],80H
+ 0c85  74 20                             je      L101
+ 0c87  66 8b 4b 1a                       mov     cx,+1aH[ebx]
+ 0c8b  80 e1 01                          and     cl,01H
+ 0c8e  30 ed                             xor     ch,ch
+ 0c90  66 83 f9 01                       cmp     cx,0001H
+ 0c94  74 11                             je      L101
+ 0c96  66 8b 5b 16                       mov     bx,+16H[ebx]
+ 0c9a  66 3b 5a 18                       cmp     bx,+18H[edx]
+ 0c9e  75 07                             jne     L101
+ 0ca0  e8 00 00 00 00                    call    PlrStartSong_
+ 0ca5  eb 17                             jmp     L102
+ 0ca7  bb 7f 00 00 00    L101            mov     ebx,0000007fH
+ 0cac  31 c0                             xor     eax,eax
+ 0cae  31 c9                             xor     ecx,ecx
+ 0cb0  66 8b 42 18                       mov     ax,+18H[edx]
+ 0cb4  ba ff ff ff ff                    mov     edx,0ffffffffH
+ 0cb9  e8 00 00 00 00                    call    StartSong_
+ 0cbe  b0 01             L102            mov     al,01H
+ 0cc0  5d                                pop     ebp
+ 0cc1  5f                                pop     edi
+ 0cc2  5e                                pop     esi
+ 0cc3  5a                                pop     edx
+ 0cc4  59                                pop     ecx
+ 0cc5  5b                                pop     ebx
+ 0cc6  c3                                ret     
+ 0cc7  66 3b 4a 20       L103            cmp     cx,+20H[edx]
+ 0ccb  75 04                             jne     L104
+ 0ccd  80 62 1a fd                       and     byte ptr +1aH[edx],0fdH
+ 0cd1  31 c0             L104            xor     eax,eax
+ 0cd3  66 89 d8                          mov     ax,bx
+ 0cd6  e8 00 00 00 00                    call    PlrTrimVolume_
+ 0cdb  b0 01                             mov     al,01H
+ 0cdd  5d                                pop     ebp
+ 0cde  5f                                pop     edi
+ 0cdf  5e                                pop     esi
+ 0ce0  5a                                pop     edx
+ 0ce1  59                                pop     ecx
+ 0ce2  5b                                pop     ebx
+ 0ce3  c3                                ret     
+ 0ce4  89 f1             L105            mov     ecx,esi
+ 0ce6  01 c1                             add     ecx,eax
+ 0ce8  66 8b 72 1c                       mov     si,+1cH[edx]
+ 0cec  66 89 4a 1e                       mov     +1eH[edx],cx
+ 0cf0  66 39 f1                          cmp     cx,si
+ 0cf3  7c 0c                             jl      L106
+ 0cf5  8a 42 1a                          mov     al,+1aH[edx]
+ 0cf8  66 89 72 1e                       mov     +1eH[edx],si
+ 0cfc  24 fd                             and     al,0fdH
+ 0cfe  88 42 1a                          mov     +1aH[edx],al
+ 0d01  66 8b 3d 00 00 00 
+       00                L106            mov     di,_LastMasterVolume
+ 0d08  66 3b 7a 1e                       cmp     di,+1eH[edx]
+ 0d0c  7f 0d                             jg      L107
+ 0d0e  8a 62 1a                          mov     ah,+1aH[edx]
+ 0d11  66 89 7a 1e                       mov     +1eH[edx],di
+ 0d15  80 e4 fd                          and     ah,0fdH
+ 0d18  88 62 1a                          mov     +1aH[edx],ah
+ 0d1b  31 c0             L107            xor     eax,eax
+ 0d1d  66 89 d8                          mov     ax,bx
+ 0d20  e8 00 00 00 00                    call    PlrTrimVolume_
+ 0d25  b0 01                             mov     al,01H
+ 0d27  5d                                pop     ebp
+ 0d28  5f                                pop     edi
+ 0d29  5e                                pop     esi
+ 0d2a  5a                                pop     edx
+ 0d2b  59                                pop     ecx
+ 0d2c  5b                                pop     ebx
+ 0d2d  c3                                ret     
+ 0d2e  30 c0             L108            xor     al,al
+ 0d30  5d                L109            pop     ebp
+ 0d31  5f                                pop     edi
+ 0d32  5e                                pop     esi
+ 0d33  5a                                pop     edx
+ 0d34  59                                pop     ecx
+ 0d35  5b                                pop     ebx
+ 0d36  c3                                ret     
+ 0d37  90                                nop     
+ 0d38  53                ServiceFader_   push    ebx
+ 0d39  51                                push    ecx
+ 0d3a  52                                push    edx
+ 0d3b  55                                push    ebp
+ 0d3c  89 e5                             mov     ebp,esp
+ 0d3e  f6 05 00 00 00 00 
+       80                                test    byte ptr _DmxDebug,80H
+ 0d45  74 2a                             je      L110
+ 0d47  ba da 03 00 00                    mov     edx,000003daH
+ 0d4c  29 c0                             sub     eax,eax
+ 0d4e  ec                                in      al,dx
+ 0d4f  ba c0 03 00 00                    mov     edx,000003c0H
+ 0d54  b0 31                             mov     al,31H
+ 0d56  ee                                out     dx,al
+ 0d57  ba 88 03 00 00                    mov     edx,00000388H
+ 0d5c  29 c0                             sub     eax,eax
+ 0d5e  ec                                in      al,dx
+ 0d5f  ba c1 03 00 00                    mov     edx,000003c1H
+ 0d64  29 c0                             sub     eax,eax
+ 0d66  ec                                in      al,dx
+ 0d67  ba c0 03 00 00                    mov     edx,000003c0H
+ 0d6c  88 c5                             mov     ch,al
+ 0d6e  b0 3e                             mov     al,3eH
+ 0d70  ee                                out     dx,al
+ 0d71  a1 00 00 00 00    L110            mov     eax,_Mus
+ 0d76  83 78 18 00                       cmp     dword ptr +18H[eax],00000000H
+ 0d7a  74 2d                             je      L112
+ 0d7c  ff 50 18                          call    dword ptr +18H[eax]
+ 0d7f  85 c0                             test    eax,eax
+ 0d81  74 26                             je      L112
+ 0d83  f6 05 00 00 00 00 
+       80                                test    byte ptr _DmxDebug,80H
+ 0d8a  74 13                             je      L111
+ 0d8c  ba da 03 00 00                    mov     edx,000003daH
+ 0d91  29 c0                             sub     eax,eax
+ 0d93  ec                                in      al,dx
+ 0d94  ba c0 03 00 00                    mov     edx,000003c0H
+ 0d99  b0 31                             mov     al,31H
+ 0d9b  ee                                out     dx,al
+ 0d9c  88 e8                             mov     al,ch
+ 0d9e  ee                                out     dx,al
+ 0d9f  b8 01 00 00 00    L111            mov     eax,00000001H
+ 0da4  5d                                pop     ebp
+ 0da5  5a                                pop     edx
+ 0da6  59                                pop     ecx
+ 0da7  5b                                pop     ebx
+ 0da8  c3                                ret     
+ 0da9  a1 00 00 00 00    L112            mov     eax,_LastMasterVolume
+ 0dae  8b 1d 00 00 00 00                 mov     ebx,_MasterVolume
+ 0db4  39 d8                             cmp     eax,ebx
+ 0db6  74 0a                             je      L113
+ 0db8  b1 01                             mov     cl,01H
+ 0dba  89 1d 00 00 00 00                 mov     _LastMasterVolume,ebx
+ 0dc0  eb 02                             jmp     L114
+ 0dc2  30 c9             L113            xor     cl,cl
+ 0dc4  31 db             L114            xor     ebx,ebx
+ 0dc6  eb 34                             jmp     L118
+ 0dc8  31 d2             L115            xor     edx,edx
+ 0dca  66 89 da                          mov     dx,bx
+ 0dcd  69 c2 2a 01 00 00                 imul    eax,edx,0000012aH
+ 0dd3  f6 80 1a 00 00 00 
+       01                                test    byte ptr _SongStatus+1aH[eax],01H
+ 0dda  74 1f                             je      L117
+ 0ddc  f6 80 1a 00 00 00 
+       02                                test    byte ptr _SongStatus+1aH[eax],02H
+ 0de3  74 0b                             je      L116
+ 0de5  89 d0                             mov     eax,edx
+ 0de7  e8 00 00 00 00                    call    PlrRampVolume_
+ 0dec  84 c0                             test    al,al
+ 0dee  75 0b                             jne     L117
+ 0df0  84 c9             L116            test    cl,cl
+ 0df2  74 07                             je      L117
+ 0df4  89 d0                             mov     eax,edx
+ 0df6  e8 00 00 00 00                    call    PlrTrimVolume_
+ 0dfb  43                L117            inc     ebx
+ 0dfc  66 83 fb 02       L118            cmp     bx,0002H
+ 0e00  72 c6                             jb      L115
+ 0e02  a1 00 00 00 00                    mov     eax,_Mus
+ 0e07  83 78 1c 00                       cmp     dword ptr +1cH[eax],00000000H
+ 0e0b  74 03                             je      L119
+ 0e0d  ff 50 1c                          call    dword ptr +1cH[eax]
+ 0e10  f6 05 00 00 00 00 
+       80                L119            test    byte ptr _DmxDebug,80H
+ 0e17  74 13                             je      L120
+ 0e19  ba da 03 00 00                    mov     edx,000003daH
+ 0e1e  29 c0                             sub     eax,eax
+ 0e20  ec                                in      al,dx
+ 0e21  ba c0 03 00 00                    mov     edx,000003c0H
+ 0e26  b0 31                             mov     al,31H
+ 0e28  ee                                out     dx,al
+ 0e29  88 e8                             mov     al,ch
+ 0e2b  ee                                out     dx,al
+ 0e2c  31 c0             L120            xor     eax,eax
+ 0e2e  5d                                pop     ebp
+ 0e2f  5a                                pop     edx
+ 0e30  59                                pop     ecx
+ 0e31  5b                                pop     ebx
+ 0e32  c3                                ret     
+ 0e33  90                                nop     
+ 0e34  52                PlrReset_       push    edx
+ 0e35  55                                push    ebp
+ 0e36  89 e5                             mov     ebp,esp
+ 0e38  31 d2                             xor     edx,edx
+ 0e3a  66 89 15 1a 00 00 
+       00                                mov     _SongStatus+1aH,dx
+ 0e41  66 89 15 16 00 00 
+       00                                mov     _SongStatus+16H,dx
+ 0e48  66 89 15 18 00 00 
+       00                                mov     _SongStatus+18H,dx
+ 0e4f  66 89 15 44 01 00 
+       00                                mov     _SongStatus+144H,dx
+ 0e56  66 89 15 40 01 00 
+       00                                mov     _SongStatus+140H,dx
+ 0e5d  66 89 15 42 01 00 
+       00                                mov     _SongStatus+142H,dx
+ 0e64  66 89 15 00 00 00 
+       00                                mov     _SongsActive,dx
+ 0e6b  ba 7f 00 00 00                    mov     edx,0000007fH
+ 0e70  89 15 00 00 00 00                 mov     _MasterVolume,edx
+ 0e76  89 15 00 00 00 00                 mov     _LastMasterVolume,edx
+ 0e7c  5d                                pop     ebp
+ 0e7d  5a                                pop     edx
+ 0e7e  c3                                ret     
+ 0e7f  90                                nop     
+ 0e80  53                MUS_PlaySong_   push    ebx
+ 0e81  51                                push    ecx
+ 0e82  55                                push    ebp
+ 0e83  89 e5                             mov     ebp,esp
+ 0e85  89 d3                             mov     ebx,edx
+ 0e87  8b 15 00 00 00 00                 mov     edx,_pid1
+ 0e8d  83 fa ff                          cmp     edx,0ffffffffH
+ 0e90  75 06                             jne     L121
+ 0e92  89 d0                             mov     eax,edx
+ 0e94  5d                                pop     ebp
+ 0e95  59                                pop     ecx
+ 0e96  5b                                pop     ebx
+ 0e97  c3                                ret     
+ 0e98  ba ff ff ff ff    L121            mov     edx,0ffffffffH
+ 0e9d  31 c9                             xor     ecx,ecx
+ 0e9f  e8 00 00 00 00                    call    StartSong_
+ 0ea4  5d                                pop     ebp
+ 0ea5  59                                pop     ecx
+ 0ea6  5b                                pop     ebx
+ 0ea7  c3                                ret     
+ 0ea8  55                MUS_RampVolume_ push    ebp
+ 0ea9  89 e5                             mov     ebp,esp
+ 0eab  e8 00 00 00 00                    call    StartSong_
+ 0eb0  5d                                pop     ebp
+ 0eb1  c3                                ret     
+ 0eb2  8b c0                             mov     eax,eax
+ 0eb4  53                MUS_FadeInSong_ push    ebx
+ 0eb5  51                                push    ecx
+ 0eb6  55                                push    ebp
+ 0eb7  89 e5                             mov     ebp,esp
+ 0eb9  89 d1                             mov     ecx,edx
+ 0ebb  bb 7f 00 00 00                    mov     ebx,0000007fH
+ 0ec0  31 d2                             xor     edx,edx
+ 0ec2  e8 00 00 00 00                    call    StartSong_
+ 0ec7  5d                                pop     ebp
+ 0ec8  59                                pop     ecx
+ 0ec9  5b                                pop     ebx
+ 0eca  c3                                ret     
+ 0ecb  90                                nop     
+ 0ecc                    MUS_FadeOutSong_:
+ 0ecc  53                                push    ebx
+ 0ecd  51                                push    ecx
+ 0ece  56                                push    esi
+ 0ecf  55                                push    ebp
+ 0ed0  89 e5                             mov     ebp,esp
+ 0ed2  89 d1                             mov     ecx,edx
+ 0ed4  83 f8 01                          cmp     eax,00000001H
+ 0ed7  7c 15                             jl      L122
+ 0ed9  3b 05 00 00 00 00                 cmp     eax,_MaxSongs
+ 0edf  7f 0d                             jg      L122
+ 0ee1  8b 35 00 00 00 00                 mov     esi,_Song
+ 0ee7  83 7c c6 f8 00                    cmp     dword ptr -8H[esi+eax*8],00000000H
+ 0eec  75 0a                             jne     L123
+ 0eee  b8 ff ff ff ff    L122            mov     eax,0ffffffffH
+ 0ef3  5d                                pop     ebp
+ 0ef4  5e                                pop     esi
+ 0ef5  59                                pop     ecx
+ 0ef6  5b                                pop     ebx
+ 0ef7  c3                                ret     
+ 0ef8  31 d2             L123            xor     edx,edx
+ 0efa  69 f2 2a 01 00 00 L124            imul    esi,edx,0000012aH
+ 0f00  81 c6 00 00 00 00                 add     esi,offset _SongStatus
+ 0f06  66 3b 46 16                       cmp     ax,+16H[esi]
+ 0f0a  75 2e                             jne     L126
+ 0f0c  f6 46 1a 01                       test    byte ptr +1aH[esi],01H
+ 0f10  74 28                             je      L126
+ 0f12  ba ff ff ff ff                    mov     edx,0ffffffffH
+ 0f17  31 db                             xor     ebx,ebx
+ 0f19  e8 00 00 00 00                    call    StartSong_
+ 0f1e  8a 7e 1a                          mov     bh,+1aH[esi]
+ 0f21  f6 c7 02                          test    bh,02H
+ 0f24  74 0a                             je      L125
+ 0f26  88 f9                             mov     cl,bh
+ 0f28  80 c9 20                          or      cl,20H
+ 0f2b  88 4e 1a                          mov     +1aH[esi],cl
+ 0f2e  eb 10                             jmp     L127
+ 0f30  88 fd             L125            mov     ch,bh
+ 0f32  80 cd 40                          or      ch,40H
+ 0f35  88 6e 1a                          mov     +1aH[esi],ch
+ 0f38  eb 06                             jmp     L127
+ 0f3a  42                L126            inc     edx
+ 0f3b  83 fa 02                          cmp     edx,00000002H
+ 0f3e  7c ba                             jl      L124
+ 0f40  31 c0             L127            xor     eax,eax
+ 0f42  5d                                pop     ebp
+ 0f43  5e                                pop     esi
+ 0f44  59                                pop     ecx
+ 0f45  5b                                pop     ebx
+ 0f46  c3                                ret     
+ 0f47  90                                nop     
+ 0f48                    MUS_QrySongPlaying_:
+ 0f48  53                                push    ebx
+ 0f49  52                                push    edx
+ 0f4a  55                                push    ebp
+ 0f4b  89 e5                             mov     ebp,esp
+ 0f4d  83 3d 00 00 00 00 
+       ff                                cmp     dword ptr _pid1,0ffffffffH
+ 0f54  74 40                             je      L130
+ 0f56  83 f8 01                          cmp     eax,00000001H
+ 0f59  7c 3b                             jl      L130
+ 0f5b  3b 05 00 00 00 00                 cmp     eax,_MaxSongs
+ 0f61  7f 33                             jg      L130
+ 0f63  8b 15 00 00 00 00                 mov     edx,_Song
+ 0f69  83 7c c2 f8 00                    cmp     dword ptr -8H[edx+eax*8],00000000H
+ 0f6e  74 26                             je      L130
+ 0f70  31 d2                             xor     edx,edx
+ 0f72  69 da 2a 01 00 00 L128            imul    ebx,edx,0000012aH
+ 0f78  66 3b 83 16 00 00 
+       00                                cmp     ax,_SongStatus+16H[ebx]
+ 0f7f  75 0f                             jne     L129
+ 0f81  f6 83 1a 00 00 00 
+       01                                test    byte ptr _SongStatus+1aH[ebx],01H
+ 0f88  74 06                             je      L129
+ 0f8a  b0 01                             mov     al,01H
+ 0f8c  5d                                pop     ebp
+ 0f8d  5a                                pop     edx
+ 0f8e  5b                                pop     ebx
+ 0f8f  c3                                ret     
+ 0f90  42                L129            inc     edx
+ 0f91  83 fa 02                          cmp     edx,00000002H
+ 0f94  7c dc                             jl      L128
+ 0f96  30 c0             L130            xor     al,al
+ 0f98  5d                                pop     ebp
+ 0f99  5a                                pop     edx
+ 0f9a  5b                                pop     ebx
+ 0f9b  c3                                ret     
+ 0f9c                    MUS_GetMasterVolume_:
+ 0f9c  55                                push    ebp
+ 0f9d  89 e5                             mov     ebp,esp
+ 0f9f  a1 00 00 00 00                    mov     eax,_MasterVolume
+ 0fa4  5d                                pop     ebp
+ 0fa5  c3                                ret     
+ 0fa6  8b c0                             mov     eax,eax
+ 0fa8                    MUS_SetMasterVolume_:
+ 0fa8  55                                push    ebp
+ 0fa9  89 e5                             mov     ebp,esp
+ 0fab  83 3d 00 00 00 00 
+       ff                                cmp     dword ptr _pid1,0ffffffffH
+ 0fb2  74 13                             je      L131
+ 0fb4  85 c0                             test    eax,eax
+ 0fb6  7c 0f                             jl      L131
+ 0fb8  83 f8 7f                          cmp     eax,0000007fH
+ 0fbb  7f 0a                             jg      L131
+ 0fbd  25 ff ff 00 00                    and     eax,0000ffffH
+ 0fc2  a3 00 00 00 00                    mov     _MasterVolume,eax
+ 0fc7  5d                L131            pop     ebp
+ 0fc8  c3                                ret     
+ 0fc9  8d 40 00                          lea     eax,+0H[eax]
+ 0fcc  53                MUS_StopSong_   push    ebx
+ 0fcd  51                                push    ecx
+ 0fce  52                                push    edx
+ 0fcf  55                                push    ebp
+ 0fd0  89 e5                             mov     ebp,esp
+ 0fd2  83 f8 01                          cmp     eax,00000001H
+ 0fd5  7c 4e                             jl      L134
+ 0fd7  3b 05 00 00 00 00                 cmp     eax,_MaxSongs
+ 0fdd  7f 46                             jg      L134
+ 0fdf  8b 15 00 00 00 00                 mov     edx,_Song
+ 0fe5  83 7c c2 f8 00                    cmp     dword ptr -8H[edx+eax*8],00000000H
+ 0fea  74 39                             je      L134
+ 0fec  31 d2                             xor     edx,edx
+ 0fee  69 da 2a 01 00 00 L132            imul    ebx,edx,0000012aH
+ 0ff4  66 3b 83 16 00 00 
+       00                                cmp     ax,_SongStatus+16H[ebx]
+ 0ffb  75 22                             jne     L133
+ 0ffd  8a 8b 1a 00 00 00                 mov     cl,_SongStatus+1aH[ebx]
+ 1003  f6 c1 01                          test    cl,01H
+ 1006  74 17                             je      L133
+ 1008  88 cd                             mov     ch,cl
+ 100a  80 cd 40                          or      ch,40H
+ 100d  88 ab 1a 00 00 00                 mov     _SongStatus+1aH[ebx],ch
+ 1013  e8 00 00 00 00                    call    ServicePlayer_
+ 1018  31 c0                             xor     eax,eax
+ 101a  5d                                pop     ebp
+ 101b  5a                                pop     edx
+ 101c  59                                pop     ecx
+ 101d  5b                                pop     ebx
+ 101e  c3                                ret     
+ 101f  42                L133            inc     edx
+ 1020  83 fa 02                          cmp     edx,00000002H
+ 1023  7c c9                             jl      L132
+ 1025  b8 ff ff ff ff    L134            mov     eax,0ffffffffH
+ 102a  5d                                pop     ebp
+ 102b  5a                                pop     edx
+ 102c  59                                pop     ecx
+ 102d  5b                                pop     ebx
+ 102e  c3                                ret     
+ 102f  90                                nop     
+ 1030  53                MUS_PauseSong_  push    ebx
+ 1031  51                                push    ecx
+ 1032  52                                push    edx
+ 1033  55                                push    ebp
+ 1034  89 e5                             mov     ebp,esp
+ 1036  8b 15 00 00 00 00                 mov     edx,_pid1
+ 103c  83 fa ff                          cmp     edx,0ffffffffH
+ 103f  75 07                             jne     L135
+ 1041  89 d0                             mov     eax,edx
+ 1043  5d                                pop     ebp
+ 1044  5a                                pop     edx
+ 1045  59                                pop     ecx
+ 1046  5b                                pop     ebx
+ 1047  c3                                ret     
+ 1048  83 f8 01          L135            cmp     eax,00000001H
+ 104b  7c 49                             jl      L138
+ 104d  3b 05 00 00 00 00                 cmp     eax,_MaxSongs
+ 1053  7f 41                             jg      L138
+ 1055  8b 15 00 00 00 00                 mov     edx,_Song
+ 105b  83 7c c2 f8 00                    cmp     dword ptr -8H[edx+eax*8],00000000H
+ 1060  74 34                             je      L138
+ 1062  31 db                             xor     ebx,ebx
+ 1064  69 d3 2a 01 00 00 L136            imul    edx,ebx,0000012aH
+ 106a  66 3b 82 16 00 00 
+       00                                cmp     ax,_SongStatus+16H[edx]
+ 1071  75 1d                             jne     L137
+ 1073  8a 8a 1a 00 00 00                 mov     cl,_SongStatus+1aH[edx]
+ 1079  f6 c1 01                          test    cl,01H
+ 107c  74 12                             je      L137
+ 107e  88 cd                             mov     ch,cl
+ 1080  80 cd 04                          or      ch,04H
+ 1083  31 c0                             xor     eax,eax
+ 1085  88 aa 1a 00 00 00                 mov     _SongStatus+1aH[edx],ch
+ 108b  5d                                pop     ebp
+ 108c  5a                                pop     edx
+ 108d  59                                pop     ecx
+ 108e  5b                                pop     ebx
+ 108f  c3                                ret     
+ 1090  43                L137            inc     ebx
+ 1091  83 fb 02                          cmp     ebx,00000002H
+ 1094  7c ce                             jl      L136
+ 1096  b8 ff ff ff ff    L138            mov     eax,0ffffffffH
+ 109b  5d                                pop     ebp
+ 109c  5a                                pop     edx
+ 109d  59                                pop     ecx
+ 109e  5b                                pop     ebx
+ 109f  c3                                ret     
+ 10a0  53                MUS_ResumeSong_ push    ebx
+ 10a1  51                                push    ecx
+ 10a2  52                                push    edx
+ 10a3  55                                push    ebp
+ 10a4  89 e5                             mov     ebp,esp
+ 10a6  8b 15 00 00 00 00                 mov     edx,_pid1
+ 10ac  83 fa ff                          cmp     edx,0ffffffffH
+ 10af  75 07                             jne     L139
+ 10b1  89 d0                             mov     eax,edx
+ 10b3  5d                                pop     ebp
+ 10b4  5a                                pop     edx
+ 10b5  59                                pop     ecx
+ 10b6  5b                                pop     ebx
+ 10b7  c3                                ret     
+ 10b8  83 f8 01          L139            cmp     eax,00000001H
+ 10bb  7c 49                             jl      L142
+ 10bd  3b 05 00 00 00 00                 cmp     eax,_MaxSongs
+ 10c3  7f 41                             jg      L142
+ 10c5  8b 15 00 00 00 00                 mov     edx,_Song
+ 10cb  83 7c c2 f8 00                    cmp     dword ptr -8H[edx+eax*8],00000000H
+ 10d0  74 34                             je      L142
+ 10d2  31 db                             xor     ebx,ebx
+ 10d4  69 d3 2a 01 00 00 L140            imul    edx,ebx,0000012aH
+ 10da  66 3b 82 16 00 00 
+       00                                cmp     ax,_SongStatus+16H[edx]
+ 10e1  75 1d                             jne     L141
+ 10e3  8a 8a 1a 00 00 00                 mov     cl,_SongStatus+1aH[edx]
+ 10e9  f6 c1 01                          test    cl,01H
+ 10ec  74 12                             je      L141
+ 10ee  88 cd                             mov     ch,cl
+ 10f0  80 e5 f7                          and     ch,0f7H
+ 10f3  31 c0                             xor     eax,eax
+ 10f5  88 aa 1a 00 00 00                 mov     _SongStatus+1aH[edx],ch
+ 10fb  5d                                pop     ebp
+ 10fc  5a                                pop     edx
+ 10fd  59                                pop     ecx
+ 10fe  5b                                pop     ebx
+ 10ff  c3                                ret     
+ 1100  43                L141            inc     ebx
+ 1101  83 fb 02                          cmp     ebx,00000002H
+ 1104  7c ce                             jl      L140
+ 1106  b8 ff ff ff ff    L142            mov     eax,0ffffffffH
+ 110b  5d                                pop     ebp
+ 110c  5a                                pop     edx
+ 110d  59                                pop     ecx
+ 110e  5b                                pop     ebx
+ 110f  c3                                ret     
+ 1110  53                MUS_ChainSong_  push    ebx
+ 1111  51                                push    ecx
+ 1112  55                                push    ebp
+ 1113  89 e5                             mov     ebp,esp
+ 1115  8b 1d 00 00 00 00                 mov     ebx,_pid1
+ 111b  83 fb ff                          cmp     ebx,0ffffffffH
+ 111e  75 06                             jne     L143
+ 1120  89 d8                             mov     eax,ebx
+ 1122  5d                                pop     ebp
+ 1123  59                                pop     ecx
+ 1124  5b                                pop     ebx
+ 1125  c3                                ret     
+ 1126  83 f8 01          L143            cmp     eax,00000001H
+ 1129  7c 17                             jl      L144
+ 112b  8b 0d 00 00 00 00                 mov     ecx,_MaxSongs
+ 1131  39 c8                             cmp     eax,ecx
+ 1133  7f 0d                             jg      L144
+ 1135  8b 1d 00 00 00 00                 mov     ebx,_Song
+ 113b  83 7c c3 f8 00                    cmp     dword ptr -8H[ebx+eax*8],00000000H
+ 1140  75 09                             jne     L145
+ 1142  b8 ff ff ff ff    L144            mov     eax,0ffffffffH
+ 1147  5d                                pop     ebp
+ 1148  59                                pop     ecx
+ 1149  5b                                pop     ebx
+ 114a  c3                                ret     
+ 114b  83 fa ff          L145            cmp     edx,0ffffffffH
+ 114e  7c 0b                             jl      L146
+ 1150  39 ca                             cmp     edx,ecx
+ 1152  7f 07                             jg      L146
+ 1154  83 7c d3 f8 00                    cmp     dword ptr -8H[ebx+edx*8],00000000H
+ 1159  75 09                             jne     L147
+ 115b  b8 ff ff ff ff    L146            mov     eax,0ffffffffH
+ 1160  5d                                pop     ebp
+ 1161  59                                pop     ecx
+ 1162  5b                                pop     ebx
+ 1163  c3                                ret     
+ 1164  85 d2             L147            test    edx,edx
+ 1166  7d 02                             jge     L148
+ 1168  31 d2                             xor     edx,edx
+ 116a  8d 1c c5 00 00 00 
+       00                L148            lea     ebx,+0H[eax*8]
+ 1171  a1 00 00 00 00                    mov     eax,_Song
+ 1176  89 54 03 fc                       mov     -4H[ebx+eax],edx
+ 117a  31 c0                             xor     eax,eax
+ 117c  5d                                pop     ebp
+ 117d  59                                pop     ecx
+ 117e  5b                                pop     ebx
+ 117f  c3                                ret     
+ 1180                    MUS_FadeToNextSong_:
+ 1180  53                                push    ebx
+ 1181  51                                push    ecx
+ 1182  55                                push    ebp
+ 1183  89 e5                             mov     ebp,esp
+ 1185  89 d1                             mov     ecx,edx
+ 1187  8b 15 00 00 00 00                 mov     edx,_pid1
+ 118d  83 fa ff                          cmp     edx,0ffffffffH
+ 1190  75 06                             jne     L149
+ 1192  89 d0                             mov     eax,edx
+ 1194  5d                                pop     ebp
+ 1195  59                                pop     ecx
+ 1196  5b                                pop     ebx
+ 1197  c3                                ret     
+ 1198  83 f8 01          L149            cmp     eax,00000001H
+ 119b  7c 15                             jl      L150
+ 119d  3b 05 00 00 00 00                 cmp     eax,_MaxSongs
+ 11a3  7f 0d                             jg      L150
+ 11a5  8b 1d 00 00 00 00                 mov     ebx,_Song
+ 11ab  83 7c c3 f8 00                    cmp     dword ptr -8H[ebx+eax*8],00000000H
+ 11b0  75 09                             jne     L151
+ 11b2  b8 ff ff ff ff    L150            mov     eax,0ffffffffH
+ 11b7  5d                                pop     ebp
+ 11b8  59                                pop     ecx
+ 11b9  5b                                pop     ebx
+ 11ba  c3                                ret     
+ 11bb  31 d2             L151            xor     edx,edx
+ 11bd  69 da 2a 01 00 00 L152            imul    ebx,edx,0000012aH
+ 11c3  81 c3 00 00 00 00                 add     ebx,offset _SongStatus
+ 11c9  66 3b 43 16                       cmp     ax,+16H[ebx]
+ 11cd  75 14                             jne     L153
+ 11cf  f6 43 1a 01                       test    byte ptr +1aH[ebx],01H
+ 11d3  74 0e                             je      L153
+ 11d5  ba ff ff ff ff                    mov     edx,0ffffffffH
+ 11da  31 db                             xor     ebx,ebx
+ 11dc  e8 00 00 00 00                    call    StartSong_
+ 11e1  eb 06                             jmp     L154
+ 11e3  42                L153            inc     edx
+ 11e4  83 fa 02                          cmp     edx,00000002H
+ 11e7  7c d4                             jl      L152
+ 11e9  31 c0             L154            xor     eax,eax
+ 11eb  5d                                pop     ebp
+ 11ec  59                                pop     ecx
+ 11ed  5b                                pop     ebx
+ 11ee  c3                                ret     
+ 11ef  90                                nop     
+ 11f0                    MUS_RegisterSong_:
+ 11f0  53                                push    ebx
+ 11f1  51                                push    ecx
+ 11f2  52                                push    edx
+ 11f3  56                                push    esi
+ 11f4  55                                push    ebp
+ 11f5  89 e5                             mov     ebp,esp
+ 11f7  89 c1                             mov     ecx,eax
+ 11f9  83 3d 00 00 00 00 
+       00                                cmp     dword ptr _pid1,00000000H
+ 1200  7c 31                             jl      L158
+ 1202  31 c0                             xor     eax,eax
+ 1204  eb 25                             jmp     L157
+ 1206  8b 1d 00 00 00 00 L155            mov     ebx,_Song
+ 120c  8d 14 c5 00 00 00 
+       00                                lea     edx,+0H[eax*8]
+ 1213  01 d3                             add     ebx,edx
+ 1215  8b 33                             mov     esi,[ebx]
+ 1217  85 f6                             test    esi,esi
+ 1219  75 0f                             jne     L156
+ 121b  89 0b                             mov     [ebx],ecx
+ 121d  8b 1d 00 00 00 00                 mov     ebx,_Song
+ 1223  40                                inc     eax
+ 1224  89 74 1a 04                       mov     +4H[edx+ebx],esi
+ 1228  eb 0e                             jmp     L159
+ 122a  40                L156            inc     eax
+ 122b  3b 05 00 00 00 00 L157            cmp     eax,_MaxSongs
+ 1231  7c d3                             jl      L155
+ 1233  b8 ff ff ff ff    L158            mov     eax,0ffffffffH
+ 1238  5d                L159            pop     ebp
+ 1239  5e                                pop     esi
+ 123a  5a                                pop     edx
+ 123b  59                                pop     ecx
+ 123c  5b                                pop     ebx
+ 123d  c3                                ret     
+ 123e  8b c0                             mov     eax,eax
+ 1240                    MUS_UnregisterSong_:
+ 1240  52                                push    edx
+ 1241  55                                push    ebp
+ 1242  89 e5                             mov     ebp,esp
+ 1244  89 c2                             mov     edx,eax
+ 1246  83 f8 01                          cmp     eax,00000001H
+ 1249  7c 14                             jl      L160
+ 124b  3b 05 00 00 00 00                 cmp     eax,_MaxSongs
+ 1251  7f 0c                             jg      L160
+ 1253  a1 00 00 00 00                    mov     eax,_Song
+ 1258  83 7c d0 f8 00                    cmp     dword ptr -8H[eax+edx*8],00000000H
+ 125d  75 08                             jne     L161
+ 125f  b8 ff ff ff ff    L160            mov     eax,0ffffffffH
+ 1264  5d                                pop     ebp
+ 1265  5a                                pop     edx
+ 1266  c3                                ret     
+ 1267  89 d0             L161            mov     eax,edx
+ 1269  e8 00 00 00 00                    call    MUS_QrySongPlaying_
+ 126e  84 c0                             test    al,al
+ 1270  74 07                             je      L162
+ 1272  89 d0                             mov     eax,edx
+ 1274  e8 00 00 00 00                    call    MUS_StopSong_
+ 1279  a1 00 00 00 00    L162            mov     eax,_Song
+ 127e  c7 44 d0 f8 00 00 
+       00 00                             mov     dword ptr -8H[eax+edx*8],00000000H
+ 1286  31 c0                             xor     eax,eax
+ 1288  5d                                pop     ebp
+ 1289  5a                                pop     edx
+ 128a  c3                                ret     
+ 128b  90                                nop     
+ 128c  53                MUS_DeInit_     push    ebx
+ 128d  51                                push    ecx
+ 128e  52                                push    edx
+ 128f  55                                push    ebp
+ 1290  89 e5                             mov     ebp,esp
+ 1292  8b 15 00 00 00 00                 mov     edx,_pid1
+ 1298  85 d2                             test    edx,edx
+ 129a  7c 31                             jl      L164
+ 129c  89 d0                             mov     eax,edx
+ 129e  bb ff ff ff ff                    mov     ebx,0ffffffffH
+ 12a3  e8 00 00 00 00                    call    TSM_DelService_
+ 12a8  8b 0d 00 00 00 00                 mov     ecx,_pid2
+ 12ae  89 1d 00 00 00 00                 mov     _pid1,ebx
+ 12b4  85 c9                             test    ecx,ecx
+ 12b6  7c 0d                             jl      L163
+ 12b8  89 c8                             mov     eax,ecx
+ 12ba  e8 00 00 00 00                    call    TSM_DelService_
+ 12bf  89 1d 00 00 00 00                 mov     _pid2,ebx
+ 12c5  a1 00 00 00 00    L163            mov     eax,_Mus
+ 12ca  ff 50 04                          call    dword ptr +4H[eax]
+ 12cd  5d                L164            pop     ebp
+ 12ce  5a                                pop     edx
+ 12cf  59                                pop     ecx
+ 12d0  5b                                pop     ebx
+ 12d1  c3                                ret     
+ 12d2  8b c0                             mov     eax,eax
+ 12d4  51                MUS_Init_       push    ecx
+ 12d5  55                                push    ebp
+ 12d6  89 e5                             mov     ebp,esp
+ 12d8  89 d1                             mov     ecx,edx
+ 12da  ba 08 00 00 00                    mov     edx,00000008H
+ 12df  a3 00 00 00 00                    mov     _Mus,eax
+ 12e4  89 d8                             mov     eax,ebx
+ 12e6  e8 00 00 00 00                    call    calloc_
+ 12eb  a3 00 00 00 00                    mov     _Song,eax
+ 12f0  85 c0                             test    eax,eax
+ 12f2  75 08                             jne     L165
+ 12f4  b8 ff ff ff ff                    mov     eax,0ffffffffH
+ 12f9  5d                                pop     ebp
+ 12fa  59                                pop     ecx
+ 12fb  c3                                ret     
+ 12fc  ba ff ff ff ff    L165            mov     edx,0ffffffffH
+ 1301  89 1d 00 00 00 00                 mov     _MaxSongs,ebx
+ 1307  e8 00 00 00 00                    call    PlrReset_
+ 130c  b8 00 00 00 00                    mov     eax,offset ServicePlayer_
+ 1311  bb 0a 00 00 00                    mov     ebx,0000000aH
+ 1316  89 15 00 00 00 00                 mov     _pid2,edx
+ 131c  89 15 00 00 00 00                 mov     _pid1,edx
+ 1322  89 ca                             mov     edx,ecx
+ 1324  31 c9                             xor     ecx,ecx
+ 1326  e8 00 00 00 00                    call    TSM_NewService_
+ 132b  a3 00 00 00 00                    mov     _pid1,eax
+ 1330  83 f8 ff                          cmp     eax,0ffffffffH
+ 1333  74 20                             je      L166
+ 1335  b8 00 00 00 00                    mov     eax,offset ServiceFader_
+ 133a  ba 32 00 00 00                    mov     edx,00000032H
+ 133f  bb 09 00 00 00                    mov     ebx,00000009H
+ 1344  31 c9                             xor     ecx,ecx
+ 1346  e8 00 00 00 00                    call    TSM_NewService_
+ 134b  a3 00 00 00 00                    mov     _pid2,eax
+ 1350  83 f8 ff                          cmp     eax,0ffffffffH
+ 1353  75 0d                             jne     L167
+ 1355  e8 00 00 00 00    L166            call    MUS_DeInit_
+ 135a  b8 ff ff ff ff                    mov     eax,0ffffffffH
+ 135f  5d                                pop     ebp
+ 1360  59                                pop     ecx
+ 1361  c3                                ret     
+ 1362  31 c0             L167            xor     eax,eax
+ 1364  5d                                pop     ebp
+ 1365  59                                pop     ecx
+ 1366  c3                                ret     
+
+No disassembly errors
+
+------------------------------------------------------------
+
+Segment: CONST  DWORD USE32  00000018 bytes  
+ 0000  4d 55 53 41 50 49 2e 43 L168            - MUSAPI.C
+ 0008  2c 4b 3d 3d 4d 41 58 5f                 - ,K==MAX_
+ 0010  41 43 54 49 56 45 0a 00                 - ACTIVE..
+
+No disassembly errors
+
+------------------------------------------------------------
+
+Segment: _DATA  DWORD USE32  00000010 bytes  
+ 0000  00 00 00 00             _Mus            - ....
+ 0004  ff ff ff ff             _pid1           - ....
+ 0008  ff ff ff ff             _pid2           - ....
+ 000c  7f 00 00 00             _MasterVolume   - ....
+
+No disassembly errors
+
+------------------------------------------------------------
+
+Segment: _BSS  PARA USE32  00000262 bytes  
+
+No disassembly errors
+
+------------------------------------------------------------
+
+Segment: $$SYMBOLS  BYTE USE16  000004c6 bytes  
+ 0000  13 12                                   - ..
+ 0002  00 00 00 00 00 00                       DP      _SongStatus
+ 0008  2b 53 6f 6e 67 53 74 61                 - +SongSta
+ 0010  74 75 73 0d 12                          - tus..
+ 0015  00 00 00 00 00 00                       DP      _Song
+ 001b  2e 53 6f 6e 67 0d 12                    - .Song..
+ 0022  00 00 00 00 00 00                       DP      _pid1
+ 0028  23 70 69 64 31 0d 12                    - #pid1..
+ 002f  00 00 00 00 00 00                       DP      _pid2
+ 0035  23 70 69 64 32 0c 12                    - #pid2..
+ 003c  00 00 00 00 00 00                       DP      _Mus
+ 0042  40 4d 75 73 19 12                       - @Mus..
+ 0048  00 00 00 00 00 00                       DP      _LastMasterVolume
+ 004e  23 4c 61 73 74 4d 61 73                 - #LastMas
+ 0056  74 65 72 56 6f 6c 75 6d                 - terVolum
+ 005e  65 15 12                                - e..
+ 0061  00 00 00 00 00 00                       DP      _MasterVolume
+ 0067  23 4d 61 73 74 65 72 56                 - #MasterV
+ 006f  6f 6c 75 6d 65 11 12                    - olume..
+ 0076  00 00 00 00 00 00                       DP      _MaxSongs
+ 007c  23 4d 61 78 53 6f 6e 67                 - #MaxSong
+ 0084  73 14 12                                - s..
+ 0087  00 00 00 00 00 00                       DP      _SongsActive
+ 008d  1a 53 6f 6e 67 73 41 63                 - .SongsAc
+ 0095  74 69 76 65 08 32                       - tive.2
+ 009b  00 00 00 00 00 00                       DP      PlrResetCounters_
+ 00a1  0c 23 ad 00 00 00 31 00                 - .#....1.
+ 00a9  00 00 ad 00 27 24 00 00                 - ....'$..
+ 00b1  00 00 24 01 00 00 00 00                 - ..$.....
+ 00b9  0b 09 18 00 00 00 42 00                 - ......B.
+ 00c1  01 30 1c 50 6c 72 52 65                 - .0.PlrRe
+ 00c9  73 65 74 43 6f 75 6e 74                 - setCount
+ 00d1  65 72 73 23 24 24 01 00                 - ers#$$..
+ 00d9  00 92 00 00 00 00 00 06                 - ........
+ 00e1  05 10 00 00 00 43 00 01                 - .....C..
+ 00e9  30 1c 50 6c 72 53 74 61                 - 0.PlrSta
+ 00f1  72 74 53 6f 6e 67 25 24                 - rtSong%$
+ 00f9  b8 01 00 00 96 00 00 00                 - ........
+ 0101  00 00 0b 09 18 00 00 00                 - ........
+ 0109  42 00 01 30 1c 50 6c 72                 - B..0.Plr
+ 0111  53 69 6c 65 6e 63 65 53                 - SilenceS
+ 0119  6f 6e 67 23 24 50 02 00                 - ong#$P..
+ 0121  00 38 00 00 00 00 00 05                 - .8......
+ 0129  04 0c 00 00 00 43 00 01                 - .....C..
+ 0131  30 1c 50 6c 72 50 61 75                 - 0.PlrPau
+ 0139  73 65 53 6f 6e 67 22 24                 - seSong"$
+ 0141  88 02 00 00 ef 01 00 00                 - ........
+ 0149  00 00 0b 09 18 00 00 00                 - ........
+ 0151  43 00 01 30 1c 50 6c 72                 - C..0.Plr
+ 0159  4b 69 6c 6c 53 6f 6e 67                 - KillSong
+ 0161  27 24 78 04 00 00 cd 01                 - '$x.....
+ 0169  00 00 00 00 08 06 0c 00                 - ........
+ 0171  00 00 44 30 1c 04 30 1c                 - ..D0..0.
+ 0179  30 1f 30 1d 30 1e 53 74                 - 0.0.0.St
+ 0181  61 72 74 53 6f 6e 67 1e                 - artSong.
+ 0189  24 64 06 00 00 15 03 00                 - $d......
+ 0191  00 00 00 0b 09 18 00 00                 - ........
+ 0199  00 43 00 01 30 1c 50 6c                 - .C..0.Pl
+ 01a1  61 79 4d 75 73 23 24 7c                 - ayMus#$|
+ 01a9  09 00 00 5f 01 00 00 00                 - ..._....
+ 01b1  00 08 07 18 00 00 00 45                 - .......E
+ 01b9  30 1c 00 53 65 72 76 69                 - 0..Servi
+ 01c1  63 65 50 6c 61 79 65 72                 - cePlayer
+ 01c9  24 24 dc 0a 00 00 e4 00                 - $$......
+ 01d1  00 00 00 00 0b 09 18 00                 - ........
+ 01d9  00 00 43 00 01 30 1c 50                 - ..C..0.P
+ 01e1  6c 72 54 72 69 6d 56 6f                 - lrTrimVo
+ 01e9  6c 75 6d 65 24 24 c0 0b                 - lume$$..
+ 01f1  00 00 77 01 00 00 00 00                 - ..w.....
+ 01f9  08 07 18 00 00 00 48 40                 - ......H@
+ 0201  01 30 1c 50 6c 72 52 61                 - .0.PlrRa
+ 0209  6d 70 56 6f 6c 75 6d 65                 - mpVolume
+ 0211  22 24 38 0d 00 00 fb 00                 - "$8.....
+ 0219  00 00 00 00 06 05 10 00                 - ........
+ 0221  00 00 3b 30 1c 00 53 65                 - ..;0..Se
+ 0229  72 76 69 63 65 46 61 64                 - rviceFad
+ 0231  65 72 1d 24 34 0e 00 00                 - er.$4...
+ 0239  4b 00 00 00 00 00 04 03                 - K.......
+ 0241  08 00 00 00 33 00 00 50                 - ....3..P
+ 0249  6c 72 52 65 73 65 74 26                 - lrReset&
+ 0251  24 80 0e 00 00 28 00 00                 - $....(..
+ 0259  00 00 00 05 04 0c 00 00                 - ........
+ 0261  00 49 30 1c 02 30 1c 30                 - .I0..0.0
+ 0269  1f 4d 55 53 5f 50 6c 61                 - .MUS_Pla
+ 0271  79 53 6f 6e 67 2c 24 a8                 - ySong,$.
+ 0279  0e 00 00 0a 00 00 00 00                 - ........
+ 0281  00 03 02 04 00 00 00 44                 - .......D
+ 0289  30 1c 04 30 1c 30 1f 30                 - 0..0.0.0
+ 0291  1d 30 1e 4d 55 53 5f 52                 - .0.MUS_R
+ 0299  61 6d 70 56 6f 6c 75 6d                 - ampVolum
+ 02a1  65 28 24 b4 0e 00 00 17                 - e($.....
+ 02a9  00 00 00 00 00 05 04 0c                 - ........
+ 02b1  00 00 00 49 30 1c 02 30                 - ...I0..0
+ 02b9  1c 30 1f 4d 55 53 5f 46                 - .0.MUS_F
+ 02c1  61 64 65 49 6e 53 6f 6e                 - adeInSon
+ 02c9  67 29 24 cc 0e 00 00 7b                 - g)$....{
+ 02d1  00 00 00 00 00 06 05 10                 - ........
+ 02d9  00 00 00 49 30 1c 02 30                 - ...I0..0
+ 02e1  1c 30 1f 4d 55 53 5f 46                 - .0.MUS_F
+ 02e9  61 64 65 4f 75 74 53 6f                 - adeOutSo
+ 02f1  6e 67 29 24 48 0f 00 00                 - ng)$H...
+ 02f9  54 00 00 00 00 00 05 04                 - T.......
+ 0301  0c 00 00 00 4a 40 01 30                 - ....J@.0
+ 0309  1c 4d 55 53 5f 51 72 79                 - .MUS_Qry
+ 0311  53 6f 6e 67 50 6c 61 79                 - SongPlay
+ 0319  69 6e 67 29 24 9c 0f 00                 - ing)$...
+ 0321  00 0a 00 00 00 00 00 03                 - ........
+ 0329  02 04 00 00 00 3b 30 1c                 - .....;0.
+ 0331  00 4d 55 53 5f 47 65 74                 - .MUS_Get
+ 0339  4d 61 73 74 65 72 56 6f                 - MasterVo
+ 0341  6c 75 6d 65 2a 24 a8 0f                 - lume*$..
+ 0349  00 00 21 00 00 00 00 00                 - ..!.....
+ 0351  03 02 04 00 00 00 4b 00                 - ......K.
+ 0359  01 30 1c 4d 55 53 5f 53                 - .0.MUS_S
+ 0361  65 74 4d 61 73 74 65 72                 - etMaster
+ 0369  56 6f 6c 75 6d 65 24 24                 - Volume$$
+ 0371  cc 0f 00 00 63 00 00 00                 - ....c...
+ 0379  00 00 06 05 10 00 00 00                 - ........
+ 0381  4c 30 1c 01 30 1c 4d 55                 - L0..0.MU
+ 0389  53 5f 53 74 6f 70 53 6f                 - S_StopSo
+ 0391  6e 67 25 24 30 10 00 00                 - ng%$0...
+ 0399  70 00 00 00 00 00 06 05                 - p.......
+ 03a1  10 00 00 00 4c 30 1c 01                 - ....L0..
+ 03a9  30 1c 4d 55 53 5f 50 61                 - 0.MUS_Pa
+ 03b1  75 73 65 53 6f 6e 67 26                 - useSong&
+ 03b9  24 a0 10 00 00 70 00 00                 - $....p..
+ 03c1  00 00 00 06 05 10 00 00                 - ........
+ 03c9  00 4c 30 1c 01 30 1c 4d                 - .L0..0.M
+ 03d1  55 53 5f 52 65 73 75 6d                 - US_Resum
+ 03d9  65 53 6f 6e 67 27 24 10                 - eSong'$.
+ 03e1  11 00 00 70 00 00 00 00                 - ...p....
+ 03e9  00 05 04 0c 00 00 00 49                 - .......I
+ 03f1  30 1c 02 30 1c 30 1f 4d                 - 0..0.0.M
+ 03f9  55 53 5f 43 68 61 69 6e                 - US_Chain
+ 0401  53 6f 6e 67 2c 24 80 11                 - Song,$..
+ 0409  00 00 6f 00 00 00 00 00                 - ..o.....
+ 0411  05 04 0c 00 00 00 49 30                 - ......I0
+ 0419  1c 02 30 1c 30 1f 4d 55                 - ..0.0.MU
+ 0421  53 5f 46 61 64 65 54 6f                 - S_FadeTo
+ 0429  4e 65 78 74 53 6f 6e 67                 - NextSong
+ 0431  28 24 f0 11 00 00 4e 00                 - ($....N.
+ 0439  00 00 00 00 07 06 14 00                 - ........
+ 0441  00 00 4d 30 1c 01 30 1c                 - ..M0..0.
+ 0449  4d 55 53 5f 52 65 67 69                 - MUS_Regi
+ 0451  73 74 65 72 53 6f 6e 67                 - sterSong
+ 0459  2a 24 40 12 00 00 4b 00                 - *$@...K.
+ 0461  00 00 00 00 04 03 08 00                 - ........
+ 0469  00 00 4c 30 1c 01 30 1c                 - ..L0..0.
+ 0471  4d 55 53 5f 55 6e 72 65                 - MUS_Unre
+ 0479  67 69 73 74 65 72 53 6f                 - gisterSo
+ 0481  6e 67 1f 24 8c 12 00 00                 - ng.$....
+ 0489  46 00 00 00 00 00 06 05                 - F.......
+ 0491  10 00 00 00 33 00 00 4d                 - ....3..M
+ 0499  55 53 5f 44 65 49 6e 69                 - US_DeIni
+ 04a1  74 24 24 d4 12 00 00 93                 - t$$.....
+ 04a9  00 00 00 00 00 04 03 08                 - ........
+ 04b1  00 00 00 4e 30 1c 03 30                 - ...N0..0
+ 04b9  1c 30 1f 30 1d 4d 55 53                 - .0.0.MUS
+ 04c1  5f 49 6e 69 74                          - _Init
+
+No disassembly errors
+
+------------------------------------------------------------
+
+Segment: $$TYPES  BYTE USE16  0000054a bytes  
+ 0000  08 11 73 74 72 75 63 74                 - ..struct
+ 0008  07 11 75 6e 69 6f 6e 06                 - ..union.
+ 0010  11 65 6e 75 6d 03 10 00                 - .enum...
+ 0018  03 10 10 03 10 01 03 10                 - ........
+ 0020  11 03 10 03 03 10 13 08                 - ........
+ 0028  12 00 05 63 68 61 72 08                 - ...char.
+ 0030  12 00 05 63 68 61 72 0a                 - ...char.
+ 0038  12 00 09 73 69 7a 65 5f                 - ...size_
+ 0040  74 03 46 0a 04 20 00 0d                 - t.F.. ..
+ 0048  0d 12 00 0e 5f 5f 76 61                 - ....__va
+ 0050  5f 6c 69 73 74 03 10 03                 - _list...
+ 0058  0a 12 00 10 66 70 6f 73                 - ....fpos
+ 0060  5f 74 0a 12 00 10 66 70                 - _t....fp
+ 0068  6f 73 5f 74 03 10 13 0a                 - os_t....
+ 0070  12 00 13 74 69 6d 65 5f                 - ...time_
+ 0078  74 09 12 00 09 69 6e 6f                 - t....ino
+ 0080  5f 74 09 12 00 08 64 65                 - _t....de
+ 0088  76 5f 74 09 12 00 10 6f                 - v_t....o
+ 0090  66 66 5f 74 0b 12 00 07                 - ff_t....
+ 0098  42 4f 4f 4c 45 41 4e 08                 - BOOLEAN.
+ 00a0  12 00 05 42 59 54 45 08                 - ...BYTE.
+ 00a8  12 00 07 57 4f 52 44 09                 - ...WORD.
+ 00b0  12 00 13 44 57 4f 52 44                 - ...DWORD
+ 00b8  03 10 30 08 12 00 1c 56                 - ..0....V
+ 00c0  4f 49 44 08 12 00 0a 43                 - OID....C
+ 00c8  48 41 52 09 12 00 06 53                 - HAR....S
+ 00d0  48 4f 52 54 0a 12 00 07                 - HORT....
+ 00d8  55 53 48 4f 52 54 08 12                 - USHORT..
+ 00e0  00 10 4c 4f 4e 47 09 12                 - ..LONG..
+ 00e8  00 13 55 4c 4f 4e 47 07                 - ..ULONG.
+ 00f0  12 00 08 49 4e 54 08 12                 - ...INT..
+ 00f8  00 09 55 49 4e 54 03 46                 - ..UINT.F
+ 0100  19 08 60 10 00 10 00 00                 - ..`.....
+ 0108  00 11 61 0f 19 43 75 72                 - ..a..Cur
+ 0110  72 65 6e 74 56 6f 6c 75                 - rentVolu
+ 0118  6d 65 0d 61 0e 19 52 65                 - me.a..Re
+ 0120  73 65 72 76 65 64 32 0d                 - served2.
+ 0128  61 0d 19 52 65 73 65 72                 - a..Reser
+ 0130  76 65 64 31 0d 61 0c 19                 - ved1.a..
+ 0138  50 69 74 63 68 42 65 6e                 - PitchBen
+ 0140  64 10 61 0b 19 4e 6f 74                 - d.a..Not
+ 0148  65 56 65 6c 6f 63 69 74                 - eVelocit
+ 0150  79 08 61 0a 19 4d 6f 6e                 - y.a..Mon
+ 0158  6f 08 61 09 19 53 6f 66                 - o.a..Sof
+ 0160  74 08 61 08 19 48 6f 6c                 - t.a..Hol
+ 0168  64 0f 61 07 19 43 68 6f                 - d.a..Cho
+ 0170  72 75 73 44 65 70 74 68                 - rusDepth
+ 0178  0f 61 06 19 52 65 76 65                 - .a..Reve
+ 0180  72 62 44 65 70 74 68 0e                 - rbDepth.
+ 0188  61 05 19 45 78 70 72 65                 - a..Expre
+ 0190  73 73 69 6f 6e 0a 61 04                 - ssion.a.
+ 0198  19 50 61 6e 50 6f 74 0a                 - .PanPot.
+ 01a0  61 03 19 56 6f 6c 75 6d                 - a..Volum
+ 01a8  65 0e 61 02 19 4d 6f 64                 - e.a..Mod
+ 01b0  75 6c 61 74 69 6f 6e 0b                 - ulation.
+ 01b8  61 01 19 50 72 6f 67 72                 - a..Progr
+ 01c0  61 6d 08 61 00 19 42 61                 - am.a..Ba
+ 01c8  6e 6b 0e 12 00 26 43 48                 - nk...&CH
+ 01d0  4e 4c 5f 53 54 41 54 45                 - NL_STATE
+ 01d8  04 20 0f 27 08 60 12 00                 - . .'.`..
+ 01e0  2a 01 00 00 09 61 2a 28                 - *....a*(
+ 01e8  53 74 61 74 65 10 61 28                 - State.a(
+ 01f0  1f 52 61 6d 70 4c 65 76                 - .RampLev
+ 01f8  65 6c 41 63 63 10 61 26                 - elAcc.a&
+ 0200  1f 52 61 6d 70 4c 65 76                 - .RampLev
+ 0208  65 6c 45 72 72 10 61 24                 - elErr.a$
+ 0210  1f 52 61 6d 70 4c 65 76                 - .RampLev
+ 0218  65 6c 53 75 6d 0e 61 22                 - elSum.a"
+ 0220  1f 52 61 6d 70 4c 65 76                 - .RampLev
+ 0228  65 6c 73 13 61 20 1f 52                 - els.a .R
+ 0230  61 6d 70 54 61 72 67 65                 - ampTarge
+ 0238  74 4c 65 76 65 6c 10 61                 - tLevel.a
+ 0240  1e 1f 43 75 72 72 65 6e                 - ..Curren
+ 0248  74 4c 65 76 65 6c 12 61                 - tLevel.a
+ 0250  1c 1f 4d 61 78 56 6f 6c                 - ..MaxVol
+ 0258  75 6d 65 4c 65 76 65 6c                 - umeLevel
+ 0260  0f 61 1a 1a 41 63 74 69                 - .a..Acti
+ 0268  6f 6e 73 46 6c 61 67 0e                 - onsFlag.
+ 0270  61 18 1a 43 68 61 69 6e                 - a..Chain
+ 0278  4d 75 73 49 44 10 61 16                 - MusID.a.
+ 0280  1a 43 75 72 72 65 6e 74                 - .Current
+ 0288  4d 75 73 49 44 0f 61 14                 - MusID.a.
+ 0290  1a 42 61 73 65 43 68 61                 - .BaseCha
+ 0298  6e 6e 65 6c 12 61 12 1a                 - nnel.a..
+ 02a0  41 63 74 69 76 65 43 68                 - ActiveCh
+ 02a8  61 6e 6e 65 6c 73 11 61                 - annels.a
+ 02b0  10 1a 54 6f 74 61 6c 43                 - ..TotalC
+ 02b8  68 61 6e 6e 65 6c 73 12                 - hannels.
+ 02c0  61 0c 21 43 75 72 72 65                 - a.!Curre
+ 02c8  6e 74 4d 65 61 73 75 72                 - ntMeasur
+ 02d0  65 09 61 08 21 44 65 6c                 - e.a.!Del
+ 02d8  61 79 0d 61 04 21 4e 65                 - ay.a.!Ne
+ 02e0  78 74 45 76 65 6e 74 0c                 - xtEvent.
+ 02e8  61 00 25 53 6f 6e 67 44                 - a.%SongD
+ 02f0  61 74 61 0e 12 00 29 4d                 - ata...)M
+ 02f8  55 53 5f 53 54 41 54 55                 - US_STATU
+ 0300  53 04 20 01 2a 08 60 02                 - S. .*.`.
+ 0308  00 08 00 00 00 0b 61 04                 - ......a.
+ 0310  23 43 68 61 69 6e 54 6f                 - #ChainTo
+ 0318  0c 61 00 25 53 6f 6e 67                 - .a.%Song
+ 0320  44 61 74 61 0c 12 00 2c                 - Data...,
+ 0328  4d 55 53 5f 53 4f 4e 47                 - MUS_SONG
+ 0330  03 46 2d 05 50 0d 00 10                 - .F-.P...
+ 0338  0a 51 0c 52 53 5f 46 41                 - .Q.RS_FA
+ 0340  49 4c 16 51 0b 52 53 5f                 - IL.Q.RS_
+ 0348  44 52 49 56 45 52 5f 4e                 - DRIVER_N
+ 0350  4f 54 5f 46 4f 55 4e 44                 - OT_FOUND
+ 0358  1a 51 0a 52 53 5f 4e 4f                 - .Q.RS_NO
+ 0360  5f 44 52 49 56 45 52 53                 - _DRIVERS
+ 0368  5f 53 50 45 43 49 46 49                 - _SPECIFI
+ 0370  45 44 18 51 09 52 53 5f                 - ED.Q.RS_
+ 0378  49 4e 56 41 4c 49 44 5f                 - INVALID_
+ 0380  43 4c 4f 43 4b 5f 52 41                 - CLOCK_RA
+ 0388  54 45 16 51 08 52 53 5f                 - TE.Q.RS_
+ 0390  44 55 50 4c 49 43 41 54                 - DUPLICAT
+ 0398  45 5f 44 52 49 56 45 52                 - E_DRIVER
+ 03a0  14 51 07 52 53 5f 49 4e                 - .Q.RS_IN
+ 03a8  56 41 4c 49 44 5f 44 52                 - VALID_DR
+ 03b0  49 56 45 52 1b 51 06 52                 - IVER.Q.R
+ 03b8  53 5f 44 52 49 56 45 52                 - S_DRIVER
+ 03c0  5f 41 4c 52 45 41 44 59                 - _ALREADY
+ 03c8  5f 4c 4f 41 44 45 44 18                 - _LOADED.
+ 03d0  51 05 52 53 5f 4e 4f 5f                 - Q.RS_NO_
+ 03d8  46 52 45 45 5f 49 4e 54                 - FREE_INT
+ 03e0  45 52 52 55 50 54 53 17                 - ERRUPTS.
+ 03e8  51 04 52 53 5f 4e 4f 54                 - Q.RS_NOT
+ 03f0  5f 45 4e 4f 55 47 48 5f                 - _ENOUGH_
+ 03f8  4d 45 4d 4f 52 59 14 51                 - MEMORY.Q
+ 0400  03 52 53 5f 42 41 4e 4b                 - .RS_BANK
+ 0408  5f 4e 4f 54 5f 56 41 4c                 - _NOT_VAL
+ 0410  49 44 14 51 02 52 53 5f                 - ID.Q.RS_
+ 0418  42 41 4e 4b 5f 4e 4f 54                 - BANK_NOT
+ 0420  5f 46 4f 55 4e 44 15 51                 - _FOUND.Q
+ 0428  01 52 53 5f 42 4f 41 52                 - .RS_BOAR
+ 0430  44 5f 4e 4f 54 5f 46 4f                 - D_NOT_FO
+ 0438  55 4e 44 0a 51 00 52 53                 - UND.Q.RS
+ 0440  5f 4f 4b 41 59 0e 12 00                 - _OKAY...
+ 0448  2f 44 4d 58 5f 53 54 41                 - /DMX_STA
+ 0450  54 55 53 05 72 30 01 1c                 - TUS.r0..
+ 0458  03 46 31 05 72 1d 01 1c                 - .F1.r...
+ 0460  03 46 33 06 72 1d 02 1a                 - .F3.r...
+ 0468  1a 03 46 35 07 72 1d 03                 - ..F5.r..
+ 0470  1a 1a 1a 03 46 37 03 46                 - ....F7.F
+ 0478  35 03 46 37 05 72 23 01                 - 5.F7.r#.
+ 0480  1c 03 46 3b 03 46 33 08                 - ..F;.F3.
+ 0488  60 08 00 20 00 00 00 09                 - `.. ....
+ 0490  61 1c 3d 4c 65 61 76 65                 - a.=Leave
+ 0498  09 61 18 3c 45 6e 74 65                 - .a.<Ente
+ 04a0  72 0b 61 14 3a 43 6f 6d                 - r.a.:Com
+ 04a8  6d 61 6e 64 0d 61 10 39                 - mand.a.9
+ 04b0  50 69 74 63 68 42 65 6e                 - PitchBen
+ 04b8  64 0a 61 0c 38 4e 6f 74                 - d.a.8Not
+ 04c0  65 4f 6e 0b 61 08 36 4e                 - eOn.a.6N
+ 04c8  6f 74 65 4f 66 66 0a 61                 - oteOff.a
+ 04d0  04 34 44 65 49 6e 69 74                 - .4DeInit
+ 04d8  08 61 00 32 49 6e 69 74                 - .a.2Init
+ 04e0  0b 12 00 3e 44 4d 58 5f                 - ...>DMX_
+ 04e8  4d 55 53 03 46 3f 03 46                 - MUS.F?.F
+ 04f0  2a 05 72 1d 01 41 05 72                 - *.r..A.r
+ 04f8  1d 01 1a 08 72 23 04 23                 - ....r#.#
+ 0500  23 23 23 05 72 08 01 1c                 - ###.r...
+ 0508  05 50 02 00 10 07 51 01                 - .P....Q.
+ 0510  54 52 55 45 08 51 00 46                 - TRUE.Q.F
+ 0518  41 4c 53 45 08 12 00 46                 - ALSE...F
+ 0520  42 4f 4f 4c 05 72 47 01                 - BOOL.rG.
+ 0528  1a 06 72 23 02 23 23 05                 - ..r#.##.
+ 0530  72 47 01 23 05 72 1d 01                 - rG.#.r..
+ 0538  23 05 72 23 01 23 05 72                 - #.r#.#.r
+ 0540  23 01 25 07 72 23 03 40                 - #.%.r#.@
+ 0548  08 08                                   - ..
+
+No disassembly errors
+
+------------------------------------------------------------
