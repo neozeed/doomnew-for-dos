@@ -45,7 +45,14 @@ FixedMul
 ( fixed_t	a,
   fixed_t	b )
 {
+//    OpenWatcom has long long but everything else doesnt
+#if __WATCOMC__ > 1200
     return ((long long) a * (long long) b) >> FRACBITS;
+#else
+    double c;
+    c = ((double)a) * ((double)b) * FRACUNIT;
+    return((fixed_t)c);
+#endif
 }
 
 
