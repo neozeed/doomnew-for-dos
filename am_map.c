@@ -1421,8 +1421,8 @@ void AM_Drawer (void)
 		AM_drawThings(THINGCOLORS, THINGRANGE);
 	AM_drawCrosshair(XHAIRCOLORS);
 
-//	if (gameskill == sk_baby)
-//		AM_drawKeys(); //FS 
+	if (gameskill == sk_baby)
+		AM_drawkeys(); //FS 
 		
 	AM_drawMarks();
 

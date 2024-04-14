@@ -42,7 +42,7 @@ void AM_Drawer (void);
 // if the level is completed while it is up.
 void AM_Stop (void);
 
-
+void AM_drawkeys(void);
 
 #endif
 //-----------------------------------------------------------------------------
