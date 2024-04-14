@@ -1,4 +1,0 @@
-extern int SFX_Playing(long );
-extern void SFX_SetOrigin(long ,int ,int ,int );
-extern void SFX_StopPatch(long );
-extern long SFX_PlayPatch(void *,int ,int ,int ,int ,int );

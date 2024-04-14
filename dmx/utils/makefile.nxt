@@ -1,3 +1,0 @@
-all:
-	cc -g -arch i386 wav2dsp.c -o wav2dsp
-

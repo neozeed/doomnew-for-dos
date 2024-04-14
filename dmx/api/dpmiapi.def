@@ -1,7 +1,0 @@
-extern int _dpmi_getmemsize(void );
-extern int _dpmi_lockregion(void *,int );
-extern int _dpmi_unlockregion(void *,int );
-extern int _dpmi_dosalloc(int ,int *,int *);
-extern int _dpmi_dosfree(int *);
-extern void __interrupt __far *_dpmi_getvect(int );
-extern void _dpmi_setvect(int ,void (__interrupt __far *)());

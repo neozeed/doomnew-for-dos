@@ -1,8 +1,0 @@
-example\*.*
-inc\*.h
-lib\*.*
-bin\wav2dsp.exe
-bin\midi2mus.exe
-bin\instedit.exe
-# wav\*.wav
-# midi\*.mid

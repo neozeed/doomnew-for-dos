@@ -1,4 +1,0 @@
-extern int PC_WatchDog(void );
-extern void PC_NewISR(struct _no_name_ *,int ,void (__interrupt __far *)());
-extern void PC_DelISR(struct _no_name_ *);
-extern void PC_SendEOI(struct _no_name_ *);

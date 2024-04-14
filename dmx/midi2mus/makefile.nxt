@@ -1,3 +1,0 @@
-all:
-	cc -g -arch i386 midi2mus.c -o midi2mus
-

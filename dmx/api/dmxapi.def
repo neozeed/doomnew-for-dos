@@ -1,3 +1,0 @@
-extern void DMX_DeInit(void );
-extern int DMX_Init(int ,int ,unsigned long ,unsigned long );
-extern int DMX_SetIdleCallback(int (*)(void ));

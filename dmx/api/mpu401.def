@@ -1,4 +1,0 @@
-extern int MpuEnterBusy(void );
-extern void MpuLeave(void );
-extern void MPU_SetCard(int );
-extern int MPU_Detect(int *,int *);

@@ -1,8 +1,0 @@
-NAME player
-OPT STACK=8192
-OPT CASEEXACT
-DEBUG all
-SYSTEM dos4g
-FILE player.obj
-FILE video.obj
-LIBRARY ..\lib\dmx.lib

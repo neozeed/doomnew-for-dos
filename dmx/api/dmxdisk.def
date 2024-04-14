@@ -1,3 +1,0 @@
-extern void *DmxOpenFile(unsigned char *,unsigned char *,unsigned int );
-extern unsigned int DmxReadFile(void *,void *,unsigned int );
-extern void DmxCloseFile(void *);
