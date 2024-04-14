@@ -1,3 +1,8 @@
+04-14-24
+ - Fixed some typos and re-linked using the Apogee Sound System 
+   and the DMX wrapper APODMX instead of the proprietary DMX library from
+   Raptor Call Of The Shadows DOS source code v1.2
+
 11-03-14
  - Got a GUS and an SB-compatible living in harmony?  Awesome.
    Want to show off the difference?  Use -usesb at startup to force
