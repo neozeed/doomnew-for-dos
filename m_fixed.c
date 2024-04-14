@@ -49,9 +49,26 @@ FixedMul
 #if __WATCOMC__ > 1200
     return ((long long) a * (long long) b) >> FRACBITS;
 #else
-    double c;
-    c = ((double)a) * ((double)b) * FRACUNIT;
-    return((fixed_t)c);
+    int ah,al,bh,bl,result;
+    /* overflow? underflow? */
+    if ( (abs(a)>>14) >= abs(b))   {
+	return (a^b)<0 ? MININT : MAXINT;
+        }
+    ah = (a >> FRACBITS);
+    al = (a & (FRACUNIT-1));
+    bh = (b >> FRACBITS);
+    bl = (b & (FRACUNIT-1));
+
+    // Multiply the parts separately
+    result = (ah * bh) << FRACBITS; // High*High
+    result += ah * bl;                   // High*Low
+    result += al * bh;                   // Low*High
+    // Low*Low part doesn't need to be calculated because it doesn't contribute to the result after shifting
+
+    // Shift right by FRACBITS to get the fixed-point result
+    result += (al * bl) >> FRACBITS;
+
+    return (fixed_t)result;
 #endif
 }
 
