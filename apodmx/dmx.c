@@ -294,6 +294,7 @@ int SB_Detect(int *port, int *irq, int *dma, int *unk) {
         dmx_blaster.Interrupt = *irq;
         dmx_blaster.Dma8 = *dma;
     }
+printf("  dmx.c SB_Detect port 0x%04x int %d dma %d\n",dmx_blaster.Address,dmx_blaster.Interrupt,dmx_blaster.Dma8);
     return 0;
 }
 void SB_SetCard(int port, int irq, int dma) { } //FIXME
@@ -373,15 +374,19 @@ int DMX_Init(int rate, int maxsng, int mdev, int sdev) {
             device = SoundBlaster;
         else
             device = Adlib;
+printf("  DMX_Init Adlib\n");
         break;
     case AHW_SOUND_BLASTER:
         device = SoundBlaster;
+printf("  DMX_Init SoundBlaster\n");
         break;
     case AHW_MPU_401:
         device = GenMidi;
+printf("  DMX_Init MPU401/GenMidi\n");
         break;
     case AHW_ULTRA_SOUND:
         device = UltraSound;
+printf("  DMX_Init UltraSound\n");
         break;
     default:
         return -1;
