@@ -59,6 +59,7 @@ fixed_t FixedDiv2	(fixed_t a, fixed_t b);
 	modify exact [eax edx]
 #endif
 
+
 #endif
 //-----------------------------------------------------------------------------
 //

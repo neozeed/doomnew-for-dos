@@ -37,7 +37,9 @@ rcsid[] = "$Id: m_bbox.c,v 1.1 1997/02/03 22:45:10 b1 Exp $";
 
 
 
+
 // Fixme. __USE_C_FIXED__ or something.
+
 fixed_t
 FixedMul
 ( fixed_t	a,
@@ -47,13 +49,18 @@ FixedMul
 #if __WATCOMC__ > 1200
     return ((long long) a * (long long) b) >> FRACBITS;
 #else
-    int ah = (a >> FRACBITS);
-    int al = (a & (FRACUNIT-1));
-    int bh = (b >> FRACBITS);
-    int bl = (b & (FRACUNIT-1));
+    int ah,al,bh,bl,result;
+    /* overflow? underflow? */
+    if ( (abs(a)>>14) >= abs(b))   {
+	return (a^b)<0 ? MININT : MAXINT;
+        }
+    ah = (a >> FRACBITS);
+    al = (a & (FRACUNIT-1));
+    bh = (b >> FRACBITS);
+    bl = (b & (FRACUNIT-1));
 
     // Multiply the parts separately
-    int result = (ah * bh) << FRACBITS; // High*High
+    result = (ah * bh) << FRACBITS; // High*High
     result += ah * bl;                   // High*Low
     result += al * bh;                   // Low*High
     // Low*Low part doesn't need to be calculated because it doesn't contribute to the result after shifting
@@ -61,7 +68,7 @@ FixedMul
     // Shift right by FRACBITS to get the fixed-point result
     result += (al * bl) >> FRACBITS;
 
-    return result;   
+    return (fixed_t)result;
 #endif
 }
 

@@ -23,7 +23,7 @@
 #
 # --------------------------------------------------------------------------
 
-CCOPTS = $(EXTERNOPT) /omaxet /zp1 /4r /ei /j /zq /i=apodmx
+CCOPTS = $(EXTERNOPT) /omaxet /d2 /zp1 /5r /ei /j /zq /i=apodmx
 #CCOPTS = /d2 /odam /zp1 /4r /ei /j /zq /i=apodmx
 
 LOCOBJS = &
@@ -115,7 +115,7 @@ d.exe : $(LOCOBJS) i_ibm.obj
 # sb /R /O doomnew.exe #Uncomment this to use DOS32/a
 
 i_ibm.obj:
- wcc386 /zp1 /4r /zq /ei /j /i=apodmx i_ibm.c
+ wcc386 /zp1 /d2 /5r /zq /ei /j /i=apodmx i_ibm.c
 
 .c.obj :
  wcc386 $(CCOPTS) $[*
