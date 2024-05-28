@@ -26,7 +26,7 @@ int tsm_ID = -1;
 void I_StartupTimer (void)
 {
 #ifndef NOTIMER
-	extern int I_TimerISR(void);
+	extern void I_TimerISR(void);
 
 	printf("I_StartupTimer()\n",0);
 	// installs master timer.  Must be done before StartupTimer()!

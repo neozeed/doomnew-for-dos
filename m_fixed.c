@@ -45,10 +45,12 @@ FixedMul
 ( fixed_t	a,
   fixed_t	b )
 {
-//    OpenWatcom has long long but everything else doesnt
-#if __WATCOMC__ > 1200
-    return ((long long) a * (long long) b) >> FRACBITS;
-#else
+//	OpenWatcom has long long but everything else doesnt
+//	file m_fixed.obj(m_fixed.c): undefined symbol __I8M
+//	file m_fixed.obj(m_fixed.c): undefined symbol __I8RS
+//#if __WATCOMC__ > 1200
+//    return ((long long) a * (long long) b) >> FRACBITS;
+//#else
     unsigned int ah,al,bh,bl,result;
 
     ah = (a >> FRACBITS);
@@ -66,7 +68,7 @@ FixedMul
     result += (al * bl) >> FRACBITS;
 
     return (fixed_t)result;
-#endif
+//#endif
 }
 
 
