@@ -41,7 +41,8 @@ fixed_t FixedMul	(fixed_t a, fixed_t b);
 fixed_t FixedDiv	(fixed_t a, fixed_t b);
 fixed_t FixedDiv2	(fixed_t a, fixed_t b);
 
-#ifdef __WATCOMC__ /* FS: Heretic Merge */
+#ifdef WATASM
+/*#ifdef __WATCOMC__ /* FS: Heretic Merge */
 #pragma aux FixedMul =	\
 	"imul ebx",			\
 	"shrd eax,edx,16"	\
@@ -57,8 +58,8 @@ fixed_t FixedDiv2	(fixed_t a, fixed_t b);
 	parm	[eax] [ebx] \
 	value	[eax]		\
 	modify exact [eax edx]
+/*#endif*/
 #endif
-
 
 #endif
 //-----------------------------------------------------------------------------

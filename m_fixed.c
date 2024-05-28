@@ -49,11 +49,8 @@ FixedMul
 #if __WATCOMC__ > 1200
     return ((long long) a * (long long) b) >> FRACBITS;
 #else
-    int ah,al,bh,bl,result;
-    /* overflow? underflow? */
-    if ( (abs(a)>>14) >= abs(b))   {
-	return (a^b)<0 ? MININT : MAXINT;
-        }
+    unsigned int ah,al,bh,bl,result;
+
     ah = (a >> FRACBITS);
     al = (a & (FRACUNIT-1));
     bh = (b >> FRACBITS);

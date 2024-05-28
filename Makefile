@@ -23,6 +23,9 @@
 #
 # --------------------------------------------------------------------------
 
+# WATASM
+# turns on inline assembly for FixedMul & FixedDiv2
+
 CCOPTS = $(EXTERNOPT) /omaxet /d2 /zp1 /5r /ei /j /zq /i=apodmx
 #CCOPTS = /d2 /odam /zp1 /4r /ei /j /zq /i=apodmx
 
@@ -108,10 +111,10 @@ d.exe : $(LOCOBJS) i_ibm.obj
  wlink @doomnew.lnk
  copy d.exe stripd.exe
  wstrip stripd.exe
- 4gwbind 4gwpro.exe stripd.exe doomnew.exe -V 
- copy /y doomnew.exe D:\PROJ\doom\doom
- copy /y CHANGES.TXT D:\proj\doom\doom
- copy /y TODO.TXT D:\proj\doom\doom
+ msdos 4gwbind 4gwpro.exe stripd.exe doomnew.exe -V 
+ copy /y doomnew.exe c:\dos\doom19\doomnew.exe
+# copy /y CHANGES.TXT D:\proj\doom\doom
+# copy /y TODO.TXT D:\proj\doom\doom
 # sb /R /O doomnew.exe #Uncomment this to use DOS32/a
 
 i_ibm.obj:
@@ -145,7 +148,7 @@ final : .SYMBOLIC
  copy d.exe stripd.exe
  wstrip stripd.exe
  4gwbind 4gwpro.exe stripd.exe doomnew.exe -V 
- copy /y doomnew.exe D:\PROJ\doom\doom
- copy /y CHANGES.TXT D:\proj\doom\doom
- copy /y TODO.TXT D:\proj\doom\doom
- sb /R /O doomnew.exe
+ copy /y doomnew.exe c:\dos\doom19\doomnew.exe
+# copy /y CHANGES.TXT D:\proj\doom\doom
+# copy /y TODO.TXT D:\proj\doom\doom
+# sb /R /O doomnew.exe
